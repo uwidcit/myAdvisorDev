@@ -12,7 +12,7 @@ const db = new Sequelize(
     'advisor-app-uwi', //username
     'phe3aeB5yopha7sh', //password
     {
-        host: 'postgres_14',
+        host: 'www.sundaebytes.com',
         port: 5432,
         dialect: 'postgres',
         pool: {
