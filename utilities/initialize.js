@@ -9,8 +9,8 @@ const Programme = require("../models/Programme");
 const Course = require("../models/Course");
 const ProgrammeCourse = require("../models/ProgrammeCourse");
 
-const Dummytranscript = require("./dummytranscript.json")
-const DummyProgCourses = require("./dummyProgCourses.json")
+// const Dummytranscript = require("./dummytranscript.json")
+// const DummyProgCourses = require("./dummyProgCourses.json")
 
 //TESTING
 const fs = require('fs');
@@ -87,13 +87,17 @@ async function loadProgrammeCourses(programmesJSON) {
 
         const coursePromises = courseIdArray.map(async (courseCode) => {
             const course = await Course.findOne({ where: { code: courseCode } });;
-            const typeName = await Type.findOne({ where: {
-                type: programmeData.courses[courseCode] 
-               } });
-            const typeId = await Type.findOne({where:{
-                type: typeName.type
-            }});
-           
+            const typeName = await Type.findOne({
+                where: {
+                    type: programmeData.courses[courseCode]
+                }
+            });
+            const typeId = await Type.findOne({
+                where: {
+                    type: typeName.type
+                }
+            });
+
             return createProgrammeCourse(programme.id, course.code, typeId.id);
 
         });
