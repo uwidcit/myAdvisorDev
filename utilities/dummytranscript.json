@@ -1,0 +1,12 @@
+{
+    "gpa": 3.86,
+    "name": "John Doe",
+    "degree": "Bachelor of Science (Special)",
+    "major": "Computer Science",
+    "admitTerm": "2023",
+    "degreeAttemptHours": 15,
+    "degreePassedHours": 15,
+    "degreeEarnedHours": 15,
+    "degreeGpaHours": 15,
+    "degreeQualityPoints": 57.90
+}
