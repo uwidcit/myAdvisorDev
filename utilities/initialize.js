@@ -93,8 +93,9 @@ async function loadProgrammeCourses(programmesJSON) {
             const typeId = await Type.findOne({where:{
                 type: typeName.type
             }});
-            
+           
             return createProgrammeCourse(programme.id, course.code, typeId.id);
+
         });
 
         return Promise.all(coursePromises);
