@@ -44,7 +44,7 @@ router.get("/courses/all", async (req, res) => {
 // get a student in the database
 router.get("/details/view/:studentId", async (req, res) => {
     try {
-        const student = await Transcript.findOne({ where: { studentID: req.params.studentId } });
+        const student = await Transcript.findOne({ where: { studentId: req.params.studentId } });
 
         if (!student) {
             //return res.status(404).send("Student not found.");
@@ -148,20 +148,18 @@ router.post("/details/add", async (req, res) => {
 router.post("/courses/add", async (req, res) => {
     try {
         // destructure data entered
-        const { studentId, courseCode, courseTitle, grade } = req.body;
-
+        const { studentId, courseCode, semesterId, grade } = req.body;
         // create new entry
         await StudentCourses.create({
             studentId,
             courseCode,
-            courseTitle,
             grade
         })
             .then(() => {
                 return res.status(200).send("Student courses added!");
             })
             .catch(err => {
-                console.log("Error: ", err.message);
+                console.log("Error: ", err);
             });
     }
     catch (err) {
@@ -183,14 +181,14 @@ router.post('/parseForm', upload.single('file'), async (req, res) => {
 
 
         // check if student is already added
-        const student = await Transcript.findOne({ where: { studentID: studentId } });
+        const student = await Transcript.findOne({ where: { studentId: studentId } });
 
         if (student) {
             // return res.status(401).send("Student already exists.");
         }
         else {
             await Transcript.create({
-                studentID: studentId,
+                studentId: studentId,
                 gpa,
                 name,
                 credits,
@@ -252,7 +250,7 @@ router.put("/details/edit/:studentId", async (req, res) => {
     try {
         const { studentId, gpa, name, progress, credits, degree, major, admitTerm, degreeAttemptHours, degreePassedHours, degreeEarnedHours, degreeGpaHours, degreeQualityPoints } = req.body;
 
-        const student = await Transcript.findOne({ where: { studentID: req.params.studentId } });
+        const student = await Transcript.findOne({ where: { studentId: req.params.studentId } });
         if (!student) {
             return res.status(401).send("Student not found.");
         }
@@ -402,7 +400,7 @@ router.get("/course/options", studentAccountVerification, async(req, res)=>{
     const studentId = req.user;
 
     // Get student's transcript
-    const student = await Transcript.findOne({ where: { studentID: studentId } });
+    const student = await Transcript.findOne({ where: { studentId: studentId } });
     console.log("Programme: ", student.major);
     
     // Get all the student's courses

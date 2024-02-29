@@ -24,7 +24,7 @@ router.post("/login", async (req, res) => {
         console.log("LOG::> Passowrd: ", password);
 
         const admin = await Admin.findOne({ where: { "adminID": username } });
-        const student = await Student.findOne({ where: { "studentID": username } });
+        const student = await Student.findOne({ where: { "studentId": username } });
 
         if (!admin && !student) {
             return res.status(401).send("This account does not exist.");
@@ -59,10 +59,10 @@ router.post("/login", async (req, res) => {
             }
             else if (passCompare2) {
                 // generates token for student user
-                const token = jwtGeneratorStudent(student.studentID);
+                const token = jwtGeneratorStudent(student.studentId);
                 res.json({
                     "accountType": "student",
-                    "studentID": student.studentID,
+                    "studentId": student.studentId,
                     "firstName": student.firstName,
                     "lastName": student.lastName,
                     "email": student.email,

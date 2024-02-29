@@ -1,0 +1,103 @@
+[
+        {
+            "courseCode" : "COMP1600",
+            "typeId": 1,
+            "programmeId" : 1
+        },
+        {
+            "courseCode" : "COMP1601",
+            "typeId": 1,
+            "programmeId" : 1
+        },
+        {
+            "courseCode" : "INFO1600",
+            "typeId": 1,
+            "programmeId" : 1
+        },
+        {
+            "courseCode" : "MATH1115",
+            "typeId": 1,
+            "programmeId" : 1
+        },
+        {
+            "courseCode" : "FOUN1101",
+            "typeId": 6,
+            "programmeId" : 1
+        },
+        {
+            "courseCode" : "COMP1602",
+            "typeId": 1,
+            "programmeId" : 1
+        },
+        {
+            "courseCode" : "COMP1603",
+            "typeId": 1,
+            "programmeId" : 1
+        },
+        {
+            "courseCode" : "COMP1604",
+            "typeId": 1,
+            "programmeId" : 1
+        },
+        {
+            "courseCode" : "INFO1601",
+            "typeId": 1,
+            "programmeId" : 1
+        },
+        {
+            "courseCode" : "FOUN1105",
+            "typeId": 6,
+            "programmeId" : 1
+        },
+        {
+            "courseCode" : "COMP2601",
+            "typeId": 2,
+            "programmeId" : 1
+        },
+        {
+            "courseCode" : "COMP2602",
+            "typeId": 2,
+            "programmeId" : 1
+        },
+        {
+            "courseCode" : "COMP2605",
+            "typeId": 2,
+            "programmeId" : 1
+        },
+        {
+            "courseCode" : "COMP2611",
+            "typeId": 2,
+            "programmeId" : 1
+        },
+        {
+            "courseCode" : "MATH2250",
+            "typeId": 2,
+            "programmeId" : 1
+        },
+        {
+            "courseCode" : "COMP2603",
+            "typeId": 2,
+            "programmeId" : 1
+        },
+        {
+            "courseCode" : "COMP2604",
+            "typeId": 2,
+            "programmeId" : 1
+        },
+        {
+            "courseCode" : "COMP2606",
+            "typeId": 2,
+            "programmeId" : 1
+        },
+        {
+            "courseCode" : "INFO2602",
+            "typeId": 2,
+            "programmeId" : 1
+        },
+        {
+            "courseCode" : "INFO2604",
+            "typeId": 2,
+            "programmeId" : 1
+        }
+
+    ]
