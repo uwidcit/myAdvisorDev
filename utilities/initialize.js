@@ -9,6 +9,12 @@ const Programme = require("../models/Programme");
 const Course = require("../models/Course");
 const ProgrammeCourse = require("../models/ProgrammeCourse");
 
+const Dummytranscript = require("./dummytranscript.json")
+const DummyProgCourses = require("./dummyProgCourses.json")
+
+//TESTING
+const fs = require('fs');
+const filePath = 'TypeIds.txt';
 // models
 // const Admin = require("../models/Admin");
 // const AdvisedCourse = require("../models/SelectedCourse");
@@ -70,8 +76,8 @@ async function loadTypes(TypesJSON) {
     }
 }
 
-async function createProgrammeCourse(programmeId, courseId, typeId) {
-    return ProgrammeCourse.create({ programmeId, courseId, typeId });
+async function createProgrammeCourse(programmeId, courseCode, typeId) {
+    return ProgrammeCourse.create({ programmeId, courseCode, typeId });
 }
 
 async function loadProgrammeCourses(programmesJSON) {
@@ -80,9 +86,16 @@ async function loadProgrammeCourses(programmesJSON) {
         const courseIdArray = Object.keys(programmeData.courses);
 
         const coursePromises = courseIdArray.map(async (courseCode) => {
-            const course = await Course.findOne({ where: { code: courseCode } });
-            const typeId = await Type.findOne({ where: { type: programmeData.courses[courseCode] } });
-            return createProgrammeCourse(programme.id, course.id, typeId.id);
+            const course = await Course.findOne({ where: { code: courseCode } });;
+            const typeName = await Type.findOne({ where: {
+                type: programmeData.courses[courseCode] 
+               } });
+            const typeId = await Type.findOne({where:{
+                type: typeName.type
+            }});
+           
+            return createProgrammeCourse(programme.id, course.code, typeId.id);
+
         });
 
         return Promise.all(coursePromises);
@@ -90,6 +103,7 @@ async function loadProgrammeCourses(programmesJSON) {
 
     try {
         await Promise.all(promises);
+        console.log('Loaded Programme Courses');
     } catch (e) {
         console.error("Error loading programme courses: ", e);
     }
@@ -102,5 +116,6 @@ async function loadProgrammeCourses(programmesJSON) {
     await loadCourses(CoursesJSON);
     await loadProgrammes(ProgrammesJSON);
     await loadProgrammeCourses(ProgrammesJSON);
+    // await loadProgrammeCourses(DummyProgCourses);
     console.log('Done');
 })()

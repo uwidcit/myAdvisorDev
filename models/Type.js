@@ -4,11 +4,11 @@ const db = require("../db");
 // const ElectiveRequirement = require("./ElectiveRequirement");
 
 const Type = db.define("type", {
-  // type: {
-  //   primaryKey: true,
-  //   allowNull: false,
-  //   type: Sequelize.STRING,
-  // },
+  type: {
+    // primaryKey: true,
+    allowNull: false,
+    type: Sequelize.STRING,
+  },
   description: {
     allowNull: false,
     type: Sequelize.STRING
