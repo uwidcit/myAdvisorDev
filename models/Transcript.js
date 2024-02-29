@@ -15,10 +15,6 @@ const Transcript = db.define("transcript", {
         allowNull: false,
         type: Sequelize.STRING,
     },
-    // credits: {
-    //     allowNull: false,
-    //     type: Sequelize.DECIMAL(5, 2),
-    // },
     degree: {
         allowNull: false,
         type: Sequelize.STRING,
