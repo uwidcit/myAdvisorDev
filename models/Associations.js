@@ -27,12 +27,12 @@ const SemesterCourse = require("./SemesterCourse");
 
 // A Student has one Transcript
 Student.hasOne(Transcript, {
-    foreignKey: 'studentID',
+    foreignKey: 'studentId',
     allowNull: false,
 });
 // A Transcript belongs to one Student
 Transcript.belongsTo(Student, {
-    foreignKey: 'studentID',
+    foreignKey: 'studentId',
     allowNull: false
 });
 
