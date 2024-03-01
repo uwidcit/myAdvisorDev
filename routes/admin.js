@@ -71,10 +71,10 @@ router.post("/create/admin", staffAccountVerification, async (req, res) => {
 router.post("/create/student", async (req, res) => {
     try {
         // destructure data entered
-        const { studentID, firstName, lastName, email, programmeId, password } = req.body
+        const { studentId, firstName, lastName, email, programmeId, password } = req.body
 
         // check if student exists since duplicate usernames aren't allowed
-        const student = await Student.findOne({ where: { "studentID": studentID } });
+        const student = await Student.findOne({ where: { "studentId": studentId } });
         if (student) {
             return res.status(401).send("Student Account Already Exist!");
         }
@@ -84,7 +84,7 @@ router.post("/create/student", async (req, res) => {
             const passEncrypt = await bcrypt.hash(password, salt);// passEncrypt is the encrypted version of the password entered which uses the salt created
 
             await Student.create({
-                studentID,
+                studentId,
                 firstName,
                 lastName,
                 email,
@@ -137,7 +137,7 @@ router.get("/course-plan/:semesterId/:studentId", staffAccountVerification, asyn
     // console.log("student courses: ", studentCourseCodes);
 
     // Get programme id from student model
-    const student = await Student.findOne({ where: { studentID: studentId } });
+    const student = await Student.findOne({ where: { studentId: studentId } });
     if (student) {
         programmeId = student.dataValues.programmeId;
         // console.log("student: ", student.dataValues.programmeId);
@@ -251,7 +251,7 @@ router.get("/course-plan/:semesterId", staffAccountVerification, async (req, res
             courseplan = {};
             courses = [];
 
-            studentId = s.dataValues.studentID;
+            studentId = s.dataValues.studentId;
             courseplan["studentId"] = studentId;
             studentName = s.dataValues.firstName + " " + s.dataValues.lastName;
             courseplan["studentName"] = studentName;
@@ -710,14 +710,14 @@ router.get("/degreeProgress/all", staffAccountVerification, async (req, res) => 
     let gpa;
 
     for (let s of students) {
-        studentId = s.dataValues.studentID;
+        studentId = s.dataValues.studentId;
         let studentName = s.dataValues.firstName + " " + s.dataValues.lastName;
         let programmeId = s.dataValues.programmeId;
 
         let programme = await Programme.findOne({ where: { id: programmeId } });
         let programmeName = programme.name;
 
-        const transcript = await Transcript.findOne({ where: { studentID: studentId } });
+        const transcript = await Transcript.findOne({ where: { studentId: studentId } });
         if (transcript) {
             gpa = transcript.dataValues.gpa
         } else {
@@ -744,7 +744,7 @@ router.get("/degreeProgress/all", staffAccountVerification, async (req, res) => 
 
 
         // Get programme id from student model
-        const student = await Student.findOne({ where: { studentID: studentId } });
+        const student = await Student.findOne({ where: { studentId: studentId } });
         if (student) {
             programmeId = student.dataValues.programmeId;
 
@@ -808,7 +808,7 @@ router.get("/degreeProgress/all", staffAccountVerification, async (req, res) => 
 
 router.get("/studentsSummary", staffAccountVerification, async (req, res) => {
 
-    let studentID;
+    let studentId;
     let summary = {};
     let year1 = 0;
     let year2 = 0;
@@ -820,19 +820,19 @@ router.get("/studentsSummary", staffAccountVerification, async (req, res) => {
 
     for (let s of students) {
         if (s) {
-            studentID = s.dataValues.studentID;
+            studentId = s.dataValues.studentId;
             let programmeId = s.dataValues.programmeId;
 
-            //console.log("studentId: ", studentID);
+            //console.log("studentId: ", studentId);
 
-            let transcript = await Transcript.findOne({ where: { studentID } });
+            let transcript = await Transcript.findOne({ where: { studentId } });
             // console.log(transcript.admitTerm);
             if (transcript) {
 
                 //#region 
 
                 // get course codes of courses completed by student
-                const studentCourses = await StudentCourse.findAll({ where: { studentId: studentID } });
+                const studentCourses = await StudentCourse.findAll({ where: { studentId: studentId } });
                 let studentCourseCodes = [];
                 for (i = 0; i < studentCourses.length; i++) {
                     studentCourseCodes.push(studentCourses[i].dataValues.courseCode);

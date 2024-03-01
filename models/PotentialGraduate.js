@@ -26,6 +26,6 @@ const PotentialGraduate = db.define("potentialgraduate", {
         allowNull: false,
         type: Sequelize.STRING,
     }
-}, {timestamps: true});
+}, { timestamps: true });
 
 module.exports = PotentialGraduate;

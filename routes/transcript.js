@@ -1,4 +1,4 @@
- //Initialise file upload components
+//Initialise file upload components
 const multer = require('multer')
 const upload = multer({ storage: multer.memoryStorage() })
 const { parse } = require('../utilities/parser');
@@ -44,7 +44,7 @@ router.get("/courses/all", async (req, res) => {
 // get a student in the database
 router.get("/details/view/:studentId", async (req, res) => {
     try {
-        const student = await Transcript.findOne({ where: { studentID: req.params.studentId } });
+        const student = await Transcript.findOne({ where: { studentId: req.params.studentId } });
 
         if (!student) {
             //return res.status(404).send("Student not found.");
@@ -179,18 +179,18 @@ router.post('/parseForm', upload.single('file'), async (req, res) => {
         // destructure data entered
         const { studentId, gpa, name, credits, degree, major, admitTerm, degreeAttemptHours, degreePassedHours, degreeEarnedHours, degreeGpaHours, degreeQualityPoints } = data;
         //console.log("credits "+credits);
-        //console.log("LOG::> StudentId: ", studentId);
+        //console.log("LOG::> studentId: ", studentId);
 
 
         // check if student is already added
-        const student = await Transcript.findOne({ where: { studentID: studentId } });
+        const student = await Transcript.findOne({ where: { studentId: studentId } });
 
         if (student) {
             // return res.status(401).send("Student already exists.");
         }
         else {
             await Transcript.create({
-                studentID: studentId,
+                studentId: studentId,
                 gpa,
                 name,
                 credits,
@@ -252,7 +252,7 @@ router.put("/details/edit/:studentId", async (req, res) => {
     try {
         const { studentId, gpa, name, progress, credits, degree, major, admitTerm, degreeAttemptHours, degreePassedHours, degreeEarnedHours, degreeGpaHours, degreeQualityPoints } = req.body;
 
-        const student = await Transcript.findOne({ where: { studentID: req.params.studentId } });
+        const student = await Transcript.findOne({ where: { studentId: req.params.studentId } });
         if (!student) {
             return res.status(401).send("Student not found.");
         }
@@ -396,20 +396,20 @@ router.delete("/courses/deleteAll/:studentId", async (req, res) => {
 
 
 // Get registerable courses
-router.get("/course/options", studentAccountVerification, async(req, res)=>{
+router.get("/course/options", studentAccountVerification, async (req, res) => {
 
     // Get studentId from the auth
     const studentId = req.user;
 
     // Get student's transcript
-    const student = await Transcript.findOne({ where: { studentID: studentId } });
+    const student = await Transcript.findOne({ where: { studentId: studentId } });
     console.log("Programme: ", student.major);
-    
+
     // Get all the student's courses
     const studentCourses = await StudentCourses.findAll({ where: { studentId: studentId } });
 
-    
-    
+
+
     console.log("Programme: ", student.major);
 
 

@@ -303,7 +303,7 @@ router.get("/courses/:department/:semesterId", async (req, res) => {
 
 router.get("/flags/:semesterId", async (req, res) => {
 
-    
+
 
 });
 

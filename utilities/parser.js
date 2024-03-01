@@ -6,25 +6,25 @@ const axios = require('axios');
  * @description receives the location of a pdf file and returns a promise which resolves with the parsed json data 
  * @param {String} fileBuffer the file stored in memory 
  */
-async function getPDFText(fileBuffer){
-    
+async function getPDFText(fileBuffer) {
+
     let json = await new Promise((resolve, reject) => {
         let pdfParser = new PDFParser();
         pdfParser.on("pdfParser_dataReady", pdfData => resolve(pdfData));
         pdfParser.on("pdfParser_dataError", errData => reject(errData));
         pdfParser.parseBuffer(fileBuffer);
-        
+
     });
-    
+
     let pdfText = [];
     //console.log("json  "+ JSON.stringify(json['formImage']['Pages']));
 
-    for(let page of json['formImage']['Pages']){
+    for (let page of json['formImage']['Pages']) {
         //console.log("page    "+ page['Texts']);
-        for(let text of page['Texts']){
+        for (let text of page['Texts']) {
             //console.log("*******Text    "+text['R']);
-            for(let rec of text['R']){
-                
+            for (let rec of text['R']) {
+
                 let token = rec['T'];
                 //console.log("token    "+token);
                 pdfText.push(token)
@@ -37,7 +37,7 @@ async function getPDFText(fileBuffer){
 /**
  * @param {String} token - Replaces uri encoding in the string given eg %2B => +
  */
-function decode(token){
+function decode(token) {
     token = token.replace(/\%2B/g, '+');
     token = token.replace(/\%20/g, ' ');
     token = token.replace(/\%2F/g, '/');
@@ -48,21 +48,21 @@ function decode(token){
 async function getCourses() {
     try {
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-      const {data:response} = await axios.get("https://myadvisorapp.onrender.com/courses/all") //use data destructuring to get data from the promise object
-      //console.log("??????????????????",response);
-      return response
+        const { data: response } = await axios.get("https://myadvisorapp.onrender.com/courses/all") //use data destructuring to get data from the promise object
+        //console.log("??????????????????",response);
+        return response
     }
     catch (error) {
-      console.log(error);
+        console.log(error);
     }
-  }
+}
 
- /**
-  * 
-  * @param {*} text - data retrieved from parsing with pdfParser and flattening with getPDFText()
-  * @param {*} filename - name of file
-  */
-async function getStudentData(text, filename){
+/**
+ * 
+ * @param {*} text - data retrieved from parsing with pdfParser and flattening with getPDFText()
+ * @param {*} filename - name of file
+ */
+async function getStudentData(text, filename) {
     let inprogress = false;
     let courseCodeLetters = [];
     let courseCodeNumbers = [];
@@ -71,8 +71,8 @@ async function getStudentData(text, filename){
     var courseList = {};
     let totalCredits = 0;
     let student = {
-        studentId:undefined,
-        gpa:undefined,
+        studentId: undefined,
+        gpa: undefined,
         name: undefined,
         progress: undefined,
         credits: undefined,
@@ -93,12 +93,12 @@ async function getStudentData(text, filename){
     //console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",courses);
     let i = 0;
 
-    for (i=0; i<courses.length; i++) {
+    for (i = 0; i < courses.length; i++) {
         letterString = courses[i].courseCode.slice(0, 4)
         courseCodeLetters.push(letterString)
 
         numberString = courses[i].courseCode.slice(4, 8)
-        courseCodeNumbers.push(numberString) 
+        courseCodeNumbers.push(numberString)
 
         if (courseList[letterString]) {
             courseList[letterString].push(numberString)
@@ -106,29 +106,29 @@ async function getStudentData(text, filename){
         else {
             courseList[letterString] = [numberString]
         }
-       
+
     }
 
     i = 0;
-    if(filename)
+    if (filename)
         student.filename = filename;
 
     i = 0;
-    for(let token of text){
+    for (let token of text) {
 
-        if(token === "Record%20of%3A"){
-            student.name = decode(text[i-1])
+        if (token === "Record%20of%3A") {
+            student.name = decode(text[i - 1])
             //console.log("text      "+text[i-1]);
             //console.log("i    "+ i);
         }
 
         //reached the courses in progress section of transcript
-        if(!inprogress && token === "In%20Progress%20Courses%3A"){
+        if (!inprogress && token === "In%20Progress%20Courses%3A") {
             inprogress = true;
         }
 
-        if(token === "DEGREE%20GPA%20TOTALS"){
-            student.gpa = text[i - 1]; 
+        if (token === "DEGREE%20GPA%20TOTALS") {
+            student.gpa = text[i - 1];
             student.degreeAttemptHours = text[i + 12];
             student.degreePassedHours = text[i + 13];
             student.degreeEarnedHours = text[i + 14];
@@ -137,30 +137,30 @@ async function getStudentData(text, filename){
             // student.degreeGpa = text[i + 17];
         }
 
-        if(token === "Record%20of%3A"){
-            student.studentId = text[ i + 1]
+        if (token === "Record%20of%3A") {
+            student.studentId = text[i + 1]
         }
 
-        if(token === "Admit%20Term%3A") {
+        if (token === "Admit%20Term%3A") {
             student.admitTerm = decode(text[i + 9])
             student.degree = decode(text[i + 12])
             student.major = decode(text[i + 16])
         }
 
-        var j=0;
-        
-        for (key in courseList) {   
-            if(courseList[key].includes(token) && text[i - 1] === key) {
-            //grade column is 4 cols after the course column
-                if(!inprogress){
+        var j = 0;
+
+        for (key in courseList) {
+            if (courseList[key].includes(token) && text[i - 1] === key) {
+                //grade column is 4 cols after the course column
+                if (!inprogress) {
                     var grade = decode(text[i + 4]);
                     var title = decode(text[i + 5])
-                    student[`${key}${token}`] = [title, grade]; 
+                    student[`${key}${token}`] = [title, grade];
                     if (!noCreditGrade.includes(grade)) {
                         totalCredits += parseInt(text[i + 2], 10);
                     }
                 }
-                else{
+                else {
                     var title = decode(text[i + 3])
                     student[`${key}${token}`] = [title, 'IP']; //indicate In Progress
                 }
@@ -177,14 +177,14 @@ async function getStudentData(text, filename){
     return student;
 }
 
-async function parse(file){
+async function parse(file) {
     const text = await getPDFText(file);
     //console.log("=================================================pdftext - " + text);
     var studentData = await getStudentData(text);
-console.log("Student data "+ studentData.COMP3609);
+    console.log("Student data " + studentData.COMP3609);
     return studentData;
-    
+
 }
 
 
-module.exports = {parse}
+module.exports = { parse }

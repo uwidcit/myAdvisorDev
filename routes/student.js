@@ -38,8 +38,8 @@ const Type = require("../models/Type");
 router.post("/academic-advising/session/:studentId", studentAccountVerification, async (req, res) => {
     try {
         // get current student details
-        const studentID = req.body.studentID;
-        const student = await Student.findOne({ where: { studentID: req.body.studentID } });
+        const studentId = req.body.studentId;
+        const student = await Student.findOne({ where: { studentId: req.body.studentId } });
 
         // setup date format and get current date
         var today = new Date();
@@ -49,13 +49,13 @@ router.post("/academic-advising/session/:studentId", studentAccountVerification,
 
         today = yyyy + '-' + mm + '-' + dd;
 
-        const session = await AdvisingSession.findOne({ where: { studentId: student.studentID } });
-        //console.log(student.studentID);
+        const session = await AdvisingSession.findOne({ where: { studentId: student.studentId } });
+        //console.log(student.studentId);
         //const window = await AdvisingWindow.findOne({ where: { id: 1 } });
 
         if (!session) {
             await AdvisingSession.create({
-                studentId: student.studentID,
+                studentId: student.studentId,
                 sessionDate: today,
                 semesterId: req.body.semester
             })
@@ -70,7 +70,7 @@ router.post("/academic-advising/session/:studentId", studentAccountVerification,
             await session.destroy();
 
             await AdvisingSession.create({
-                studentId: student.studentID,
+                studentId: student.studentId,
                 sessionDate: today,
                 semesterId: req.body.semester
             })
@@ -111,10 +111,10 @@ router.get("/eligilbeCourses/:semesterId", studentAccountVerification, async (re
     // console.log("student courses: ", studentCourseCodes);
 
     // Get programme id from student model
-    const student = await Student.findOne({where: {studentID: studentId}});
-    if(student){
+    const student = await Student.findOne({ where: { studentId: studentId } });
+    if (student) {
         programmeId = student.dataValues.programmeId;
-     
+
         // console.log("student: ", student.dataValues.programmeId);
     }
 
@@ -197,10 +197,10 @@ router.get("/degreeProgress", studentAccountVerification, async (req, res) => {
 
 
     // Get programme id from student model
-    const student = await Student.findOne({where: {studentID: studentId}});
-    if(student){
+    const student = await Student.findOne({ where: { studentId: studentId } });
+    if (student) {
         programmeId = student.dataValues.programmeId;
-     
+
         // console.log("student: ", student.dataValues.programmeId);
     }
 
@@ -266,14 +266,14 @@ router.get("/course-plan/:semesterId", studentAccountVerification, async (req, r
     // console.log("student courses: ", studentCourseCodes);
 
     // Get programme id from student model
-    const student = await Student.findOne({where: {studentID: studentId}});
-    if(student){
+    const student = await Student.findOne({ where: { studentId: studentId } });
+    if (student) {
         programmeId = student.dataValues.programmeId;
         // console.log("student: ", student.dataValues.programmeId);
     }
 
     // // Get student's transcript
-    // const transcript = await Transcript.findOne({ where: { studentID: studentId }, });
+    // const transcript = await Transcript.findOne({ where: { studentId: studentId }, });
     // switch (transcript.major) {
     //     case "Computer Science (Special)":
     //         programme = await Programme.findOne({ where: { name: "BSc " + transcript.major } })
@@ -355,14 +355,14 @@ router.get("/course-plan/:semesterId", studentAccountVerification, async (req, r
 
     // -----------------CALL THE FUNCTION-------------------------
 
-    let coursePlan =  await getCoursePlan(programmeId, studentCourseCodes, programmeCourses, semCourses, prereqs, antireqs, coursegroups, courses, programmeCreditRequirements, types, studentId, semesterId);
+    let coursePlan = await getCoursePlan(programmeId, studentCourseCodes, programmeCourses, semCourses, prereqs, antireqs, coursegroups, courses, programmeCreditRequirements, types, studentId, semesterId);
 
 
 
 
     // console.log("COURSEPLAN:::> ",coursePlan);
     res.json({
-        "Course Plan: ":coursePlan
+        "Course Plan: ": coursePlan
     });
 
 });

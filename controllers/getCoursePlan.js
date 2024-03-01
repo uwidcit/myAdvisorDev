@@ -184,12 +184,12 @@ async function getCoursePlan(programmeId, studentCourseCodes, programmeCourses, 
             // console.log(degreeProgress.Requirements[type][0]);
             for (let e of eligiblecoursesObj) {
                 if (e.type === type) {
-                    if(e.selected){
+                    if (e.selected) {
                         planData["creditsRemaining"] -= e.credits;
                     }
                     // console.log(plannedCoursesObj);
 
-                    
+
                     // console.log("planData.creditsRemaining",planData.creditsRemaining);
                     // console.log("remaining credits",planData["creditsRemaining"]);
                     plancourses.push(e);
@@ -217,7 +217,7 @@ async function getCoursePlan(programmeId, studentCourseCodes, programmeCourses, 
         }
     }
 
-    console.log("COURSEPLAN:::> ",coursePlan);
+    console.log("COURSEPLAN:::> ", coursePlan);
 
     return coursePlan;
 

@@ -1,31 +1,31 @@
 [
     {
         "grade": "A",
-        "studentID": "816021565",
+        "studentId": "816021565",
         "semesterID": 1,
         "courseCode": "COMP1600"
     },
     {
         "grade": "A",
-        "studentID": "816021565",
+        "studentId": "816021565",
         "semesterID": 1,
         "courseCode": "COMP1601"
     },
     {
         "grade": "A",
-        "studentID": "816031565",
+        "studentId": "816031565",
         "semesterID": 1,
         "courseCode": "FOUN1101"
     },
     {
         "grade": "B+",
-        "studentID": "816021565",
+        "studentId": "816021565",
         "semesterID": 1,
         "courseCode": "INFO1600"
     },
     {
         "grade": "A",
-        "studentID": "816021565",
+        "studentId": "816021565",
         "semesterID": 1,
         "courseCode": "MATH1115"
     }
