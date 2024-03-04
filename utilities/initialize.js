@@ -97,7 +97,6 @@ async function loadProgrammeCourses(programmesJSON) {
                     type: typeName.type
                 }
             });
-
             return createProgrammeCourse(programme.id, course.code, typeId.id);
 
         });
