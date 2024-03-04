@@ -20,6 +20,7 @@ require("../models/Associations");
 // const Antirequisite = require("../models/Antirequisite");
 // const AwardedDegree = require("../models/AwardedDegree");
 const ElectiveRequirement = require("../models/ElectiveRequirement");
+const ElectiveRequirement = require("../models/ElectiveRequirement");
 // const PotentialGraduate = require("../models/PotentialGraduate");
 // const Prerequisite = require("../models/Prerequisite");
 // const Semester = require("../models/Semester");
@@ -29,7 +30,7 @@ const ElectiveRequirement = require("../models/ElectiveRequirement");
 // const Group = require("../models/Group");
 // const CourseGroup = require("../models/CourseGroup");
 // const SemesterCourse = require("../models/SemesterCourse");
-
+require("../models/Associations");
 
 async function createType({ type, description }) {
     return Type.create({ type, description });

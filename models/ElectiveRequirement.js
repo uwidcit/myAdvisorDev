@@ -7,20 +7,20 @@ const ElectiveRequirement = db.define("electiveRequirement", {
     allowNull: false,
     type: Sequelize.INTEGER,
   },
-  programmeId: {
-    type: Sequelize.INTEGER,
-    // references: {
-    //   model: Programme,
-    //   key: 'id'
-    // }
-  },
-  typeId: {
-    type: Sequelize.INTEGER,
-    // references: {
-    //   model: Type,
-    //   key: 'id'
-    // }
-  }
+  // programmeId: {
+  //   type: Sequelize.INTEGER,
+  //   // references: {
+  //   //   model: Programme,
+  //   //   key: 'id'
+  //   // }
+  // },
+  // typeId: {
+  //   type: Sequelize.INTEGER,
+  //   // references: {
+  //   //   model: Type,
+  //   //   key: 'id'
+  //   // }
+  // }
 
 });
 // ElectiveRequirement.belongsTo(Programme, {
