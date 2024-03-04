@@ -11,10 +11,8 @@ const ProgrammeCourse = require("../models/ProgrammeCourse");
 
 // const Dummytranscript = require("./dummytranscript.json")
 // const DummyProgCourses = require("./dummyProgCourses.json")
+require("../models/Associations");
 
-//TESTING
-const fs = require('fs');
-const filePath = 'TypeIds.txt';
 // models
 // const Admin = require("../models/Admin");
 // const AdvisedCourse = require("../models/SelectedCourse");

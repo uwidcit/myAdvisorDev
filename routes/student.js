@@ -218,7 +218,7 @@ router.get("/degreeProgress", studentAccountVerification, async (req, res) => {
     for (i = 0; i < course.length; i++) {
         courses.push(course[i].dataValues);
     }
-    //  console.log("courses: ", courses);
+    // console.log("courses: ", courses);
 
     // get programmeCreditRequirements
     let pcrs = await PCR.findAll({ where: { programmeId } });
