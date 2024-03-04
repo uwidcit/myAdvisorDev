@@ -2,7 +2,7 @@ const router = require("express").Router();
 
 // import models
 const Semester = require("../models/Semester");
-const SemesterCourse = require("../models/SemesterCourse");
+const SemesterCourse = require("../models/semesterCourse");
 const AdvisingSession = require("../models/AdvisingSession");
 const SelectedCourse = require("../models/SelectedCourse");
 const Course = require("../models/Course");
@@ -13,7 +13,7 @@ const { Op } = require("sequelize");
 router.post("/add", async (req, res) => {
     try {
         // destructure data entered
-        const { startDate, endDate, num, academicYear } = req.body;
+        const { startDate, endDate, num, academicYear, courses } = req.body;
 
         // check if semester is already added
         let semester = await Semester.findOne({ where: { num, academicYear } });
@@ -35,21 +35,21 @@ router.post("/add", async (req, res) => {
                 });
         }
 
-        // semester = await Semester.findOne({ where: { num, academicYear } });
-        // for (let i = 0; i < courses.length; i++) {
-        //     const semesterCourse = await SemesterCourse.findOne({
-        //         where: {
-        //             courseCode: courses[i],
-        //             semesterId: semester.id,
-        //         }
-        //     })
-        //     if (!semesterCourse) {
-        //         await SemesterCourse.create({
-        //             semesterId: semester.id,
-        //             courseCode: courses[i]
-        //         })
-        //     }
-        // }
+        semester = await Semester.findOne({ where: { num, academicYear } });
+        for (let i = 0; i < courses.length; i++) {
+            const semesterCourse = await SemesterCourse.findOne({
+                where: {
+                    courseCode: courses[i],
+                    semesterId: semester.id,
+                }
+            })
+            if (!semesterCourse) {
+                await SemesterCourse.create({
+                    semesterId: semester.id,
+                    courseCode: courses[i]
+                })
+            }
+        }
 
     }
     catch (err) {
@@ -303,7 +303,7 @@ router.get("/courses/:department/:semesterId", async (req, res) => {
 
 router.get("/flags/:semesterId", async (req, res) => {
 
-    
+
 
 });
 

@@ -1,10 +1,10 @@
-const { Sequelize} = require("sequelize");
+const { Sequelize } = require("sequelize");
 const db = require("../db");
 // const Transcript = require("./Transcript");
 // const AwardedDegree= require("./AwardedDegree");
 // const Programme= require("./Programme");
 // const StudentCourse= require("./StudentCourse");
-const AdvisingSession= require("./AdvisingSession");
+const AdvisingSession = require("./AdvisingSession");
 
 const Student = db.define("student", {
     studentId: {

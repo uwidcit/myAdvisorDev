@@ -111,10 +111,10 @@ router.get("/eligilbeCourses/:semesterId", studentAccountVerification, async (re
     // console.log("student courses: ", studentCourseCodes);
 
     // Get programme id from student model
-    const student = await Student.findOne({where: {studentId: studentId}});
-    if(student){
+    const student = await Student.findOne({ where: { studentId: studentId } });
+    if (student) {
         programmeId = student.dataValues.programmeId;
-     
+
         // console.log("student: ", student.dataValues.programmeId);
     }
 
@@ -197,10 +197,10 @@ router.get("/degreeProgress", studentAccountVerification, async (req, res) => {
 
 
     // Get programme id from student model
-    const student = await Student.findOne({where: {studentId: studentId}});
-    if(student){
+    const student = await Student.findOne({ where: { studentId: studentId } });
+    if (student) {
         programmeId = student.dataValues.programmeId;
-     
+
         // console.log("student: ", student.dataValues.programmeId);
     }
 
@@ -218,7 +218,7 @@ router.get("/degreeProgress", studentAccountVerification, async (req, res) => {
     for (i = 0; i < course.length; i++) {
         courses.push(course[i].dataValues);
     }
-    //  console.log("courses: ", courses);
+    // console.log("courses: ", courses);
 
     // get programmeCreditRequirements
     let pcrs = await PCR.findAll({ where: { programmeId } });
@@ -266,8 +266,8 @@ router.get("/course-plan/:semesterId", studentAccountVerification, async (req, r
     // console.log("student courses: ", studentCourseCodes);
 
     // Get programme id from student model
-    const student = await Student.findOne({where: {studentId: studentId}});
-    if(student){
+    const student = await Student.findOne({ where: { studentId: studentId } });
+    if (student) {
         programmeId = student.dataValues.programmeId;
         // console.log("student: ", student.dataValues.programmeId);
     }
@@ -355,14 +355,14 @@ router.get("/course-plan/:semesterId", studentAccountVerification, async (req, r
 
     // -----------------CALL THE FUNCTION-------------------------
 
-    let coursePlan =  await getCoursePlan(programmeId, studentCourseCodes, programmeCourses, semCourses, prereqs, antireqs, coursegroups, courses, programmeCreditRequirements, types, studentId, semesterId);
+    let coursePlan = await getCoursePlan(programmeId, studentCourseCodes, programmeCourses, semCourses, prereqs, antireqs, coursegroups, courses, programmeCreditRequirements, types, studentId, semesterId);
 
 
 
 
     // console.log("COURSEPLAN:::> ",coursePlan);
     res.json({
-        "Course Plan: ":coursePlan
+        "Course Plan: ": coursePlan
     });
 
 });

@@ -6,8 +6,8 @@ const { getPlannedCourses } = require("../controllers/getPlannedCourses");
 async function getCoursePlanAdmin(programmeId, studentCourseCodes, programmeCourses, semCourses, prereqs, antireqs, coursegroups, courses, programmeCreditRequirements, types, studentId, semesterId) {
 
     let plannedCoursesObjs = [];
-    let coursePlan ;
-    let plannedCourseCodes =[];
+    let coursePlan;
+    let plannedCourseCodes = [];
 
     // -----------------CALL THE FUNCTIONS-------------------------
 
@@ -48,17 +48,17 @@ async function getCoursePlanAdmin(programmeId, studentCourseCodes, programmeCour
     //     })
 
     // }
-    
+
 
     // console.log("degreeprogress Requiremtns: ", degreeProgress.Requirements);
 
-     if(plannedCoursesObjs){
-        
-        
-        
-        
+    if (plannedCoursesObjs) {
 
-     }
+
+
+
+
+    }
 
 
     // for (type in degreeProgress.Requirements) {
@@ -84,7 +84,7 @@ async function getCoursePlanAdmin(programmeId, studentCourseCodes, programmeCour
 
     // }
 
-    
+
 
     // console.log("COURSEPLAN:::> ",coursePlan);
 

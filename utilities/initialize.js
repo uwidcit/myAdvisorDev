@@ -11,16 +11,15 @@ const ProgrammeCourse = require("../models/ProgrammeCourse");
 
 // const Dummytranscript = require("./dummytranscript.json")
 // const DummyProgCourses = require("./dummyProgCourses.json")
+require("../models/Associations");
 
-//TESTING
-const fs = require('fs');
-const filePath = 'TypeIds.txt';
 // models
 // const Admin = require("../models/Admin");
 // const AdvisedCourse = require("../models/SelectedCourse");
 // const AdvisingSesssion = require("../models/AdvisingSession")
 // const Antirequisite = require("../models/Antirequisite");
 // const AwardedDegree = require("../models/AwardedDegree");
+const ElectiveRequirement = require("../models/ElectiveRequirement");
 const ElectiveRequirement = require("../models/ElectiveRequirement");
 // const PotentialGraduate = require("../models/PotentialGraduate");
 // const Prerequisite = require("../models/Prerequisite");
@@ -97,6 +96,7 @@ async function loadProgrammeCourses(programmesJSON) {
                     type: typeName.type
                 }
             });
+
             return createProgrammeCourse(programme.id, course.code, typeId.id);
 
         });
@@ -130,7 +130,7 @@ async function loadElectiveRequirements(programmesJSON) {
                 }
             });
 
-            return createElectiveRequirement(amt,programme.id,  typeId.id);
+            return createElectiveRequirement(amt, programme.id, typeId.id);
 
         });
 
@@ -144,6 +144,7 @@ async function loadElectiveRequirements(programmesJSON) {
         console.error("Error loading Elective Requirements: ", e);
     }
 }
+
 (async () => {
     await db.sync({ force: true });
     await loadTypes(TypesJSON);
@@ -151,5 +152,6 @@ async function loadElectiveRequirements(programmesJSON) {
     await loadProgrammes(ProgrammesJSON);
     await loadProgrammeCourses(ProgrammesJSON);
     await loadElectiveRequirements(ProgrammesJSON);
+    // await loadProgrammeCourses(DummyProgCourses);
     console.log('Done');
 })()

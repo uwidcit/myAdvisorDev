@@ -1,4 +1,4 @@
- //Initialise file upload components
+//Initialise file upload components
 const multer = require('multer')
 const upload = multer({ storage: multer.memoryStorage() })
 const { parse } = require('../utilities/parser');
@@ -148,18 +148,20 @@ router.post("/details/add", async (req, res) => {
 router.post("/courses/add", async (req, res) => {
     try {
         // destructure data entered
-        const { studentId, courseCode, semesterId, grade } = req.body;
+        const { studentId, courseCode, courseTitle, grade } = req.body;
+
         // create new entry
         await StudentCourses.create({
             studentId,
             courseCode,
+            courseTitle,
             grade
         })
             .then(() => {
                 return res.status(200).send("Student courses added!");
             })
             .catch(err => {
-                console.log("Error: ", err);
+                console.log("Error: ", err.message);
             });
     }
     catch (err) {
@@ -177,7 +179,7 @@ router.post('/parseForm', upload.single('file'), async (req, res) => {
         // destructure data entered
         const { studentId, gpa, name, credits, degree, major, admitTerm, degreeAttemptHours, degreePassedHours, degreeEarnedHours, degreeGpaHours, degreeQualityPoints } = data;
         //console.log("credits "+credits);
-        //console.log("LOG::> StudentId: ", studentId);
+        //console.log("LOG::> studentId: ", studentId);
 
 
         // check if student is already added
@@ -394,7 +396,7 @@ router.delete("/courses/deleteAll/:studentId", async (req, res) => {
 
 
 // Get registerable courses
-router.get("/course/options", studentAccountVerification, async(req, res)=>{
+router.get("/course/options", studentAccountVerification, async (req, res) => {
 
     // Get studentId from the auth
     const studentId = req.user;
@@ -402,12 +404,12 @@ router.get("/course/options", studentAccountVerification, async(req, res)=>{
     // Get student's transcript
     const student = await Transcript.findOne({ where: { studentId: studentId } });
     console.log("Programme: ", student.major);
-    
+
     // Get all the student's courses
     const studentCourses = await StudentCourses.findAll({ where: { studentId: studentId } });
 
-    
-    
+
+
     console.log("Programme: ", student.major);
 
 

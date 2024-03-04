@@ -12,7 +12,7 @@ const upload = multer({ storage: multer.memoryStorage() })
 const { parse } = require('./utilities/parser');
 const bcrypt = require("bcrypt");
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3002;
 
 // app connection and resources
 app.use(cors());
@@ -72,26 +72,26 @@ async function newinitializeDatabase() {
       if (!process.env.SYNCED) {
         // Create tables if they do not exist
         await pool.sync()
-        // await Admin.sync();
-        // await Semester.sync();
+        await Admin.sync();
+        await Semester.sync();
         // await Career.sync();
-        // await Course.sync();
-        // await Programme.sync();
-        // await Student.sync();
-        // await Transcript.sync();
-        // await Type.sync();
-        // await StudentCourse.sync();
-        // await AdvisingSesssion.sync();
-        // await Antirequisite.sync();
-        // await SelectedCourse.sync();
-        // await AwardedDegree.sync();
+        await Course.sync();
+        await Programme.sync();
+        await Student.sync();
+        await Transcript.sync();
+        await Type.sync();
+        await StudentCourse.sync();
+        await AdvisingSesssion.sync();
+        await Antirequisite.sync();
+        await SelectedCourse.sync();
+        await AwardedDegree.sync();
         // await CareerCourse.sync();
-        // await ElectiveRequirement.sync();
-        // await ProgrammeCourse.sync();
-        // await Group.sync();
-        // await CourseGroup.sync();
-        // await Prerequisite.sync();
-        // await SemesterCourse.sync();
+        await ElectiveRequirement.sync();
+        await ProgrammeCourse.sync();
+        await Group.sync();
+        await CourseGroup.sync();
+        await Prerequisite.sync();
+        await SemesterCourse.sync();
 
         // Creates Admin Account
         const adminID = "816020000";
