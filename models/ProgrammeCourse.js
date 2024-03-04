@@ -7,27 +7,27 @@ const db = require("../db");
 
 const ProgrammeCourse = db.define("programmeCourse", {
   // has a default primary key id
-  programmeId: {
-    type: Sequelize.INTEGER,
-    // references: {
-    //   model: Programme,
-    //   key: 'id'
-    // }
-  },
-  courseCode: {
-    type: Sequelize.STRING,
-    // references: {
-    //   model: Course,
-    //   key: 'code'
-    // }
-  },
-  typeId: {
-    type: Sequelize.INTEGER,
-    // references: {
-    //   model: Type,
-    //   key: 'id'
-    // }
-  }
+  // programmeId: {
+  //   type: Sequelize.INTEGER,
+  //   // references: {
+  //   //   model: Programme,
+  //   //   key: 'id'
+  //   // }
+  // },
+  // courseCode: {
+  //   type: Sequelize.STRING,
+  //   // references: {
+  //   //   model: Course,
+  //   //   key: 'code'
+  //   // }
+  // },
+  // typeId: {
+  //   type: Sequelize.INTEGER,
+  //   // references: {
+  //   //   model: Type,
+  //   //   key: 'id'
+  //   // }
+  // }
 });
 
 module.exports = ProgrammeCourse;
