@@ -9,8 +9,8 @@ const Programme = require("../models/Programme");
 const Course = require("../models/Course");
 const ProgrammeCourse = require("../models/ProgrammeCourse");
 
-const Dummytranscript = require("./dummytranscript.json")
-const DummyProgCourses = require("./dummyProgCourses.json")
+// const Dummytranscript = require("./dummytranscript.json")
+// const DummyProgCourses = require("./dummyProgCourses.json")
 
 //TESTING
 const fs = require('fs');
@@ -21,7 +21,7 @@ const filePath = 'TypeIds.txt';
 // const AdvisingSesssion = require("../models/AdvisingSession")
 // const Antirequisite = require("../models/Antirequisite");
 // const AwardedDegree = require("../models/AwardedDegree");
-// const ElectiveRequirement = require("../models/ElectiveRequirement");
+const ElectiveRequirement = require("../models/ElectiveRequirement");
 // const PotentialGraduate = require("../models/PotentialGraduate");
 // const Prerequisite = require("../models/Prerequisite");
 // const Semester = require("../models/Semester");
@@ -31,7 +31,7 @@ const filePath = 'TypeIds.txt';
 // const Group = require("../models/Group");
 // const CourseGroup = require("../models/CourseGroup");
 // const SemesterCourse = require("../models/SemesterCourse");
-
+require("../models/Associations");
 
 async function createType({ type, description }) {
     return Type.create({ type, description });
@@ -87,13 +87,16 @@ async function loadProgrammeCourses(programmesJSON) {
 
         const coursePromises = courseIdArray.map(async (courseCode) => {
             const course = await Course.findOne({ where: { code: courseCode } });;
-            const typeName = await Type.findOne({ where: {
-                type: programmeData.courses[courseCode] 
-               } });
-            const typeId = await Type.findOne({where:{
-                type: typeName.type
-            }});
-           
+            const typeName = await Type.findOne({
+                where: {
+                    type: programmeData.courses[courseCode]
+                }
+            });
+            const typeId = await Type.findOne({
+                where: {
+                    type: typeName.type
+                }
+            });
             return createProgrammeCourse(programme.id, course.code, typeId.id);
 
         });
@@ -110,12 +113,43 @@ async function loadProgrammeCourses(programmesJSON) {
 }
 
 
+async function createElectiveRequirement(amount, programmeId, typeId) {
+    return ElectiveRequirement.create({ amount, programmeId, typeId });
+}
+
+async function loadElectiveRequirements(programmesJSON) {
+    let promises = programmesJSON.map(async (programmeData) => {
+        const programme = await Programme.findOne({ where: { name: programmeData.name } });
+        const reqIdArray = Object.keys(programmeData.requirements);
+
+        const reqPromises = reqIdArray.map(async (type_n) => {
+            const amt = programmeData.requirements[type_n];
+            const typeId = await Type.findOne({
+                where: {
+                    type: type_n
+                }
+            });
+
+            return createElectiveRequirement(amt,programme.id,  typeId.id);
+
+        });
+
+        return Promise.all(reqPromises);
+    });
+
+    try {
+        await Promise.all(promises);
+        console.log('Loaded Elective Requirements');
+    } catch (e) {
+        console.error("Error loading Elective Requirements: ", e);
+    }
+}
 (async () => {
     await db.sync({ force: true });
     await loadTypes(TypesJSON);
     await loadCourses(CoursesJSON);
     await loadProgrammes(ProgrammesJSON);
     await loadProgrammeCourses(ProgrammesJSON);
-    // await loadProgrammeCourses(DummyProgCourses);
+    await loadElectiveRequirements(ProgrammesJSON);
     console.log('Done');
 })()
