@@ -143,6 +143,7 @@ async function loadElectiveRequirements(programmesJSON) {
         console.error("Error loading Elective Requirements: ", e);
     }
 }
+
 (async () => {
     await db.sync({ force: true });
     await loadTypes(TypesJSON);
@@ -150,11 +151,6 @@ async function loadElectiveRequirements(programmesJSON) {
     await loadProgrammes(ProgrammesJSON);
     await loadProgrammeCourses(ProgrammesJSON);
     await loadElectiveRequirements(ProgrammesJSON);
-    // await createElectiveRequirement(24, 1, 1);
-    // await createElectiveRequirement(30, 1, 2);
-    // await createElectiveRequirement(15, 1, 3);
-    // await createElectiveRequirement(15, 1, 5);
-    // await createElectiveRequirement(9, 1, 6);
     // await loadProgrammeCourses(DummyProgCourses);
     console.log('Done');
 })()
