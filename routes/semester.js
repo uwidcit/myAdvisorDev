@@ -2,7 +2,7 @@ const router = require("express").Router();
 
 // import models
 const Semester = require("../models/Semester");
-const SemesterCourse = require("../models/semesterCourse");
+const SemesterCourse = require("../models/SemesterCourse");
 const AdvisingSession = require("../models/AdvisingSession");
 const SelectedCourse = require("../models/SelectedCourse");
 const Course = require("../models/Course");
