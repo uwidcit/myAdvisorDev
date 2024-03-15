@@ -6,6 +6,9 @@ const TypesJSON = require("../types.json");
 const StudentsJSON = require("../students.json");
 const SemestersJSON = require("../semesters.json");
 const StudentCoursesJSON = require("../studentCourses.json");
+const GroupsJSON = require("../groups.json");
+const CourseGroupsJSON = require("../courseGroups.json");
+const PrerequisitesJSON = require("../prerequisites.json");
 
 const Type = require("../models/Type");
 const Programme = require("../models/Programme");
@@ -24,13 +27,13 @@ require("../models/Associations");
 // const AwardedDegree = require("../models/AwardedDegree");
 const ElectiveRequirement = require("../models/ElectiveRequirement");
 // const PotentialGraduate = require("../models/PotentialGraduate");
-// const Prerequisite = require("../models/Prerequisite");
+const Prerequisite = require("../models/Prerequisite");
 const Semester = require("../models/Semester");
 const Student = require("../models/Student");
 const StudentCourse = require("../models/StudentCourse");
 // const Transcript = require("../models/Transcript");s
-// const Group = require("../models/Group");
-// const CourseGroup = require("../models/CourseGroup");
+const Group = require("../models/Group");
+const CourseGroup = require("../models/CourseGroup");
 // const SemesterCourse = require("../models/SemesterCourse");
 require("../models/Associations");
 
@@ -147,6 +150,48 @@ async function loadElectiveRequirements(programmesJSON) {
     }
 }
 
+async function createGroup(groupData) {
+    return Group.create(groupData);
+}
+
+async function loadGroups(groupData) {
+    let promises = groupData.map(createGroup);
+    try {
+        await Promise.all(promises);
+        console.log("Loaded Groups");
+    } catch (e) {
+        console.error("Error loading groups: ", e);
+    }
+}
+
+async function createCourseGroup(courseGroupData) {
+    return CourseGroup.create(courseGroupData);
+}
+
+async function loadCourseGroups(courseGroupData) {
+    let promises = courseGroupData.map(createCourseGroup);
+    try {
+        await Promise.all(promises);
+        console.log("Loaded Course Groups");
+    } catch (e) {
+        console.error("Error loading course groups: ", e);
+    }
+}
+
+async function createPrerequisite(prerequisiteData) {
+    return Prerequisite.create(prerequisiteData);
+}
+
+async function loadPrerequisites(prerequisiteData) {
+    let promises = prerequisiteData.map(createPrerequisite);
+    try {
+        await Promise.all(promises);
+        console.log("Loaded Course Groups");
+    } catch (e) {
+        console.error("Error loading course groups: ", e);
+    }
+}
+
 
 //Dummy data loading
 async function createStudent(studentData) {
@@ -200,6 +245,9 @@ async function loadDummyStudentCourses(studentCorseData) {
     await loadProgrammes(ProgrammesJSON);
     await loadProgrammeCourses(ProgrammesJSON);
     await loadElectiveRequirements(ProgrammesJSON);
+    await loadGroups(GroupsJSON);
+    await loadCourseGroups(CourseGroupsJSON);
+    await loadPrerequisites(PrerequisitesJSON);
     await loadDummyStudents(StudentsJSON);
     await loadDummySemesters(SemestersJSON);
     await loadDummyStudentCourses(StudentCoursesJSON);
