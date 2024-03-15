@@ -1,13 +1,13 @@
 [
     {
         "grade": "A",
-        "studentId": "816021565",
+        "studentId": "816031565",
         "semesterID": 1,
         "courseCode": "COMP1600"
     },
     {
         "grade": "A",
-        "studentId": "816021565",
+        "studentId": "816031565",
         "semesterID": 1,
         "courseCode": "COMP1601"
     },
@@ -19,13 +19,13 @@
     },
     {
         "grade": "B+",
-        "studentId": "816021565",
+        "studentId": "816031565",
         "semesterID": 1,
         "courseCode": "INFO1600"
     },
     {
         "grade": "A",
-        "studentId": "816021565",
+        "studentId": "816031565",
         "semesterID": 1,
         "courseCode": "MATH1115"
     }
