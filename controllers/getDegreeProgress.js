@@ -1,8 +1,6 @@
 const Type = require("../models/Type");
 
 
-
-
 // returns the students degree progress(list of completed courses, total credits completed, remaining requirements and total credits remaining)
 function getDegreeProgress(programmeId, studentCourseCodes, programmeCourses, courses, programmeCreditRequirements, types) {
 
@@ -18,35 +16,44 @@ function getDegreeProgress(programmeId, studentCourseCodes, programmeCourses, co
             creditRequirements[creditType.type] = [ct.amount, ct.amount];
         }
     }
-    console.log("creditRequirements: ", creditRequirements);
-
+    // console.log("creditRequirements: ", creditRequirements);
+    // console.log("LENGTH:", studentCourseCodes.length);
     for (let creditType in creditRequirements) {
         degreeCredits += creditRequirements[creditType][0];
         for (let i = 0; i < studentCourseCodes.length; i++) {
-            let course = courses.find((c) => c.courseCode === studentCourseCodes[i]);
-            console.log("COURSE<<<<<>>>>>>: ", course);
-            const type = types.find(type => type.type === creditType);
-            console.log(type);
+            try {
+                let course = courses.find((c) => c.code === studentCourseCodes[i]);
 
-            let programmeCourse = programmeCourses.find((c) => c.courseCode === studentCourseCodes[i] && c.programmeId === programmeId && c.typeId === type.id);
-            console.log("code: ", studentCourseCodes[i]);
-            console.log("progId", programmeId);
-            console.log("typeId", type.id);
-            console.log("PROGRAMMECOURSE<<<<<>>>>>>: ", programmeCourse);
+                // console.log("COURSE<<<<<>>>>>>: ", course.code);
 
+                const type = types.find(type => type.type === creditType);
+                console.log(type);
 
-            if (creditRequirements[creditType][0] <= 0) {
-                break;
-            }
+                let programmeCourse = programmeCourses.find((c) => c.courseCode === studentCourseCodes[i] && c.programmeId === programmeId && c.typeId === type.id);
 
-            if (programmeCourse && !completedCourses.includes(programmeCourse.courseCode)) {
-                let credits = parseInt(course.credits);     // get course credits
-                completedCourses.push(course.courseCode);   // add course to completed courses
-                creditRequirements[creditType][0] -= credits;  // reduce credit requirementss
-                totalCredits = totalCredits + credits;
+                // console.log("code: ", studentCourseCodes[i]);
+                // console.log("progId", programmeId);
+                // console.log("typeId", type.id);
+                // console.log("PROGRAMMECOURSE<<<<<>>>>>>: ", programmeCourse.courseCode);
+
+                if (creditRequirements[creditType][0] <= 0) {
+                    break;
+                }
+
+                if (programmeCourse && !completedCourses.includes(programmeCourse.courseCode)) {
+                    let credits = parseInt(course.credits);
+                    completedCourses.push(course.code);
+                    creditRequirements[creditType][0] -= credits;
+                    totalCredits = totalCredits + credits;
+                    console.log(completedCourses);
+                }
+
+            } catch (error) {
+                console.error("Error fetching course or programme course:", error);
             }
         }
     }
+
 
     // console.log(creditRequirements);
 

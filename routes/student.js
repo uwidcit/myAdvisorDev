@@ -179,10 +179,11 @@ router.get("/eligilbeCourses/:semesterId", studentAccountVerification, async (re
 
 });
 
-router.get("/degreeProgress", studentAccountVerification, async (req, res) => {
+router.get("/degreeProgress", async (req, res) => {
 
     // get logged in studentId
-    const studentId = req.user;
+    // const studentId = req.user;
+    const studentId = "816031565";
 
     // get all the data for the function
 
@@ -193,7 +194,7 @@ router.get("/degreeProgress", studentAccountVerification, async (req, res) => {
     for (i = 0; i < studentCourses.length; i++) {
         studentCourseCodes.push(studentCourses[i].dataValues.courseCode);
     }
-    // console.log("student courses: ", studentCourseCodes);
+    console.log("student courses: ", studentCourseCodes);
 
 
     // Get programme id from student model
@@ -201,7 +202,7 @@ router.get("/degreeProgress", studentAccountVerification, async (req, res) => {
     if (student) {
         programmeId = student.dataValues.programmeId;
 
-        // console.log("student: ", student.dataValues.programmeId);
+        console.log("student: ", student.dataValues.programmeId);
     }
 
     //  get programme courses for programmeId
@@ -210,7 +211,7 @@ router.get("/degreeProgress", studentAccountVerification, async (req, res) => {
     for (i = 0; i < programmeCourse.length; i++) {
         programmeCourses.push(programmeCourse[i].dataValues);
     }
-    // console.log("programmeCourse: ", programmeCoursess);
+    console.log("programmeCourse: ", programmeCourses);
 
     //  get courses
     let course = await Course.findAll();
@@ -218,7 +219,7 @@ router.get("/degreeProgress", studentAccountVerification, async (req, res) => {
     for (i = 0; i < course.length; i++) {
         courses.push(course[i].dataValues);
     }
-    // console.log("courses: ", courses);
+    console.log("courses: ", courses);
 
     // get programmeCreditRequirements
     let pcrs = await PCR.findAll({ where: { programmeId } });
@@ -226,7 +227,7 @@ router.get("/degreeProgress", studentAccountVerification, async (req, res) => {
     for (i = 0; i < pcrs.length; i++) {
         programmeCreditRequirements.push(pcrs[i].dataValues);
     }
-    // console.log("PCR: ", programmeCreditRequirements);
+    console.log("PCR: ", programmeCreditRequirements);
 
     // get types
     let type = await Type.findAll();
@@ -234,11 +235,11 @@ router.get("/degreeProgress", studentAccountVerification, async (req, res) => {
     for (i = 0; i < type.length; i++) {
         types.push(type[i].dataValues);
     }
-    // console.log("types: ", types);
+    console.log("types: ", types);
 
 
     let degreeProgress = getDegreeProgress(programmeId, studentCourseCodes, programmeCourses, courses, programmeCreditRequirements, types);
-    // console.log("Degree Progrress: ", degreeProgress);
+    console.log("Degree Progrress: ", degreeProgress);
     res.json({
         "DegreeProgress: ": degreeProgress
     });

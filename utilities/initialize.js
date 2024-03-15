@@ -3,6 +3,9 @@ const db = require("../db");
 const ProgrammesJSON = require("../programmes.json");
 const CoursesJSON = require("../courses.json");
 const TypesJSON = require("../types.json");
+const StudentsJSON = require("../students.json");
+const SemestersJSON = require("../semesters.json");
+const StudentCoursesJSON = require("../studentCourses.json");
 
 const Type = require("../models/Type");
 const Programme = require("../models/Programme");
@@ -20,12 +23,11 @@ require("../models/Associations");
 // const Antirequisite = require("../models/Antirequisite");
 // const AwardedDegree = require("../models/AwardedDegree");
 const ElectiveRequirement = require("../models/ElectiveRequirement");
-const ElectiveRequirement = require("../models/ElectiveRequirement");
 // const PotentialGraduate = require("../models/PotentialGraduate");
 // const Prerequisite = require("../models/Prerequisite");
-// const Semester = require("../models/Semester");
-// const Student = require("../models/Student");
-// const StudentCourse = require("../models/StudentCourse");
+const Semester = require("../models/Semester");
+const Student = require("../models/Student");
+const StudentCourse = require("../models/StudentCourse");
 // const Transcript = require("../models/Transcript");s
 // const Group = require("../models/Group");
 // const CourseGroup = require("../models/CourseGroup");
@@ -145,6 +147,52 @@ async function loadElectiveRequirements(programmesJSON) {
     }
 }
 
+
+//Dummy data loading
+async function createStudent(studentData) {
+    return Student.create(studentData);
+}
+
+async function loadDummyStudents(studentsData) {
+    let promises = studentsData.map(createStudent);
+    try {
+        await Promise.all(promises);
+        console.log("Loaded Students");
+    } catch (e) {
+        console.error("Error loading students: ", e);
+    }
+}
+
+async function createSemester(semesterData) {
+    return Semester.create(semesterData);
+}
+
+async function loadDummySemesters(semesterData) {
+    let promises = semesterData.map(createSemester);
+    try {
+        await Promise.all(promises);
+        console.log("Loaded Semesters");
+    } catch (e) {
+        console.error("Error loading semesters: ", e);
+    }
+}
+
+async function createStudentCourse(studentCorseData) {
+    return StudentCourse.create(studentCorseData);
+}
+
+async function loadDummyStudentCourses(studentCorseData) {
+    let promises = studentCorseData.map(createStudentCourse);
+    try {
+        await Promise.all(promises);
+        console.log("Loaded Student Courses");
+    } catch (e) {
+        console.error("Error loading student courses: ", e);
+    }
+}
+
+
+
 (async () => {
     await db.sync({ force: true });
     await loadTypes(TypesJSON);
@@ -152,6 +200,8 @@ async function loadElectiveRequirements(programmesJSON) {
     await loadProgrammes(ProgrammesJSON);
     await loadProgrammeCourses(ProgrammesJSON);
     await loadElectiveRequirements(ProgrammesJSON);
-    // await loadProgrammeCourses(DummyProgCourses);
+    await loadDummyStudents(StudentsJSON);
+    await loadDummySemesters(SemestersJSON);
+    await loadDummyStudentCourses(StudentCoursesJSON);
     console.log('Done');
 })()
