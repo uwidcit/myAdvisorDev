@@ -1,4 +1,25 @@
-// constants for express routes, paths and db connection
+// constants for expreconst ElectiveRequirement = require("./models/ElectiveRequirement");
+
+const Prerequisite = require("./models/Prerequisite");
+const Programme = require("./models/Programme");
+const ProgrammeCourse = require("./models/ProgrammeCourse");
+const Semester = require("./models/Semester");
+const Student = require("./models/Student");
+const StudentCourse = require("./models/StudentCourse");
+const Transcript = require("./models/Transcript");
+const Type = require("./models/Type");
+const Group = require("./models/Group");
+const CourseGroup = require("./models/CourseGroup");
+const SemesterCourse = require("./models/SemesterCourse");
+
+
+//import associations
+require("./models/Associations");
+
+const { ppid } = require("process");
+
+// async function initializeDatabase() {
+//ss routes, paths and db connection
 const dotenv = require('dotenv').config();
 
 const express = require("express");
@@ -22,32 +43,11 @@ app.use(express.json());
 const Admin = require("./models/Admin");
 const SelectedCourse = require("./models/SelectedCourse");
 const AdvisingSesssion = require("./models/AdvisingSession")
-//const AdvisingWindow = require("./models/AdvisingWindow");
+
 const Antirequisite = require("./models/Antirequisite");
 const AwardedDegree = require("./models/AwardedDegree");
 const Course = require("./models/Course");
-const ElectiveRequirement = require("./models/ElectiveRequirement");
-//const PotentialGraduate = require("./models/PotentialGraduate");
-const Prerequisite = require("./models/Prerequisite");
-const Programme = require("./models/Programme");
-const ProgrammeCourse = require("./models/ProgrammeCourse");
-const Semester = require("./models/Semester");
-const Student = require("./models/Student");
-const StudentCourse = require("./models/StudentCourse");
-const Transcript = require("./models/Transcript");
-const Type = require("./models/Type");
-const Group = require("./models/Group");
-const CourseGroup = require("./models/CourseGroup");
-const SemesterCourse = require("./models/SemesterCourse");
-// const Faculty = require("./models/Faculty");
-
-//import associations
-require("./models/Associations");
-
-const { ppid } = require("process");
-
-// async function initializeDatabase() {
-//   try {
+   try {
 //     await AdvisingSesssion.sync();
 //     await AdvisingWindow.sync();
 //     await Career.sync();

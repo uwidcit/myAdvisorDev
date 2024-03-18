@@ -1,11 +1,11 @@
 const db = require("../db");
 
-const ProgrammesJSON = require("../programmes.json");
-const CoursesJSON = require("../courses.json");
-const TypesJSON = require("../types.json");
-const StudentsJSON = require("../students.json");
-const SemestersJSON = require("../semesters.json");
-const StudentCoursesJSON = require("../studentCourses.json");
+const ProgrammesJSON = require("../dummy_files/programmes.json");
+const CoursesJSON = require("../dummy_files/courses.json");
+const TypesJSON = require("../dummy_files/types.json");
+const StudentsJSON = require("../dummy_files/students.json");
+const SemestersJSON = require("../dummy_files/semesters.json");
+const StudentCoursesJSON = require("../dummy_files/studentCourses.json");
 
 const Type = require("../models/Type");
 const Programme = require("../models/Programme");
