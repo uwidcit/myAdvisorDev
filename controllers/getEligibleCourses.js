@@ -3,6 +3,8 @@ const Prerequisite = require("../models/Prerequisite");
 const CourseGroup = require("../models/CourseGroup");
 const ProgrammeCourse = require("../models/ProgrammeCourse");
 const StudentCourse = require("../models/StudentCourse");
+const SemesterCourse = require("../models/SemesterCourse");
+const Student = require("../models/Student");
 const { Op } = require("sequelize");
 
 async function get_prereq_courses(undone_course, student_programme_id){
@@ -47,19 +49,44 @@ function logical_or_prereq_handler(prereq_courses, student_courses){
     return false;
 }
 
-async function getEligibleCourses (programme_id,student_courses){
+async function getEligibleCourses (student_id,coming_semester){
+    const programme_id = await Student.findOne({
+        attributes : ['programmeId'],
+        where :{
+            studentId : student_id
+        }
+    }).then( async (programme)=>{
+        return programme.get('programmeId');
+    });
     const programme_courses = await ProgrammeCourse.findAll({
         attributes : ['courseCode'],
         where: {
             ProgrammeId : programme_id
         }
     });
+    const student_courses = await StudentCourse.findAll({
+        attributes : ['courseCode'],
+        where: {
+            studentId : student_id
+        }
+    }).then(async (std_courses) =>{
+        return std_courses.map(std => std.get('courseCode'));
+    });
     const courses = programme_courses.map(c => c.get('courseCode'));//do not use beyond undone
+    //const undone = courses.filter(course => !student_courses.includes(course));//Courses within student programme they could do
+    const semseter_courses = await SemesterCourse.findAll({
+        attributes : ['courseCode'],
+        where :{
+            semesterId : coming_semester
+        }
+    }).then(async (courses)=>{
+        return courses.map(c => c.get('courseCode'));
+    });
     const undone = courses.filter(course => !student_courses.includes(course));//Courses within student programme they could do
-    const courses_eligible = undone.map(uc => {
+    const undone_within_semester = undone.filter(course => semseter_courses.includes(course));
+    const courses_eligible = undone_within_semester.map(uc => {
         const course = get_prereq_courses(uc,programme_id).then(
             (value)=>{
-                
                 var courses_e = [];
                 value = value.length>1 ? value[0].concat(value[1]) : value;
                 if (value.length==0){
@@ -102,31 +129,35 @@ async function getEligibleCourses (programme_id,student_courses){
     return eligible_list ;
 }
 
-//testing without Postman
+// testing without Postman
+
 // (async () =>{
-//     const dummyStudentCourses_db = await StudentCourse.findAll({
-//         attributes : ['courseCode'],
-//         where: {
-//             studentId : '816031565'
-//         }
-//     });
-//     const dummyStudentCourses = [
-//         'COMP1600',
-//         'COMP1601',
-//         'INFO1600',
-//         'MATH1115',
-//         'FOUN1101',
-//         'COMP1602',
-//         'COMP1603',
-//         'COMP1604',
-//         'FOUN1105',
-//         'INFO1601'
-    
-//     ]
-//     await getEligibleCourses(1,dummyStudentCourses_db.map(c => c.get('courseCode')));
-//     const test_e = await getEligibleCourses(1,dummyStudentCourses);
+    // const dummyStudentCourses_db = await StudentCourse.findAll({
+    //     attributes : ['courseCode'],
+    //     where: {
+    //         studentId : '816031565'
+    //     }
+    // });
+    // const dummyStudentCourses = [
+    //     'COMP1600',
+    //     'COMP1601',
+    //     'INFO1600',
+    //     'MATH1115',
+    //     'FOUN1101'
+    // ]
+    // await getEligibleCourses(1,dummyStudentCourses_db.map(c => c.get('courseCode')));
+    // const test_e = await getEligibleCourses(1,dummyStudentCourses,2);
+//     const test_e = await getEligibleCourses('816031565',2);
 //     console.log(test_e);
 // })()
-
+/**
+ * Expected
+ * 'COMP1602',
+ * 'COMP1603',
+ * 'COMP1604',
+ * 'FOUN1105',
+ * 'INFO1601'
+  
+ */
 module.exports = { getEligibleCourses };
 

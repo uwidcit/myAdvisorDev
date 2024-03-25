@@ -21,10 +21,10 @@ const Prerequisite = require("../models/Prerequisite");
 const Semester = require("../models/Semester");
 const Student = require("../models/Student");
 const StudentCourse = require("../models/StudentCourse");
-// const Transcript = require("../models/Transcript");s
+// const Transcript = require("../models/Transcript");
 const Group = require("../models/Group");
 const CourseGroup = require("../models/CourseGroup");
-// const SemesterCourse = require("../models/SemesterCourse");
+const SemesterCourse = require("../models/SemesterCourse");
 const Type = require("../models/Type");
 const Programme = require("../models/Programme");
 const Course = require("../models/Course");
@@ -272,6 +272,34 @@ async function loadDummyAntireq(courseData){
         console.error("Error loading Anti-requisites from Courses: ", e);
     }
 }
+async function createSemesterCourse(semesterId,courseCode){
+    return SemesterCourse.create({semesterId,courseCode})
+}
+async function loadDummySemesterCourses(courseData){
+    let promises = courseData.map(async (course) =>{
+        const target_course = await Course.findOne({
+            attributes : ['code'],
+            where: {
+                code: course.code
+            }
+        });
+        const semester = await Semester.findOne({
+            attributes : ['num'],
+            where:{
+                id: course.semester
+            }
+        });
+        const courseCode = target_course.code;
+        const semester_n = semester.num
+        return createSemesterCourse(semester_n,courseCode);
+    });
+    try {
+        await Promise.all(promises);
+        console.log('Loaded Semester Courses from Courses');
+    } catch (e) {
+        console.error("Error loading Semester Courses from Courses: ", e);
+    }
+}
 (async () => {
     await db.sync({ force: true });
     await loadTypes(TypesJSON);
@@ -284,5 +312,6 @@ async function loadDummyAntireq(courseData){
     await loadDummyStudentCourses(StudentCoursesJSON);
     await loadDummyPrereq_Coursegrp(CoursesJSON);
     await loadDummyAntireq(CoursesJSON);
+    await loadDummySemesterCourses(CoursesJSON);
     console.log('Done');
 })()
