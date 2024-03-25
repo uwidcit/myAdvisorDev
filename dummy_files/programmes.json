@@ -269,6 +269,8 @@
             "ADVELECTIVE": 30,
             "FOUN": 9
         },
+        "prerequisites" :{},
+        "antirequisites" :{},
         "version": "2022/23"
     }
 ]

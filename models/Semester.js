@@ -13,7 +13,8 @@ const Semester = db.define("semester", {
         allowNull: false
     },
     num: {
-        type: Sequelize.ENUM('I', 'II', 'III'),
+        type: Sequelize.ENUM,
+        values:['I', 'II', 'III'],
         allowNull: false,
     },
     academicYear: {
