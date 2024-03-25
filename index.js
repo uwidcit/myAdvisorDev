@@ -94,7 +94,6 @@ async function newinitializeDatabase() {
         await SemesterCourse.sync();
 
         // Creates Admin Account
-        const adminID = "816020000";
         const user = await Admin.findOne({ where: { adminID: 816020000 } });//this is essentially return 1st admin object where adminID exists
         if (!user) {
           const saltRounds = 10;
