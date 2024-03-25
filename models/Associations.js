@@ -104,7 +104,8 @@ Programme.hasMany(Prerequisite, {
 // A prerequisite belongs to Programme
 Prerequisite.belongsTo(Programme, {
     foreignKey: 'programmeId',
-    allowNull: false
+    allowNull: false,
+    primaryKey: true
 });
 
 
@@ -332,7 +333,8 @@ Prerequisite.belongsTo(Course, {
         name: 'courseCode',
         type: Sequelize.STRING
     },
-    allowNull: false
+    allowNull: false,
+    primaryKey: true
 });
 
 

@@ -16,25 +16,16 @@ function getDegreeProgress(programmeId, studentCourseCodes, programmeCourses, co
             creditRequirements[creditType.type] = [ct.amount, ct.amount];
         }
     }
-    // console.log("creditRequirements: ", creditRequirements);
-    // console.log("LENGTH:", studentCourseCodes.length);
     for (let creditType in creditRequirements) {
         degreeCredits += creditRequirements[creditType][0];
         for (let i = 0; i < studentCourseCodes.length; i++) {
             try {
                 let course = courses.find((c) => c.code === studentCourseCodes[i]);
-
-                // console.log("COURSE<<<<<>>>>>>: ", course.code);
-
                 const type = types.find(type => type.type === creditType);
                 console.log(type);
 
-                let programmeCourse = programmeCourses.find((c) => c.courseCode === studentCourseCodes[i] && c.programmeId === programmeId && c.typeId === type.id);
-
-                // console.log("code: ", studentCourseCodes[i]);
-                // console.log("progId", programmeId);
-                // console.log("typeId", type.id);
-                // console.log("PROGRAMMECOURSE<<<<<>>>>>>: ", programmeCourse.courseCode);
+                let programmeCourse = programmeCourses.find(
+                    (c) => c.courseCode === studentCourseCodes[i] && c.programmeId === programmeId && c.typeId === type.id);
 
                 if (creditRequirements[creditType][0] <= 0) {
                     break;
@@ -44,7 +35,7 @@ function getDegreeProgress(programmeId, studentCourseCodes, programmeCourses, co
                     let credits = parseInt(course.credits);
                     completedCourses.push(course.code);
                     creditRequirements[creditType][0] -= credits;
-                    totalCredits = totalCredits + credits;
+                    totalCredits += credits;
                     console.log(completedCourses);
                 }
 
@@ -53,23 +44,11 @@ function getDegreeProgress(programmeId, studentCourseCodes, programmeCourses, co
             }
         }
     }
-
-
-    // console.log(creditRequirements);
-
-    // let remainingRequirements = [];
-    // for (let type in creditRequirements) {
-    //     // console.log("<><><><>", programmeCreditRequirements[type].amount)
-    //     remainingRequirements.push({ type, remainingCredits: creditRequirements[type] });
-    // }
     let degreeProgress = {
-        Requirements: creditRequirements, //remainingRequirements,
-        //completedCourses: completedCourses,
+        Requirements: creditRequirements, 
         totalCompletedCredits: [totalCredits, degreeCredits],
         remainingCredits: degreeCredits - totalCredits
     };
-    // console.log("degree progress: ",degreeProgress);
-
     return degreeProgress;
 }
 
