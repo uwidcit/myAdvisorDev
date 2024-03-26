@@ -22,12 +22,12 @@ app.use(express.json());
 const Admin = require("./models/Admin");
 const SelectedCourse = require("./models/SelectedCourse");
 const AdvisingSesssion = require("./models/AdvisingSession")
-//const AdvisingWindow = require("./models/AdvisingWindow");
+
 const Antirequisite = require("./models/Antirequisite");
 const AwardedDegree = require("./models/AwardedDegree");
 const Course = require("./models/Course");
 const ElectiveRequirement = require("./models/ElectiveRequirement");
-//const PotentialGraduate = require("./models/PotentialGraduate");
+
 const Prerequisite = require("./models/Prerequisite");
 const Programme = require("./models/Programme");
 const ProgrammeCourse = require("./models/ProgrammeCourse");
@@ -39,7 +39,7 @@ const Type = require("./models/Type");
 const Group = require("./models/Group");
 const CourseGroup = require("./models/CourseGroup");
 const SemesterCourse = require("./models/SemesterCourse");
-// const Faculty = require("./models/Faculty");
+
 
 //import associations
 require("./models/Associations");
@@ -94,7 +94,6 @@ async function newinitializeDatabase() {
         await SemesterCourse.sync();
 
         // Creates Admin Account
-        const adminID = "816020000";
         const user = await Admin.findOne({ where: { adminID: 816020000 } });//this is essentially return 1st admin object where adminID exists
         if (!user) {
           const saltRounds = 10;

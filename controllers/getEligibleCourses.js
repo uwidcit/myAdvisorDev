@@ -1,149 +1,163 @@
+const Antirequisite = require("../models/Antirequisite");
+const Prerequisite = require("../models/Prerequisite");
+const CourseGroup = require("../models/CourseGroup");
+const ProgrammeCourse = require("../models/ProgrammeCourse");
+const StudentCourse = require("../models/StudentCourse");
+const SemesterCourse = require("../models/SemesterCourse");
+const Student = require("../models/Student");
+const { Op } = require("sequelize");
 
-let prereqs = [];
-let antireqs = [];
-let courseGroups = [];
-let studentCodes = [];
-
-function cleanObject(obj) {
-    for (const key in obj) {
-        if (obj[key] === '' || obj[key] === undefined) {
-            delete obj[key];
+async function get_prereq_courses(undone_course, student_programme_id){
+    const prereqs = await Prerequisite.findAll({
+        attributes : ['groupId'],
+        where:{
+            ProgrammeId : student_programme_id,
+            courseCode: undone_course
         }
-    }
-    return obj;
+    });
+    const groups = prereqs.map(pc => pc.get('groupId'));
+    const prereqs_list = await Promise.all(groups.map(async (group) => {
+        // if (group!==''){
+            const el_course = await CourseGroup.findAll({
+                attributes : ['courseCode'],
+                where:{
+                    groupId:group
+                }
+            });
+            return el_course.map(ec => ec.get('courseCode'));
+        // }
+    }));
+    return prereqs_list;
+    
 }
-
-// returns true if all courses in the group is in the student courses
-function groupSatisfied(groupId) {
-    // checks for multiple courses in a group
-    // console.log("courseGroups Length: ", courseGroups.length);
-    for (let i = 0; i < courseGroups.length; i++) {
-        if (courseGroups[i].groupId === groupId) {
-            // console.log("prereq courseCode:", courseGroups[i].courseCode);
-            // console.log("student courses",studentCodes);
-
-            // if the student does not satisfy the course
-            if (!studentCodes.includes(courseGroups[i].courseCode)) {
-
-
-                // since the student must satisfy all the courses in th group return false
-                return false;
-            }
+function logical_and_prereq_handler(prereq_courses, student_courses){
+    for (let c of prereq_courses){
+        if(!student_courses.includes(c)){
+            return false;
         }
     }
-    // student satisfies all the courses in the group 
     return true;
 }
 
-// returns true if atleast one group of courses is in the student courses
-function atLeastOneGroupSatisfied(groupIds) {
-    for (const groupId of groupIds) {
-        if (groupSatisfied(groupId)) {
-            // console.log("group satisfied");
+function logical_or_prereq_handler(prereq_courses, student_courses){
+    prereq_courses = prereq_courses.length<2 ? prereq_courses[0] : prereq_courses;
+    for (let c of prereq_courses){
+        if(student_courses.includes(c)){
             return true;
         }
     }
     return false;
 }
 
-// checks if the prerequisites a course in a programme is satisfied  
-function arePrerequisitesSatisfied(courseCode, programmeId) {
-
-    let groupIds = [];
-
-    for (j = 0; j < prereqs.length; j++) {
-        // if course has prereq for programme
-        if (prereqs[j].courseCode === courseCode && prereqs[j].programmeId === programmeId) {
-            // console.log("prereq::::::> ", prereqs[j].courseCode);
-            // get all groups of prerequisites 
-            groupIds.push(prereqs[j].groupId);
-            // console.log("courseCode", courseCode);
-            // console.log("programmeId", programmeId);
-            // console.log("\ngroupIds", groupIds);
-
+async function getEligibleCourses (student_id,coming_semester){
+    const programme_id = await Student.findOne({
+        attributes : ['programmeId'],
+        where :{
+            studentId : student_id
         }
-    }
-
-    // if there are no groups return true OR if at least one group is satisfied return true
-    return groupIds.length === 0 || atLeastOneGroupSatisfied(groupIds);
-
-}
-
-// checks if the student did any anti-requisites for the course
-function completedAntirequisites(courseCode) {
-    for (let i = 0; i < antireqs.length; i++) {
-        if (antireqs[i].courseCode === courseCode) {
-            for (let j = 0; j < studentCourseCodes.length; j++) {
-                if (studentCourseCodes[j] === antireqs[i].antirequisiteCourseCode) {
-                    // console.log("LOG::>" );
-                    // console.log(" student course", studentCourseCodes[j]);
-                    // console.log(" antirequisite course", antirequisites[i].antirequisiteCourseCode);
-                    return true;
+    }).then( async (programme)=>{
+        return programme.get('programmeId');
+    });
+    const programme_courses = await ProgrammeCourse.findAll({
+        attributes : ['courseCode'],
+        where: {
+            ProgrammeId : programme_id
+        }
+    });
+    const student_courses = await StudentCourse.findAll({
+        attributes : ['courseCode'],
+        where: {
+            studentId : student_id
+        }
+    }).then(async (std_courses) =>{
+        return std_courses.map(std => std.get('courseCode'));
+    });
+    const courses = programme_courses.map(c => c.get('courseCode'));//do not use beyond undone
+    //const undone = courses.filter(course => !student_courses.includes(course));//Courses within student programme they could do
+    const semseter_courses = await SemesterCourse.findAll({
+        attributes : ['courseCode'],
+        where :{
+            semesterId : coming_semester
+        }
+    }).then(async (courses)=>{
+        return courses.map(c => c.get('courseCode'));
+    });
+    const undone = courses.filter(course => !student_courses.includes(course));//Courses within student programme they could do
+    const undone_within_semester = undone.filter(course => semseter_courses.includes(course));
+    const courses_eligible = undone_within_semester.map(uc => {
+        const course = get_prereq_courses(uc,programme_id).then(
+            (value)=>{
+                var courses_e = [];
+                value = value.length>1 ? value[0].concat(value[1]) : value;
+                if (value.length==0){
+                    courses_e.push(uc);
+                }else if (value.length>2 && value.length!== new Set(value).size){
+                    value = [...new Set(value)]
+                    courses_e = logical_and_prereq_handler(value,student_courses) ? courses_e.concat(uc) : courses_e
+                }else{
+                    courses_e = logical_or_prereq_handler(value,student_courses) ? courses_e.concat(uc) : courses_e
                 }
-            }
-        }
-    }
-    return false;
+                return courses_e
+            });
+            const final_eligible = course.then(async (result) => {
+                let initial_eligible = result;
+
+                const anti = await Antirequisite.findOne({
+                    attributes: ['courseCode','antirequisiteCourseCode'],
+                    where: {
+                        [Op.or]:[
+                            {courseCode : uc},
+                            {antirequisiteCourseCode : uc}
+                        ]  
+                    }
+                });
+                if (anti!==null){
+                    const course = anti.get('courseCode');
+                    const counter = anti.get('antirequisiteCourseCode');
+                    if (initial_eligible.includes(course) && initial_eligible.indexOf(counter)> -1){
+                        initial_eligible.splice(initial_eligible.indexOf(counter),1);
+                    }else if (initial_eligible.includes(counter) && initial_eligible.indexOf(course)> -1){
+                        initial_eligible.splice(initial_eligible.indexOf(course),1);
+                    }
+                }
+                return initial_eligible;
+            });
+            return final_eligible;
+    });
+    let eligible_list = await Promise.all(courses_eligible);
+    eligible_list = eligible_list.filter((c)=>c!==undefined && c.length>0);
+    return eligible_list ;
 }
 
-// returns a list of courses the student can register for in the next semester
-function getEligibleCourses(programmeId, studentCourseCodes, programmeCourses, semesterCourses, prerequisites, antirequisites, coursegroups) {
-    let registerableCourses = [];
-    prereqs = prerequisites;
-    antireqs = antirequisites;
-    courseGroups = coursegroups;
-    studentCodes = studentCourseCodes;
-    // console.log("student course codes:<><><>:::::: ", studentCodes);
+// testing without Postman
 
-    // if(degreeProgress.remainingCredits === 0){
-    //     return registerableCourses;
-    // } 
-
-    // console.log("programmeId", programmeId);
-    // console.log("studentCourseCodes: ", studentCourseCodes);
-    // console.log("programmeCourses", programmeCourses);
-    // console.log("semesterCourses", semesterCourses);
-    // console.log("prereq", prerequisites);
-    // console.log("courseGroup", courseGroups);
-    // console.log("anit-req", antirequisites);
-
-    // for each programme course
-    for (i = 0; i < programmeCourses.length; i++) {
-
-        let prereqSatisfied = false;
-        let completedAntireq = false;
-        // console.log("programmeCourses::> ",programmeCourses[i]);
-
-        // if programmeCourse not completed by the student and is available in the semester
-        if (!studentCourseCodes.includes(programmeCourses[i].courseCode) && semesterCourses.includes(programmeCourses[i].courseCode)) {
-
-            // check if the student has satisfied the prereqs
-            prereqSatisfied = arePrerequisitesSatisfied(programmeCourses[i].courseCode, programmeId);
-            //     console.log("prereqSatisfied::> ",prereqSatisfied);
-            // console.log("Course::> ",programmeCourses[i].courseCode);
-
-
-            // check if the student has done any anti-requisites
-            completedAntireq = completedAntirequisites(programmeCourses[i].courseCode);
-            // console.log("completedAntireq::> ",completedAntireq);
-
-            // registerableCourses.push(programmeCourses[i].courseCode);
-        }
-
-        // if student satisfies the prereqs and have not done any anti-reqs, course is registerable 
-        if (prereqSatisfied === true && completedAntireq === false) {
-            registerableCourses.push(programmeCourses[i].courseCode);
-            // console.log("push course: ", programmeCourses[i]);
-        }
-
-
-
-    }
-
-    return registerableCourses;
-}
-
-
-
+// (async () =>{
+    // const dummyStudentCourses_db = await StudentCourse.findAll({
+    //     attributes : ['courseCode'],
+    //     where: {
+    //         studentId : '816031565'
+    //     }
+    // });
+    // const dummyStudentCourses = [
+    //     'COMP1600',
+    //     'COMP1601',
+    //     'INFO1600',
+    //     'MATH1115',
+    //     'FOUN1101'
+    // ]
+    // await getEligibleCourses(1,dummyStudentCourses_db.map(c => c.get('courseCode')));
+    // const test_e = await getEligibleCourses(1,dummyStudentCourses,2);
+//     const test_e = await getEligibleCourses('816031565',2);
+//     console.log(test_e);
+// })()
+/**
+ * Expected
+ * 'COMP1602',
+ * 'COMP1603',
+ * 'COMP1604',
+ * 'FOUN1105',
+ * 'INFO1601'
+  
+ */
 module.exports = { getEligibleCourses };
 

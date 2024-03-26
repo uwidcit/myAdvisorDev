@@ -8,8 +8,14 @@
     "faculty": "Social Sciences",
     "department": "Management Studies",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "none",
+      "courses" : []
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "ACCT1003",
@@ -20,20 +26,35 @@
     "faculty": "Social Sciences",
     "department": "Management Studies",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "none",
+      "courses" : []
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "ACCT2017",
-    "title": "Management Accounting",
+    "title": "Management Accounting I",
     "level": "II",
     "semester": 1,
     "credits": 3,
     "faculty": "Social Sciences",
     "department": "Management Studies",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "ACCT1002",
+        "ACCT1003"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "COMP1600",
@@ -44,8 +65,14 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "none",
+      "courses" : []
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "COMP1601",
@@ -56,8 +83,14 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "none",
+      "courses" : []
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "COMP1602",
@@ -68,8 +101,14 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "none",
+      "courses" : []
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "COMP1603",
@@ -80,8 +119,14 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "none",
+      "courses" : []
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "COMP1604",
@@ -92,8 +137,14 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "none",
+      "courses" : []
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "COMP2601",
@@ -104,8 +155,16 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "COMP1600",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "COMP1600"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "COMP2602",
@@ -116,8 +175,16 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "COMP1600",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "COMP1600"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "COMP2603",
@@ -128,8 +195,16 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "COMP1602",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "COMP1603"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "COMP2604",
@@ -140,8 +215,16 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "COMP1600",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "COMP1600"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "COMP2605",
@@ -152,8 +235,17 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "COMP1601 OR COMP1602",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "COMP1601",
+        "COMP1602"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "COMP2606",
@@ -164,8 +256,16 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "COMP1602",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "COMP1603"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "COMP2611",
@@ -176,8 +276,16 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "COMP1603",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "COMP1603"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "COMP3601",
@@ -188,8 +296,16 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "COMP2611",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "COMP2611"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "COMP3602",
@@ -200,8 +316,16 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "COMP2611",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "COMP2611"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "COMP3603",
@@ -212,8 +336,16 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "COMP2606",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "COMP2606"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "COMP3605",
@@ -224,8 +356,16 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "MATH2250",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "MATH2250"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "COMP3606",
@@ -236,8 +376,17 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "COMP2602 OR INFO2601",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "COMP2602",
+        "INFO2601"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "COMP3607",
@@ -248,8 +397,16 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "COMP2603",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "COMP2603"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "COMP3608",
@@ -260,8 +417,17 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "COMP2611 AND MATH2250",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "and",
+      "courses" : [
+        "COMP2611",
+        "MATH2250"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "COMP3609",
@@ -272,8 +438,17 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "COMP2603 AND COMP2606",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "and",
+      "courses" : [
+        "COMP2603",
+        "COMP2606"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "COMP3610",
@@ -284,8 +459,16 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "COMP3605",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "COMP3605"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "COMP3611",
@@ -296,8 +479,16 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "MATH2250",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "MATH2250"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "COMP3612",
@@ -308,8 +499,17 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "COMP2611 AND COMP2603",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "and",
+      "courses" : [
+        "COMP2603",
+        "COMP2611"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "COMP3613",
@@ -320,8 +520,16 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "COMP2606",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "COMP2606"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "ECON1001",
@@ -332,8 +540,14 @@
     "faculty": "Science & Technology",
     "department": "Economics",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "none",
+      "courses" : []
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "ECON1002",
@@ -344,8 +558,14 @@
     "faculty": "Science & Technology",
     "department": "Economics",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "none",
+      "courses" : []
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "FOUN1101",
@@ -356,8 +576,14 @@
     "faculty": "Humanities and Education",
     "department": "",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "none",
+      "courses" : []
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "FOUN1105",
@@ -368,8 +594,14 @@
     "faculty": "Humanities and Education",
     "department": "",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "none",
+      "courses" : []
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "FOUN1301",
@@ -380,8 +612,14 @@
     "faculty": "Social Sciences",
     "department": "",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "none",
+      "courses" : []
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "INFO1600",
@@ -392,8 +630,14 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "none",
+      "courses" : []
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "INFO1601",
@@ -404,8 +648,14 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "none",
+      "courses" : []
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "INFO2600",
@@ -416,8 +666,14 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "none",
+      "courses" : []
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "INFO2601",
@@ -428,8 +684,16 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": "COMP2604"
+    "prerequisites": {
+      "logic" : "none",
+      "courses" : []
+    },
+    "antirequisites": {
+      "logic" : "or",
+      "courses" : [
+        "COMP2604"
+      ]
+    } 
   },
   {
     "code": "INFO2602",
@@ -440,8 +704,16 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "INFO1601",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "INFO1601"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "INFO2603",
@@ -452,8 +724,19 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": "COMP2601"
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "INFO1600",
+        "COMP1600"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "or",
+      "courses" : [
+        "COMP2601"
+      ]
+    }
   },
   {
     "code": "INFO2604",
@@ -464,8 +747,16 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "COMP1602",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "COMP1602"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "INFO2605",
@@ -476,8 +767,17 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "INFO1600 OR COMP1600",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "INFO1600",
+        "COMP1600"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "INFO3600",
@@ -488,8 +788,16 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "COMP2605",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "COMP2605"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "INFO3601",
@@ -500,8 +808,17 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "INFO2603",
+        "COMP2601"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "INFO3602",
@@ -512,8 +829,16 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "INFO2602"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "INFO3604",
@@ -524,8 +849,17 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "INFO2600 OR COMP2606",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "INFO2600",
+        "COMP2606"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "INFO3605",
@@ -536,8 +870,17 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "INFO2601 OR COMP2604",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "INFO2601",
+        "COMP2604"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "INFO3606",
@@ -548,8 +891,17 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "COMP2605",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "COMP2605"
+      ]
+    },
+
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "INFO3607",
@@ -560,8 +912,17 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "NFO2601 AND COMP2604",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "INFO2601",
+        "COMP2604"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "INFO3608",
@@ -572,8 +933,17 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "INFO2600 OR COMP2606",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "INFO2600",
+        "COMP2606"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "INFO3609",
@@ -584,8 +954,17 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "INFO2600 OR COMP2606",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "INFO2600",
+        "COMP2606"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "INFO3610",
@@ -596,8 +975,17 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "INFO2600 OR COMP2606",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "INFO2600",
+        "COMP2606"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "INFO3611",
@@ -608,8 +996,16 @@
     "faculty": "Science & Technology",
     "department": "Computing and Information Technology",
     "description": "desc",
-    "prerequisites": "COMP2605",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "COMP2605"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "MATH1115",
@@ -620,8 +1016,14 @@
     "faculty": "Science & Technology",
     "department": "Mathematics and Statistics",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "none",
+      "courses" : []
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "MATH2250",
@@ -632,8 +1034,16 @@
     "faculty": "Science & Technology",
     "department": "Mathematics and Statistics",
     "description": "desc",
-    "prerequisites": "MATH1115",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "MATH1115"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "MGMT2008",
@@ -644,8 +1054,16 @@
     "faculty": "Social Sciences",
     "department": "Management Studies",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "COMP1601"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "MGMT2012",
@@ -656,8 +1074,16 @@
     "faculty": "Social Sciences",
     "department": "Management Studies",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "COMP1601"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "MGMT2023",
@@ -668,8 +1094,16 @@
     "faculty": "Social Sciences",
     "department": "Management Studies",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "COMP1601"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "MGMT2032",
@@ -680,8 +1114,16 @@
     "faculty": "Social Sciences",
     "department": "Management Studies",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "or",
+      "courses" : [
+        "COMP1601"
+      ]
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "MKTG2001",
@@ -692,8 +1134,14 @@
     "faculty": "Social Sciences",
     "department": "Management Studies",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "none",
+      "courses" : []
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   },
   {
     "code": "MKTG3000",
@@ -704,7 +1152,13 @@
     "faculty": "Social Sciences",
     "department": "Management Studies",
     "description": "desc",
-    "prerequisites": "",
-    "antirequisites": ""
+    "prerequisites": {
+      "logic" : "none",
+      "courses" : []
+    },
+    "antirequisites": {
+      "logic" : "none",
+      "courses" : []
+    }
   }
 ]
