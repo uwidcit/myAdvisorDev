@@ -6,6 +6,9 @@ const TypesJSON = require("../dummy_files/types.json");
 const StudentsJSON = require("../dummy_files/students.json");
 const SemestersJSON = require("../dummy_files/semesters.json");
 const StudentCoursesJSON = require("../dummy_files/studentCourses.json");
+const GroupsJSON = require("../groups.json");
+const CourseGroupsJSON = require("../courseGroups.json");
+const PrerequisitesJSON = require("../prerequisites.json");
 // const Dummytranscript = require("./dummytranscript.json")
 // const DummyProgCourses = require("./dummyProgCourses.json")
 
@@ -180,9 +183,9 @@ async function loadPrerequisites(prerequisiteData) {
     let promises = prerequisiteData.map(createPrerequisite);
     try {
         await Promise.all(promises);
-        console.log("Loaded Course Groups");
+        console.log("Loaded Pre-reqs");
     } catch (e) {
-        console.error("Error loading course groups: ", e);
+        console.error("Error loading pre-reqs: ", e);
     }
 }
 
@@ -232,9 +235,6 @@ async function loadDummyStudentCourses(studentCorseData) {
 
 
 
-async function createCourseGroup(courseCode, groupId) {
-    return CourseGroup.create({ courseCode, groupId });
-}
 async function createPrequisite(courseCode, programmeId, groupId) {
     return Prerequisite.create({ courseCode, programmeId, groupId });
 }
@@ -343,20 +343,20 @@ async function loadDummySemesterCourses(courseData) {
     }
 }
 (async () => {
-    await db.sync({ force: true });
-    await loadTypes(TypesJSON);
-    await loadCourses(CoursesJSON);
-    await loadProgrammes(ProgrammesJSON);
-    await loadProgrammeCourses(ProgrammesJSON);
-    await loadElectiveRequirements(ProgrammesJSON);
-    await loadGroups(GroupsJSON);
-    await loadCourseGroups(CourseGroupsJSON);
-    await loadPrerequisites(PrerequisitesJSON);
-    await loadDummyStudents(StudentsJSON);
+    // await db.sync({ force: true });
+    // await loadTypes(TypesJSON);
+    // await loadCourses(CoursesJSON);
+    // await loadProgrammes(ProgrammesJSON);
+    // await loadProgrammeCourses(ProgrammesJSON);
+    // await loadElectiveRequirements(ProgrammesJSON);
+    // await loadGroups(GroupsJSON);
+    // await loadCourseGroups(CourseGroupsJSON);
+    // await loadPrerequisites(PrerequisitesJSON);
+    // await loadDummyStudents(StudentsJSON);
     await loadDummySemesters(SemestersJSON);
     await loadDummyStudentCourses(StudentCoursesJSON);
-    await loadDummyPrereq_Coursegrp(CoursesJSON);
-    await loadDummyAntireq(CoursesJSON);
-    await loadDummySemesterCourses(CoursesJSON);
+    // await loadDummyPrereq_Coursegrp(CoursesJSON);
+    // await loadDummyAntireq(CoursesJSON);
+    // await loadDummySemesterCourses(CoursesJSON);
     console.log('Done');
 })()
