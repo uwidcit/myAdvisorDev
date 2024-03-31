@@ -1,48 +1,54 @@
-// imports sequelize module
-const Sequelize = require("sequelize");
+require('dotenv').config(); // Load environment variables from .env file
 
-// const url = 'postgres://myadvisor_database_user:YuKpP0lz6KhxNnsRLExqDQrl64bJj6OS@dpg-ci1kmm0rddl1m6hknfbg-a.oregon-postgres.render.com/myadvisor_database';
+const { Sequelize } = require('sequelize');
 
-// // Extracting database connection information from the URL
-// const [, dialect, username, password, host, database] = url.match(/^(postgres):\/\/([^:]+):([^@]+)@([^/]+)\/(.+)$/);
+// Function to parse a generic database connection string
+function parseConnectionString(connectionString) {
+    // This regex is designed to parse most common connection string formats
+    const regex = /^(.+?):\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/([^?]+)/;
+    const match = connectionString.match(regex);
+    if (!match) throw new Error('Invalid connection string format');
 
+    return {
+        dialect: match[1],
+        username: match[2],
+        password: match[3],
+        host: match[4],
+        port: match[5],
+        database: match[6],
+    };
+}
 
-//SQLITE DATABASE
-const db = new Sequelize({
-  dialect: 'sqlite',
-  logging: false,
-  storage: 'database.sqlite', // Replace with the path to your SQLite database file
-});
+let db;
 
+// Check if DATABASE_URL environment variable is set
+if (process.env.DATABASE_URL) {
+    // Parse the connection string to extract connection details
+    const { dialect, username, password, host, database } = parseConnectionString(process.env.DATABASE_URL);
 
-// //CONNECTS TO THE RENDER POSTGRES DATABASE
-// const db = new Sequelize(database, username, password, {
-//   host,
-//   dialect,
-//   dialectOptions: {
-//     ssl: true,
-//   }
-// });
+    db = new Sequelize(database, username, password, {
+        host: host,
+        dialect: dialect, // Dynamically set the dialect based on the connection string
+    });
+} else {
+    console.log("No database url detected");
+    // Fall back to SQLite if DATABASE_URL is not set
+    db = new Sequelize({
+        dialect: 'sqlite',
+        storage: 'database.sqlite', // Specify your SQLite database file
+    });
+}
 
+// Test the connection
+async function testDBConnection() {
+    try {
+        await db.authenticate();
+        console.log('Connection has been established successfully.');
+    } catch (error) {
+        console.error('Unable to connect to the database:', error);
+    }
+}
 
-// const db = new Sequelize({
-//   dialect: "postgres",
-//   host: "YuKpP0lz6KhxNnsRLExqDQrl64bJj6OS@dpg-ci1kmm0rddl1m6hknfbg-a.oregon-postgres.render.com/myadvisor_database",
-//   port: "5432",
-//   database: "myadvisor_database",
-//   username: "myadvisor_database_user",
-//   password: "YuKpP0lz6KhxNnsRLExqDQrl64bJj6OS",
-//   pool: {
-//     max: 3,
-//     min: 0,
-//     idle: 10000,
-//   },
-// });
-
-// // tests database connection on server startup to see if the connection is OK.
-// db.authenticate()
-//   .then(() => console.log("Database Connected"))
-//   .catch((err) => console.log("Error: " + err));
 
 module.exports = db;
 

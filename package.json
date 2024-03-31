@@ -4,8 +4,8 @@
   "description": "myAdvisor is an automated self-advising and GPA management system created for the use of the University of the West Indies students.\r It aims to replace the current system of advising to an automated and faster system for greater convenience and efficiency.",
   "main": "index.js",
   "scripts": {
+    "init": "nod init.js",
     "start": "node index.js",
-    "heroku-postbuild": "cd myadvisor && npm install && npm run build",
     "dev": "node utilities/initialize.js",
     "eli": "node controllers/getEligibleCourses.js"
   },
@@ -25,11 +25,13 @@
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^8.6.0",
+    "ejs": "^3.1.9",
     "express": "^4.18.2",
     "express-session": "^1.17.1",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "multer": "^1.4.2",
+    "mysql2": "^3.9.3",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.1",
     "pdf2json": "^1.2.0",
