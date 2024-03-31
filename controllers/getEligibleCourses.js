@@ -157,7 +157,6 @@ async function getEligibleCourses (student_id,coming_semester){
  * 'COMP1604',
  * 'FOUN1105',
  * 'INFO1601'
-  
  */
 module.exports = { getEligibleCourses };
 
