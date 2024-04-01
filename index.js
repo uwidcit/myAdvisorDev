@@ -45,27 +45,6 @@ const SemesterCourse = require("./models/SemesterCourse");
 require("./models/Associations");
 
 const { ppid } = require("process");
-
-// async function initializeDatabase() {
-//   try {
-//     await AdvisingSesssion.sync();
-//     await AdvisingWindow.sync();
-//     await Career.sync();
-//     await CareerCourse.sync();
-//     await Course.sync();
-//     await PotentialGraduate.sync();
-//     await Programme.sync();
-//     await ProgrammeCourse.sync();
-//     await Staff.sync();
-//     await Student.sync();
-//     await StudentCourses.sync();
-//     await Transcript.sync();
-
-//     console.log("Tables created successfully.");
-//   } catch (error) {
-//     console.error("Error creating tables:", error);
-//   }
-// }
 async function newinitializeDatabase() {
   (async () => {
     try {
@@ -132,72 +111,6 @@ async function newinitializeDatabase() {
 
 }
 
-// async function initializeDatabase() {
-//   (async () => {
-//     try {
-//       if (!process.env.SYNCED) {
-//         // Create tables if they do not exist
-
-//         await Admin.sync();
-//         await Semester.sync();
-//         await Career.sync();
-//         await Course.sync();
-//         await Programme.sync();
-//         await Student.sync();
-//         await Transcript.sync();
-//         await Type.sync();
-//         await StudentCourse.sync();
-//         await AdvisingSesssion.sync();
-//         await Antirequisite.sync();
-//         await SelectedCourse.sync();
-//         await AwardedDegree.sync();
-//         await CareerCourse.sync();
-//         await ElectiveRequirement.sync();
-//         await ProgrammeCourse.sync();
-//         await Group.sync();
-//         await CourseGroup.sync();
-//         await Prerequisite.sync();
-//         await SemesterCourse.sync();
-
-//         // Creates Admin Account
-//         const adminID = "816020000";
-//         const user = await Admin.findOne({ where: { adminID } });
-//         if (!user) {
-//           const saltRounds = 10;
-//           const salt = await bcrypt.genSalt(saltRounds);
-//           const passEncrypt = await bcrypt.hash("adminpass", salt);
-
-//           await Admin.create({
-//             adminID: "816020000",
-//             firstName: "Admin",
-//             lastName: "istrator",
-//             email: "administratorEmail@mail.com",
-//             password: passEncrypt,
-//           });
-//           console.log('Admin account created.');
-//         }else{
-//           if(user){
-//             console.log("Admin Already Exist.");
-//           }else{
-//             console.log("Error");
-//           }
-//         }
-
-//         process.env.SYNCED = "TRUE";
-//         console.log('Database tables synchronized.');
-//       } else {
-//         console.log('Database tables are already synchronized.');
-//       }
-//     } catch (error) {
-//       console.error('Unable to synchronize the database:', error);
-//     } finally {
-//       // Close the database connection when done
-//       // await db.close();
-//     }
-//   })();
-
-
-// }
 
 newinitializeDatabase();
 
