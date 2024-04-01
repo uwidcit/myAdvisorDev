@@ -178,10 +178,10 @@ router.post("/academic-advising/session/:studentId", studentAccountVerification,
 
 
 // });
-router.get("/eligibleCourses/:semesterId", studentAccountVerification, async (req, res) =>{
+router.get("/eligibleCourses/:semesterId", studentAccountVerification, async (req, res) => {
     const student = req.user
     const semester = req.params.semesterId;
-    const eligible_courses = getEligibleCourses(student,semester);
+    const eligible_courses = getEligibleCourses(student, semester);
     res.json({
         "student": student,
         "upcoming semester": semester,
@@ -190,11 +190,11 @@ router.get("/eligibleCourses/:semesterId", studentAccountVerification, async (re
 });
 
 
-router.get("/degreeProgress", async (req, res) => {
+router.get("/degreeProgress", studentAccountVerification, async (req, res) => {
 
     // get logged in studentId
-    // const studentId = req.user;
-    const studentId = "816031565";
+    const studentId = req.user;
+    // const studentId = "816031565";
 
     // get all the data for the function
 
