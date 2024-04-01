@@ -199,57 +199,59 @@ router.get("/degreeProgress", studentAccountVerification, async (req, res) => {
     // get all the data for the function
 
 
-    // get course codes of courses completed by student
-    const studentCourses = await StudentCourse.findAll({ where: { studentId: studentId } });
-    let studentCourseCodes = [];
-    for (i = 0; i < studentCourses.length; i++) {
-        studentCourseCodes.push(studentCourses[i].dataValues.courseCode);
-    }
-    console.log("student courses: ", studentCourseCodes);
+    // // get course codes of courses completed by student
+    // const studentCourses = await StudentCourse.findAll({ where: { studentId: studentId } });
+    // let studentCourseCodes = [];
+    // for (i = 0; i < studentCourses.length; i++) {
+    //     studentCourseCodes.push(studentCourses[i].dataValues.courseCode);
+    // }
+    // console.log("student courses: ", studentCourseCodes);
 
 
-    // Get programme id from student model
-    const student = await Student.findOne({ where: { studentId: studentId } });
-    if (student) {
-        programmeId = student.dataValues.programmeId;
+    // // Get programme id from student model
+    // const student = await Student.findOne({ where: { studentId: studentId } });
+    // if (student) {
+    //     programmeId = student.dataValues.programmeId;
 
-        console.log("student: ", student.dataValues.programmeId);
-    }
+    //     console.log("student: ", student.dataValues.programmeId);
+    // }
 
-    //  get programme courses for programmeId
-    const programmeCourse = await ProgrammeCourse.findAll({ where: { programmeId } });
-    let programmeCourses = [];
-    for (i = 0; i < programmeCourse.length; i++) {
-        programmeCourses.push(programmeCourse[i].dataValues);
-    }
-    console.log("programmeCourse: ", programmeCourses);
+    // //  get programme courses for programmeId
+    // const programmeCourse = await ProgrammeCourse.findAll({ where: { programmeId } });
+    // let programmeCourses = [];
+    // for (i = 0; i < programmeCourse.length; i++) {
+    //     programmeCourses.push(programmeCourse[i].dataValues);
+    // }
+    // console.log("programmeCourse: ", programmeCourses);
 
-    //  get courses
-    let course = await Course.findAll();
-    let courses = [];
-    for (i = 0; i < course.length; i++) {
-        courses.push(course[i].dataValues);
-    }
-    console.log("courses: ", courses);
+    // //  get courses
+    // let course = await Course.findAll();
+    // let courses = [];
+    // for (i = 0; i < course.length; i++) {
+    //     courses.push(course[i].dataValues);
+    // }
+    // console.log("courses: ", courses);
 
-    // get programmeCreditRequirements
-    let pcrs = await PCR.findAll({ where: { programmeId } });
-    let programmeCreditRequirements = [];
-    for (i = 0; i < pcrs.length; i++) {
-        programmeCreditRequirements.push(pcrs[i].dataValues);
-    }
-    console.log("PCR: ", programmeCreditRequirements);
+    // // get programmeCreditRequirements
+    // let pcrs = await PCR.findAll({ where: { programmeId } });
+    // let programmeCreditRequirements = [];
+    // for (i = 0; i < pcrs.length; i++) {
+    //     programmeCreditRequirements.push(pcrs[i].dataValues);
+    // }
+    // console.log("PCR: ", programmeCreditRequirements);
 
-    // get types
-    let type = await Type.findAll();
-    let types = [];
-    for (i = 0; i < type.length; i++) {
-        types.push(type[i].dataValues);
-    }
-    console.log("types: ", types);
+    // // get types
+    // let type = await Type.findAll();
+    // let types = [];
+    // for (i = 0; i < type.length; i++) {
+    //     types.push(type[i].dataValues);
+    // }
+    // console.log("types: ", types);
 
 
-    let degreeProgress = getDegreeProgress(programmeId, studentCourseCodes, programmeCourses, courses, programmeCreditRequirements, types);
+    // let degreeProgress = getDegreeProgress(programmeId, studentCourseCodes, programmeCourses, courses, programmeCreditRequirements, types);
+
+    let degreeProgress = await getDegreeProgress(studentId);
     console.log("Degree Progrress: ", degreeProgress);
     res.json({
         "DegreeProgress: ": degreeProgress
