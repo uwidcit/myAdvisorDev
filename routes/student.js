@@ -369,7 +369,7 @@ router.get("/course-plan/:semesterId", studentAccountVerification, async (req, r
 
     // -----------------CALL THE FUNCTION-------------------------
 
-    let coursePlan = await getCoursePlan(programmeId, studentCourseCodes, programmeCourses, semCourses, prereqs, antireqs, coursegroups, courses, programmeCreditRequirements, types, studentId, semesterId);
+    let coursePlan = await getCoursePlan(studentId, semesterId);
 
 
 

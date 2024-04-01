@@ -10,34 +10,34 @@ const { getEligibleCourses } = require("../controllers/getEligibleCourses");
 const { getDegreeProgress } = require("../controllers/getDegreeProgress");
 const { getPlannedCourses } = require("../controllers/getPlannedCourses");
 
-async function getCoursePlan(studentId,semesterId){
+async function getCoursePlan(studentId, semesterId) {
     const programme_id = await Student.findOne({
-        attributes : ['programmeId'],
-        where :{
-            studentId : studentId
+        attributes: ['programmeId'],
+        where: {
+            studentId: studentId
         }
-    }).then( async (programme)=>{
+    }).then(async (programme) => {
         return programme.get('programmeId');
     });
 
     const programme_courses = await ProgrammeCourse.findAll({
-        attributes : ['courseCode'],
+        attributes: ['courseCode'],
         where: {
-            ProgrammeId : programme_id
+            ProgrammeId: programme_id
         }
     });
     const student_courses = await StudentCourse.findAll({
-        attributes : ['courseCode'],
+        attributes: ['courseCode'],
         where: {
-            studentId : studentId
+            studentId: studentId
         }
-    }).then(async (std_courses) =>{
+    }).then(async (std_courses) => {
         return std_courses.map(std => std.get('courseCode'));
     });
     const courses = await Course.findAll();
     const credit_requirements = await ElectiveRequirement.findAll({
         where: {
-            ProgrammeId : programme_id
+            ProgrammeId: programme_id
         }
     });
     const types = await Type.findAll();
@@ -45,37 +45,39 @@ async function getCoursePlan(studentId,semesterId){
     let coursePlan = [];
 
     //where selected courses can pull from
-    const courses_eligible = await getEligibleCourses(studentId,semesterId);
-    const degree_progress = await getDegreeProgress(programme_id,student_courses,programme_courses,courses,credit_requirements,types);//use to determine effect of selected courses
-    const planned_courses = await getPlannedCourses(studentId,semesterId);//what is displayed on the courseplan
-    
+    const courses_eligible = await getEligibleCourses(studentId, semesterId);
+    const degree_progress = await getDegreeProgress(studentId);//use to determine effect of selected courses
+    const planned_courses = await getPlannedCourses(studentId, semesterId);//what is displayed on the courseplan
+
     if (courses_eligible) {
         // get eligibleCourses
         for (let course_c of courses_eligible) {
             const typeName = await Type.findOne({
-                attributes : ['type'],
-                where : {
-                    id : await ProgrammeCourse.findOne({
+                attributes: ['type'],
+                where: {
+                    id: await ProgrammeCourse.findOne({
                         attributes: ['typeId'],
-                        where :{
-                            [Op.and] : [
-                                {courseCode : course_c},
-                                {programmeId : programme_id}
+                        where: {
+                            [Op.and]: [
+                                { courseCode: course_c },
+                                { programmeId: programme_id }
                             ]
-                        }}).then( async (programme)=>{
-                            return programme.get('typeId');
-                        })
-            }}).then(async (type)=>{
+                        }
+                    }).then(async (programme) => {
+                        return programme.get('typeId');
+                    })
+                }
+            }).then(async (type) => {
                 return type.get('type')
             });
 
-            const [courseName,  credits ]= await Course.findOne({
-                attributes : ['title','credits'],
-                where : {
-                    code : course_c
+            const [courseName, credits] = await Course.findOne({
+                attributes: ['title', 'credits'],
+                where: {
+                    code: course_c
                 }
-            }).then(async (content)=>{
-                return [content.get('title'),content.get('credits')]
+            }).then(async (content) => {
+                return [content.get('title'), content.get('credits')]
             });
             eligiblecoursesObj.push({
                 "courseCode": course_c,
@@ -150,8 +152,8 @@ async function getCoursePlan(studentId,semesterId){
     return coursePlan;
 
 }
-(async () =>{
-    const test = await getCoursePlan('816031565',2);
-    console.log(test);
-})()
+// (async () => {
+//     const test = await getCoursePlan('816031565', 2);
+//     console.log(test);
+// })()
 module.exports = { getCoursePlan };
