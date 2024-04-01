@@ -132,21 +132,19 @@ async function getEligibleCourses (student_id,coming_semester){
 // testing without Postman
 
 // (async () =>{
-    // const dummyStudentCourses_db = await StudentCourse.findAll({
-    //     attributes : ['courseCode'],
-    //     where: {
-    //         studentId : '816031565'
-    //     }
-    // });
-    // const dummyStudentCourses = [
-    //     'COMP1600',
-    //     'COMP1601',
-    //     'INFO1600',
-    //     'MATH1115',
-    //     'FOUN1101'
-    // ]
-    // await getEligibleCourses(1,dummyStudentCourses_db.map(c => c.get('courseCode')));
-    // const test_e = await getEligibleCourses(1,dummyStudentCourses,2);
+//     const dummyStudentCourses_db = await StudentCourse.findAll({
+//         attributes : ['courseCode'],
+//         where: {
+//             studentId : '816031565'
+//         }
+//     });
+//     const dummyStudentCourses = [
+//         'COMP1600',
+//         'COMP1601',
+//         'INFO1600',
+//         'MATH1115',
+//         'FOUN1101'
+//     ]
 //     const test_e = await getEligibleCourses('816031565',2);
 //     console.log(test_e);
 // })()
