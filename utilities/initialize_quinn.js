@@ -353,11 +353,11 @@ async function loadDummySemesterCourses(courseData) {
     // await loadGroups(GroupsJSON);
     // await loadCourseGroups(CourseGroupsJSON);
     // await loadPrerequisites(PrerequisitesJSON);
-    // await loadDummyStudents(StudentsJSON);
-    await loadDummySemesters(SemestersJSON);
+    await loadDummyStudents(StudentsJSON);
+    // await loadDummySemesters(SemestersJSON);
     await loadDummyStudentCourses(StudentCoursesJSON);
-    // await loadDummyPrereq_Coursegrp(CoursesJSON);
-    // await loadDummyAntireq(CoursesJSON);
-    // await loadDummySemesterCourses(CoursesJSON);
+    await loadDummyPrereq_Coursegrp(CoursesJSON);
+    await loadDummyAntireq(CoursesJSON);
+    await loadDummySemesterCourses(CoursesJSON);
     console.log('Done');
 })()
