@@ -26,7 +26,7 @@ router.get("/all", async (req, res) => {
 router.get("/:programmeId", async (req, res) => {
     try {
         const programmeId = req.params.programmeId;
-        const programme = await Programme.findOne({where: {id: programmeId}});
+        const programme = await Programme.findOne({ where: { id: programmeId } });
         res.status(200).json(programme);
     }
     catch (err) {
@@ -39,7 +39,7 @@ router.get("/:programmeId", async (req, res) => {
 router.post("/add", async (req, res) => {
     try {
         // destructure data entered
-        const { name, faculty, department } = req.body;
+        const { name, faculty, department, version } = req.body;
 
         // check if programmes is already added
         const programme = await Programme.findOne({ where: { name } });
@@ -50,7 +50,8 @@ router.post("/add", async (req, res) => {
             await Programme.create({
                 name,
                 faculty,
-                department
+                department,
+                version
             })
                 .then(() => {
                     return res.status(200).send("Programme added!");
@@ -83,7 +84,7 @@ router.post("/add/course", async (req, res) => {
         else {
             await ProgrammeCourse.create({
                 programmeId: programmeID,
-                courseCode: courseCode, 
+                courseCode: courseCode,
                 typeId: typeID,
             })
                 .then(() => {
@@ -143,7 +144,7 @@ router.get("/offered-courses/:id", async (req, res) => {
 
             let courses = [];
             for (i = 0; i < programmeCourses.length; i++) {
-                const course = await Course.findOne({ where: { courseCode: courseCodes[i] } });
+                const course = await Course.findOne({ where: { code: courseCodes[i] } });
                 const progCourse = await ProgrammeCourse.findOne({ where: { programmeID: programmeID, courseCode: courseCodes[i] } });
                 course.dataValues.type = progCourse.type;
                 courses.push(course);

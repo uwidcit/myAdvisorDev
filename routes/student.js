@@ -35,11 +35,10 @@ const Type = require("../models/Type");
 
 
 // save advising session
-router.post("/academic-advising/session/:studentId", studentAccountVerification, async (req, res) => {
+router.post("/academic-advising/session/:studentId", async (req, res) => {
     try {
         // get current student details
-        const studentId = req.body.studentId;
-        const student = await Student.findOne({ where: { studentId: req.body.studentId } });
+        const student = await Student.findOne({ where: { studentId: req.params.studentId } });
 
         // setup date format and get current date
         var today = new Date();
@@ -181,7 +180,8 @@ router.post("/academic-advising/session/:studentId", studentAccountVerification,
 router.get("/eligibleCourses/:semesterId", studentAccountVerification, async (req, res) => {
     const student = req.user
     const semester = req.params.semesterId;
-    const eligible_courses = getEligibleCourses(student, semester);
+    const eligible_courses = await getEligibleCourses(student, semester);
+    console.log(eligible_courses);
     res.json({
         "student": student,
         "upcoming semester": semester,
@@ -199,57 +199,59 @@ router.get("/degreeProgress", studentAccountVerification, async (req, res) => {
     // get all the data for the function
 
 
-    // get course codes of courses completed by student
-    const studentCourses = await StudentCourse.findAll({ where: { studentId: studentId } });
-    let studentCourseCodes = [];
-    for (i = 0; i < studentCourses.length; i++) {
-        studentCourseCodes.push(studentCourses[i].dataValues.courseCode);
-    }
-    console.log("student courses: ", studentCourseCodes);
+    // // get course codes of courses completed by student
+    // const studentCourses = await StudentCourse.findAll({ where: { studentId: studentId } });
+    // let studentCourseCodes = [];
+    // for (i = 0; i < studentCourses.length; i++) {
+    //     studentCourseCodes.push(studentCourses[i].dataValues.courseCode);
+    // }
+    // console.log("student courses: ", studentCourseCodes);
 
 
-    // Get programme id from student model
-    const student = await Student.findOne({ where: { studentId: studentId } });
-    if (student) {
-        programmeId = student.dataValues.programmeId;
+    // // Get programme id from student model
+    // const student = await Student.findOne({ where: { studentId: studentId } });
+    // if (student) {
+    //     programmeId = student.dataValues.programmeId;
 
-        console.log("student: ", student.dataValues.programmeId);
-    }
+    //     console.log("student: ", student.dataValues.programmeId);
+    // }
 
-    //  get programme courses for programmeId
-    const programmeCourse = await ProgrammeCourse.findAll({ where: { programmeId } });
-    let programmeCourses = [];
-    for (i = 0; i < programmeCourse.length; i++) {
-        programmeCourses.push(programmeCourse[i].dataValues);
-    }
-    console.log("programmeCourse: ", programmeCourses);
+    // //  get programme courses for programmeId
+    // const programmeCourse = await ProgrammeCourse.findAll({ where: { programmeId } });
+    // let programmeCourses = [];
+    // for (i = 0; i < programmeCourse.length; i++) {
+    //     programmeCourses.push(programmeCourse[i].dataValues);
+    // }
+    // console.log("programmeCourse: ", programmeCourses);
 
-    //  get courses
-    let course = await Course.findAll();
-    let courses = [];
-    for (i = 0; i < course.length; i++) {
-        courses.push(course[i].dataValues);
-    }
-    console.log("courses: ", courses);
+    // //  get courses
+    // let course = await Course.findAll();
+    // let courses = [];
+    // for (i = 0; i < course.length; i++) {
+    //     courses.push(course[i].dataValues);
+    // }
+    // console.log("courses: ", courses);
 
-    // get programmeCreditRequirements
-    let pcrs = await PCR.findAll({ where: { programmeId } });
-    let programmeCreditRequirements = [];
-    for (i = 0; i < pcrs.length; i++) {
-        programmeCreditRequirements.push(pcrs[i].dataValues);
-    }
-    console.log("PCR: ", programmeCreditRequirements);
+    // // get programmeCreditRequirements
+    // let pcrs = await PCR.findAll({ where: { programmeId } });
+    // let programmeCreditRequirements = [];
+    // for (i = 0; i < pcrs.length; i++) {
+    //     programmeCreditRequirements.push(pcrs[i].dataValues);
+    // }
+    // console.log("PCR: ", programmeCreditRequirements);
 
-    // get types
-    let type = await Type.findAll();
-    let types = [];
-    for (i = 0; i < type.length; i++) {
-        types.push(type[i].dataValues);
-    }
-    console.log("types: ", types);
+    // // get types
+    // let type = await Type.findAll();
+    // let types = [];
+    // for (i = 0; i < type.length; i++) {
+    //     types.push(type[i].dataValues);
+    // }
+    // console.log("types: ", types);
 
 
-    let degreeProgress = getDegreeProgress(programmeId, studentCourseCodes, programmeCourses, courses, programmeCreditRequirements, types);
+    // let degreeProgress = getDegreeProgress(programmeId, studentCourseCodes, programmeCourses, courses, programmeCreditRequirements, types);
+
+    let degreeProgress = await getDegreeProgress(studentId);
     console.log("Degree Progrress: ", degreeProgress);
     res.json({
         "DegreeProgress: ": degreeProgress
@@ -367,7 +369,7 @@ router.get("/course-plan/:semesterId", studentAccountVerification, async (req, r
 
     // -----------------CALL THE FUNCTION-------------------------
 
-    let coursePlan = await getCoursePlan(programmeId, studentCourseCodes, programmeCourses, semCourses, prereqs, antireqs, coursegroups, courses, programmeCreditRequirements, types, studentId, semesterId);
+    let coursePlan = await getCoursePlan(studentId, semesterId);
 
 
 
