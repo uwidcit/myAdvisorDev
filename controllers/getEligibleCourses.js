@@ -126,7 +126,7 @@ async function getEligibleCourses (student_id,coming_semester){
     });
     let eligible_list = await Promise.all(courses_eligible);
     eligible_list = eligible_list.filter((c)=>c!==undefined && c.length>0);
-    return eligible_list ;
+    return [].concat(...eligible_list);
 }
 
 // testing without Postman
