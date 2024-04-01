@@ -181,7 +181,8 @@ router.post("/academic-advising/session/:studentId", studentAccountVerification,
 router.get("/eligibleCourses/:semesterId", studentAccountVerification, async (req, res) => {
     const student = req.user
     const semester = req.params.semesterId;
-    const eligible_courses = getEligibleCourses(student, semester);
+    const eligible_courses = await getEligibleCourses(student, semester);
+    console.log(eligible_courses);
     res.json({
         "student": student,
         "upcoming semester": semester,

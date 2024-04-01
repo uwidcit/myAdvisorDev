@@ -9,11 +9,12 @@ const SemestersJSON = require("../dummy_files/semesters.json");
 const StudentCoursesJSON = require("../dummy_files/studentCourses.json");
 // const Dummytranscript = require("./dummytranscript.json")
 // const DummyProgCourses = require("./dummyProgCourses.json")
+const AdvisingSessionsJSON = require("../dummy_files/advisingSessions.json");
 
 // models
 // const Admin = require("../models/Admin");
 // const AdvisedCourse = require("../models/SelectedCourse");
-// const AdvisingSesssion = require("../models/AdvisingSession")
+const AdvisingSession = require("../models/AdvisingSession")
 const Antirequisite = require("../models/Antirequisite");
 // const AwardedDegree = require("../models/AwardedDegree");
 const ElectiveRequirement = require("../models/ElectiveRequirement");
@@ -316,6 +317,20 @@ async function loadDummySemesterCourses(courseData) {
         console.error("Error loading Semester Courses from Courses: ", e);
     }
 }
+
+async function createAdvisingSession(advisingSessionData) {
+    return AdvisingSession.create(advisingSessionData);
+}
+
+async function loadAdvisingSession(advisingSessionData) {
+    let promises = advisingSessionData.map(createAdvisingSession);
+    try {
+        await Promise.all(promises);
+        console.log("Loaded Advising Sessions");
+    } catch (e) {
+        console.error("Error loading Advising Session: ", e);
+    }
+}
 (async () => {
     await db.sync({ force: true });
     await loadTypes(TypesJSON);
@@ -329,5 +344,6 @@ async function loadDummySemesterCourses(courseData) {
     await loadDummyPrereq_Coursegrp(CoursesJSON);
     await loadDummyAntireq(CoursesJSON);
     await loadDummySemesterCourses(CoursesJSON);
+    await loadAdvisingSession(AdvisingSessionsJSON);
     console.log('Done');
 })()
