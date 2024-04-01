@@ -35,11 +35,10 @@ const Type = require("../models/Type");
 
 
 // save advising session
-router.post("/academic-advising/session/:studentId", studentAccountVerification, async (req, res) => {
+router.post("/academic-advising/session/:studentId", async (req, res) => {
     try {
         // get current student details
-        const studentId = req.body.studentId;
-        const student = await Student.findOne({ where: { studentId: req.body.studentId } });
+        const student = await Student.findOne({ where: { studentId: req.params.studentId } });
 
         // setup date format and get current date
         var today = new Date();
