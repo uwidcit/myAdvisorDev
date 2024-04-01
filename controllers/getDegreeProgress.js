@@ -2,7 +2,7 @@ const Type = require("../models/Type");
 
 
 // returns the students degree progress(list of completed courses, total credits completed, remaining requirements and total credits remaining)
-function getDegreeProgress(programmeId, studentCourseCodes, programmeCourses, courses, programmeCreditRequirements, types) {
+async function getDegreeProgress(programmeId, studentCourseCodes, programmeCourses, courses, programmeCreditRequirements, types) {
 
     let totalCredits = 0;
     let completedCourses = [];

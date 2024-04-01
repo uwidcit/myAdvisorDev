@@ -330,7 +330,6 @@ router.delete("/delete/:code", async (req, res) => {
 
 
 router.get("/prereqs/:id", async (req, res) => {
-    const Op = Sequelize.Op;
     try {
         // const prereqs = await Course.findAll({ where: { prerequisites: { [Op.like]: `%${req.params.id}%` } } });
 

@@ -7,7 +7,8 @@
     "start": "node index.js",
     "heroku-postbuild": "cd myadvisor && npm install && npm run build",
     "dev": "node utilities/initialize.js",
-    "eli": "node controllers/getEligibleCourses.js"
+    "eli": "node controllers/getEligibleCourses.js",
+    "plan" : "node controllers/getCoursePlan.js"
   },
   "repository": {
     "type": "git",
