@@ -342,6 +342,7 @@ async function loadDummySemesterCourses(courseData) {
         console.error("Error loading Semester Courses from Courses: ", e);
     }
 }
+
 (async () => {
     // await db.sync({ force: true });
     // await loadTypes(TypesJSON);
