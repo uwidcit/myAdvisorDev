@@ -1,5 +1,4 @@
 const db = require("../db");
-const bcrypt = require("bcrypt");
 // Dummy Data
 const ProgrammesJSON = require("../dummy_files/programmes.json");
 const CoursesJSON = require("../dummy_files/courses.json");
@@ -7,15 +6,16 @@ const TypesJSON = require("../dummy_files/types.json");
 const StudentsJSON = require("../dummy_files/students.json");
 const SemestersJSON = require("../dummy_files/semesters.json");
 const StudentCoursesJSON = require("../dummy_files/studentCourses.json");
+const GroupsJSON = require("../groups.json");
+const CourseGroupsJSON = require("../courseGroups.json");
+const PrerequisitesJSON = require("../prerequisites.json");
 // const Dummytranscript = require("./dummytranscript.json")
 // const DummyProgCourses = require("./dummyProgCourses.json")
-const AdvisingSessionsJSON = require("../dummy_files/advisingSessions.json");
-const SelectedCourseJSON = require("../dummy_files/selectedCourses.json")
 
 // models
 // const Admin = require("../models/Admin");
-const SelectedCourse = require("../models/SelectedCourse");
-const AdvisingSession = require("../models/AdvisingSession");
+// const AdvisedCourse = require("../models/SelectedCourse");
+// const AdvisingSesssion = require("../models/AdvisingSession")
 const Antirequisite = require("../models/Antirequisite");
 // const AwardedDegree = require("../models/AwardedDegree");
 const ElectiveRequirement = require("../models/ElectiveRequirement");
@@ -147,6 +147,48 @@ async function loadElectiveRequirements(programmesJSON) {
     }
 }
 
+async function createGroup(groupData) {
+    return Group.create(groupData);
+}
+
+async function loadGroups(groupData) {
+    let promises = groupData.map(createGroup);
+    try {
+        await Promise.all(promises);
+        console.log("Loaded Groups");
+    } catch (e) {
+        console.error("Error loading groups: ", e);
+    }
+}
+
+async function createCourseGroup(courseGroupData) {
+    return CourseGroup.create(courseGroupData);
+}
+
+async function loadCourseGroups(courseGroupData) {
+    let promises = courseGroupData.map(createCourseGroup);
+    try {
+        await Promise.all(promises);
+        console.log("Loaded Course Groups");
+    } catch (e) {
+        console.error("Error loading course groups: ", e);
+    }
+}
+
+async function createPrerequisite(prerequisiteData) {
+    return Prerequisite.create(prerequisiteData);
+}
+
+async function loadPrerequisites(prerequisiteData) {
+    let promises = prerequisiteData.map(createPrerequisite);
+    try {
+        await Promise.all(promises);
+        console.log("Loaded Pre-reqs");
+    } catch (e) {
+        console.error("Error loading pre-reqs: ", e);
+    }
+}
+
 
 //Dummy data loading
 async function createStudent(studentData) {
@@ -154,22 +196,7 @@ async function createStudent(studentData) {
 }
 
 async function loadDummyStudents(studentsData) {
-    const saltRounds = 10; // saltRounds are needed to increase the degree of hashing
-
-    let promises = studentsData.map(async student => {
-        const salt = await bcrypt.genSalt(saltRounds);
-        const passEncrypt = await bcrypt.hash(student.password, salt);
-        const studentDataWithEncryptedPassword = {
-            studentId: student.studentId,
-            firstName: student.firstName,
-            lastName: student.lastName,
-            email: student.email,
-            programmeId: student.programmeId,
-            password: passEncrypt,
-        };
-        return createStudent(studentDataWithEncryptedPassword);
-    });
-
+    let promises = studentsData.map(createStudent);
     try {
         await Promise.all(promises);
         console.log("Loaded Students");
@@ -208,9 +235,6 @@ async function loadDummyStudentCourses(studentCorseData) {
 
 
 
-async function createCourseGroup(courseCode, groupId) {
-    return CourseGroup.create({ courseCode, groupId });
-}
 async function createPrequisite(courseCode, programmeId, groupId) {
     return Prerequisite.create({ courseCode, programmeId, groupId });
 }
@@ -319,48 +343,21 @@ async function loadDummySemesterCourses(courseData) {
     }
 }
 
-async function createAdvisingSession(advisingSessionData) {
-    return AdvisingSession.create(advisingSessionData);
-}
-
-async function loadAdvisingSession(advisingSessionData) {
-    let promises = advisingSessionData.map(createAdvisingSession);
-    try {
-        await Promise.all(promises);
-        console.log("Loaded Advising Sessions");
-    } catch (e) {
-        console.error("Error loading Advising Session: ", e);
-    }
-}
-
-async function createSelectedCourse(selectedCourseData) {
-    return SelectedCourse.create(selectedCourseData);
-}
-
-async function loadSelectedCourses(selectedCourseData) {
-    let promises = selectedCourseData.map(createSelectedCourse);
-    try {
-        await Promise.all(promises);
-        console.log("Loaded Selected Courses");
-    } catch (e) {
-        console.error("Error loading Selected Courses: ", e);
-    }
-}
-
 (async () => {
-    await db.sync({ force: true });
-    await loadTypes(TypesJSON);
-    await loadCourses(CoursesJSON);
-    await loadProgrammes(ProgrammesJSON);
-    await loadProgrammeCourses(ProgrammesJSON);
-    await loadElectiveRequirements(ProgrammesJSON);
+    // await db.sync({ force: true });
+    // await loadTypes(TypesJSON);
+    // await loadCourses(CoursesJSON);
+    // await loadProgrammes(ProgrammesJSON);
+    // await loadProgrammeCourses(ProgrammesJSON);
+    // await loadElectiveRequirements(ProgrammesJSON);
+    // await loadGroups(GroupsJSON);
+    // await loadCourseGroups(CourseGroupsJSON);
+    // await loadPrerequisites(PrerequisitesJSON);
     await loadDummyStudents(StudentsJSON);
-    await loadDummySemesters(SemestersJSON);
+    // await loadDummySemesters(SemestersJSON);
     await loadDummyStudentCourses(StudentCoursesJSON);
     await loadDummyPrereq_Coursegrp(CoursesJSON);
     await loadDummyAntireq(CoursesJSON);
     await loadDummySemesterCourses(CoursesJSON);
-    await loadAdvisingSession(AdvisingSessionsJSON);
-    await loadSelectedCourses(SelectedCourseJSON);
     console.log('Done');
 })()

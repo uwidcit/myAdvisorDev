@@ -148,13 +148,13 @@ router.post("/details/add", async (req, res) => {
 router.post("/courses/add", async (req, res) => {
     try {
         // destructure data entered
-        const { studentId, courseCode, courseTitle, grade } = req.body;
+        const { studentId, courseCode, semesterId, grade } = req.body;
 
         // create new entry
         await StudentCourses.create({
             studentId,
             courseCode,
-            courseTitle,
+            semesterId,
             grade
         })
             .then(() => {

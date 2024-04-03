@@ -1,8 +1,66 @@
 const Type = require("../models/Type");
+const ProgrammeCourse = require("../models/ProgrammeCourse");
+const StudentCourse = require("../models/StudentCourse");
+const Student = require("../models/Student");
+const Course = require("../models/Course");
+const PCR = require("../models/ElectiveRequirement");
+const { Op } = require("sequelize");
 
+//programmeId, studentCourseCodes, programmeCourses, courses, programmeCreditRequirements, types
 
 // returns the students degree progress(list of completed courses, total credits completed, remaining requirements and total credits remaining)
-function getDegreeProgress(programmeId, studentCourseCodes, programmeCourses, courses, programmeCreditRequirements, types) {
+async function getDegreeProgress(student_id) {
+
+    const studentCourses = await StudentCourse.findAll({ where: { studentId: student_id } });
+    let studentCourseCodes = [];
+    for (i = 0; i < studentCourses.length; i++) {
+        studentCourseCodes.push(studentCourses[i].dataValues.courseCode);
+    }
+    console.log("student courses: ", studentCourseCodes);
+
+
+    // Get programme id from student model
+    const programmeId = await Student.findOne({
+        attributes: ['programmeId'],
+        where: {
+            studentId: student_id
+        }
+    }).then(async (programme) => {
+        return programme.get('programmeId');
+    });
+
+    //  get programme courses for programmeId
+    const programmeCourse = await ProgrammeCourse.findAll({ where: { programmeId } });
+    let programmeCourses = [];
+    for (i = 0; i < programmeCourse.length; i++) {
+        programmeCourses.push(programmeCourse[i].dataValues);
+    }
+    console.log("programmeCourse: ", programmeCourses);
+
+    //  get courses
+    let course = await Course.findAll();
+    let courses = [];
+    for (i = 0; i < course.length; i++) {
+        courses.push(course[i].dataValues);
+    }
+    console.log("courses: ", courses);
+
+    // get programmeCreditRequirements
+    let pcrs = await PCR.findAll({ where: { programmeId } });
+    let programmeCreditRequirements = [];
+    for (i = 0; i < pcrs.length; i++) {
+        programmeCreditRequirements.push(pcrs[i].dataValues);
+    }
+    console.log("PCR: ", programmeCreditRequirements);
+
+    // get types
+    let type = await Type.findAll();
+    let types = [];
+    for (i = 0; i < type.length; i++) {
+        types.push(type[i].dataValues);
+    }
+    console.log("types: ", types);
+
 
     let totalCredits = 0;
     let completedCourses = [];
@@ -45,7 +103,7 @@ function getDegreeProgress(programmeId, studentCourseCodes, programmeCourses, co
         }
     }
     let degreeProgress = {
-        Requirements: creditRequirements, 
+        Requirements: creditRequirements,
         totalCompletedCredits: [totalCredits, degreeCredits],
         remainingCredits: degreeCredits - totalCredits
     };

@@ -5,7 +5,7 @@ const { getEligibleCourses } = require("../controllers/getEligibleCourses");
 const { getDegreeProgress } = require("../controllers/getDegreeProgress");
 const { getPlannedCourses } = require("../controllers/getPlannedCourses");
 const { getStudentYear } = require("../controllers/getStudentYear");
-const { getCoursePlan } = require("../controllers/getCoursePlan");
+const { getCoursePlan } = require("../controllers/getCoursePlan.js");
 
 // import models
 const Admin = require("../models/Admin");
