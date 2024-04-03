@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
+    "transcript-parse": "node utilities/parseTranscript.js test.pdf",
     "heroku-postbuild": "cd myadvisor && npm install && npm run build",
     "dev": "node utilities/initialize.js",
     "eli": "node controllers/getEligibleCourses.js"
