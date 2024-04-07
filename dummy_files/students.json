@@ -8,6 +8,14 @@
         "programmeId": 1
     },
     {
+        "studentId": "816000001",
+        "firstName": "Bob",
+        "lastName": "Smith",
+        "email": "bob.smith@my.uwi.edu",
+        "password": "password123",
+        "programmeId": 1
+    },
+    {
         "studentId": 816031566,
         "firstName": "Jane",
         "lastName": "Smith",
