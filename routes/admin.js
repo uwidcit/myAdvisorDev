@@ -71,7 +71,10 @@ router.post("/create/admin", staffAccountVerification, async (req, res) => {
 router.post("/create/student", async (req, res) => {
     try {
         // destructure data entered
-        const { studentId, firstName, lastName, email, programmeId, password } = req.body
+        const { studentId, firstName, lastName, email, password } = req.body;
+        let { programmeId } = req.body;
+
+        programmeId = parseInt(programmeId, 10);
 
         // check if student exists since duplicate usernames aren't allowed
         const student = await Student.findOne({ where: { "studentId": studentId } });
@@ -82,7 +85,7 @@ router.post("/create/student", async (req, res) => {
             const saltRounds = 10;      // saltRounds are needed to increase the degree of hashing
             const salt = await bcrypt.genSalt(saltRounds);
             const passEncrypt = await bcrypt.hash(password, salt);// passEncrypt is the encrypted version of the password entered which uses the salt created
-
+            console.log(passEncrypt);
             await Student.create({
                 studentId,
                 firstName,
@@ -92,6 +95,7 @@ router.post("/create/student", async (req, res) => {
                 password: passEncrypt,
             })
                 .then(() => {
+                    console.log("hello")
                     return res.status(200).send("Student Account Created Successfully!");
                 })
                 .catch(err => {

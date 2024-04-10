@@ -19,16 +19,16 @@ async function getPDFText(fileBuffer) {
     });
 
     let pdfText = [];
-    //console.log("json  "+ JSON.stringify(json['formImage']['Pages']));
+    // console.log("json  " + JSON.stringify(json['formImage']['Pages']));
 
-    for (let page of json['formImage']['Pages']) {
+    for (let page of json['Pages']) {
         //console.log("page    "+ page['Texts']);
         for (let text of page['Texts']) {
             //console.log("*******Text    "+text['R']);
             for (let rec of text['R']) {
 
                 let token = rec['T'];
-                //console.log("token    "+token);
+                //console.log("token    " + token);
                 pdfText.push(token)
             }
         }
@@ -51,7 +51,7 @@ async function getCourses() {
     try {
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         const { data: response } = await axios.get("https://myadvisorapp.onrender.com/courses/all") //use data destructuring to get data from the promise object
-        //console.log("??????????????????",response);
+        // console.log("??????????????????", response);
         return response
     }
     catch (error) {
@@ -92,14 +92,14 @@ async function getStudentData(text, filename) {
     }
 
     const courses = await getCourses();
-    //console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!",courses);
+    // console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", courses);
     let i = 0;
 
     for (i = 0; i < courses.length; i++) {
-        letterString = courses[i].courseCode.slice(0, 4)
+        letterString = courses[i].code.slice(0, 4)
         courseCodeLetters.push(letterString)
 
-        numberString = courses[i].courseCode.slice(4, 8)
+        numberString = courses[i].code.slice(4, 8)
         courseCodeNumbers.push(numberString)
 
         if (courseList[letterString]) {
@@ -120,8 +120,8 @@ async function getStudentData(text, filename) {
 
         if (token === "Record%20of%3A") {
             student.name = decode(text[i - 1])
-            //console.log("text      "+text[i-1]);
-            //console.log("i    "+ i);
+            console.log("text      " + text[i - 1]);
+            //console.log("i    " + i);
         }
 
         //reached the courses in progress section of transcript
@@ -174,22 +174,22 @@ async function getStudentData(text, filename) {
     student.progress = ((totalCredits / 93) * 100).toFixed(1);
     student.parsedText = text;
 
-    console.log("Student data 1", student);
+    //console.log("Student data 1", student);
 
     return student;
 }
 
 async function parse(file) {
     const text = await getPDFText(file);
-    //console.log("=================================================pdftext - " + text);
+    // //console.log("=================================================pdftext - " + text);
     var studentData = await getStudentData(text);
-    console.log("Student data " + studentData.COMP3609);
+    //console.log("Student data " + studentData.COMP3609);
     return studentData;
 
 }
 
 
-async function getAcademicHistory(file){
+async function getAcademicHistory(file) {
     return []
 }
 
