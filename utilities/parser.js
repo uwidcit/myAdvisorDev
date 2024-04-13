@@ -48,10 +48,6 @@ function decode(token) {
 async function getCourses() {
     try {
         return await Course.findAll();
-        // // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // const { data: response } = await axios.get("https://myadvisorapp.onrender.com/courses/all") //use data destructuring to get data from the promise object
-        // // console.log("??????????????????", response);
-        // return response
     }
     catch (error) {
         console.log(error);
@@ -67,28 +63,29 @@ async function getStudentData(text) {
     let inprogress = false;
     let courseCodeLetters = [];
     let courseCodeNumbers = [];
+    let terms = [];
     let noCreditGrade = ["F1", "F2", "F3", "DIS", "EI", "FA", "FAS", "FC", "FE", "FO", "FP", "FT", "FWS", "FTS", "AB", "AM", "AMS", "DB", "DEF", "EQ", "EX", "FM", "FMS", "FWR", "I", "IP", "LW", "NCR", "NFC", "NP", "NR", "NV", "W", "FMP"]
     //var courses;
     let studentCourseList = []
     var courseList = {};
     let totalCredits = 0;
+    let period = undefined;
     let student = {
         studentId: undefined,
-        gpa: undefined,
+        degreeGpa: undefined,
         name: undefined,
         progress: undefined,
         credits: undefined,
         degree: undefined,
         major: undefined,
         admitTerm: undefined,
-        parsedText: undefined,
+        cumulativeGpa: undefined,
         degreeAttemptHours: undefined,
         degreePassedHours: undefined,
         degreeEarnedHours: undefined,
         degreeGpaHours: undefined,
         degreeQualityPoints: undefined,
         studentCourses : studentCourseList
-        // degreeGpa: undefined0
 
     }
 
@@ -123,14 +120,17 @@ async function getStudentData(text) {
             console.log("text      " + text[i - 1]);
             //console.log("i    " + i);
         }
-
+        
+        if (token === "Academic%20Standing%3A"){
+            period = decode(decode(text[i+1]));
+        }
         //reached the courses in progress section of transcript
         if (!inprogress && token === "In%20Progress%20Courses%3A") {
             inprogress = true;
         }
 
         if (token === "DEGREE%20GPA%20TOTALS") {
-            student.gpa = text[i - 1];
+            student.degreeGpa = text[i - 1];
             student.degreeAttemptHours = text[i + 12];
             student.degreePassedHours = text[i + 13];
             student.degreeEarnedHours = text[i + 14];
@@ -169,9 +169,21 @@ async function getStudentData(text) {
                     // student[`${key}${token}`] = [title, grade]; //indicate In Progress <- OLD WAY
                 }
                 let course= `${key}${token}`;
-                let courseInfo = {"title":title, "grade":grade};
+                let academicperiod = period.split(" ")
+                let courseInfo = {
+                    "title":title, 
+                    "grade":grade,
+                    "semester": academicperiod[2]==='I' ? 1 : 2,
+                    "year": academicperiod[0]
+                };
+
                 student.studentCourses.push({[course]:courseInfo});
+                // console.log(academicperiod);
+
             }
+        }
+        if (token === 'Overall%3A'){
+            student.cumulativeGpa = decode(text[i+17])
         }
         i++;
     }
@@ -186,8 +198,8 @@ async function getStudentData(text) {
 //feed path to student pdf -> extracts the text of the pdf -> feeds text to getStudentData -> returns JSON object
 async function parse(file) {
     const text = await getPDFText(file);
-    // //console.log("=================================================pdftext - " + text);
-    var studentData = await getStudentData(text,file);
+    // console.log("=================================================pdftext - " + text);
+    var studentData = await getStudentData(text);
     //console.log("Student data " + studentData.COMP3609);
     return studentData;
 
@@ -195,7 +207,32 @@ async function parse(file) {
 
 
 async function getAcademicHistory(file) {
-    return []
+    const student_history = await parse(file);
+    const student_name = student_history.name;
+    const student_id = student_history.studentId;
+    const date = new Date().toLocaleString();
+    const cumulative_gpa = student_history.cumulativeGpa;
+    const degree_gpa = student_history.degreeGpa;
+    const courses = student_history.studentCourses.map(c=> {
+        const course = Object.keys(c)[0];
+        return {
+            grade: c[course].grade,
+            studentId : student_id,
+            semester: c[course].semester,
+            year: c[course].year,
+            code: course
+
+        }
+    });
+
+    return {
+        name: student_name,
+        id: student_id ,
+        date_printed :date,
+        degree_gpa : degree_gpa,
+        cumulative_gpa : cumulative_gpa,
+        history : courses
+    }
 }
 
-module.exports = { parse, getAcademicHistory }
+module.exports = { parse, getAcademicHistory}

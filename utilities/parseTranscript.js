@@ -1,7 +1,7 @@
 // Import the file system module
 const fs = require('fs');
 // Import the 'getAcademicHistory' function from 'parser.js'
-const { getAcademicHistory, parse } = require('./parser');
+const { getAcademicHistory} = require('./parser');
 
 // Check if a file path was provided as a command-line argument
 if (process.argv.length < 3) {
@@ -22,7 +22,8 @@ fs.readFile(pdfFilePath, async (err, fileBuffer) => {
 
     try {
         // Call 'getAcademicHistory' with the file buffer
-        const historyResult = await parse(fileBuffer);
+        // const historyResult = await parse(fileBuffer);
+        const historyResult = await getAcademicHistory(fileBuffer);
 
         // Write the result to 'results.json'
         fs.writeFile('results.json', JSON.stringify(historyResult, null, 2), (err) => {
