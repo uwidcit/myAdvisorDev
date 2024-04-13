@@ -252,7 +252,7 @@ router.get("/degreeProgress", studentAccountVerification, async (req, res) => {
     // let degreeProgress = getDegreeProgress(programmeId, studentCourseCodes, programmeCourses, courses, programmeCreditRequirements, types);
 
     let degreeProgress = await getDegreeProgress(studentId);
-    console.log("Degree Progrress: ", degreeProgress);
+    console.log("Degree Progress: ", degreeProgress);
     res.json({
         "DegreeProgress: ": degreeProgress
     });

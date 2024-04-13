@@ -12,7 +12,8 @@ const db = require("../db");
 // import models
 const Transcript = require("../models/Transcript");
 const StudentCourses = require("../models/StudentCourse");
-
+// import controllers
+const { getStudentsCourses } = require('../controllers/getStudentCourses');
 
 // get all student details in the database
 //Get Transcript
@@ -66,7 +67,9 @@ router.get("/courses/view", async (req, res) => {
 
     try {
         const student = await StudentCourses.findOne({ where: { studentId: req.body.studentId } && { courseCode: req.body.courseCode } });
-
+        //need year: derived from sem id via Semesters
+        //need coursename: derived from courseCode via Course
+        
         if (!student) {
             return res.status(404).send("Course for student not found.");
         }
@@ -83,18 +86,12 @@ router.get("/courses/view", async (req, res) => {
 // get all of a student's course in the database
 router.get("/courses/viewAll/:studentId", async (req, res) => {
     try {
-        const student = await StudentCourses.findAll({ where: { studentId: req.params.studentId } });
-
-        res.status(202).json(student);
-        /*
-        if (student.length === 0) {
-            //return res.status(404).send("Student not found.");
-            return res.status(404).json({ error: 'Student not found.' });
-        }
-        else {
-            res.status(202).json(student);
-        }
-        */
+        const path_student = req.params.studentId; 
+        let studentCourses = await getStudentsCourses(path_student);
+        console.log("Student Courses: ", studentCourses);
+        res.json({
+            "courses" : studentCourses
+        })
     }
     catch (err) {
         console.log("Error: ", err.message);

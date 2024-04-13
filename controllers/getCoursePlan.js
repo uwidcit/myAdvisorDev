@@ -20,27 +20,27 @@ async function getCoursePlan(studentId, semesterId) {
         return programme.get('programmeId');
     });
 
-    const programme_courses = await ProgrammeCourse.findAll({
-        attributes: ['courseCode'],
-        where: {
-            ProgrammeId: programme_id
-        }
-    });
-    const student_courses = await StudentCourse.findAll({
-        attributes: ['courseCode'],
-        where: {
-            studentId: studentId
-        }
-    }).then(async (std_courses) => {
-        return std_courses.map(std => std.get('courseCode'));
-    });
-    const courses = await Course.findAll();
-    const credit_requirements = await ElectiveRequirement.findAll({
-        where: {
-            ProgrammeId: programme_id
-        }
-    });
-    const types = await Type.findAll();
+    // const programme_courses = await ProgrammeCourse.findAll({
+    //     attributes: ['courseCode'],
+    //     where: {
+    //         ProgrammeId: programme_id
+    //     }
+    // });
+    // const student_courses = await StudentCourse.findAll({
+    //     attributes: ['courseCode'],
+    //     where: {
+    //         studentId: studentId
+    //     }
+    // }).then(async (std_courses) => {
+    //     return std_courses.map(std => std.get('courseCode'));
+    // });
+    // const courses = await Course.findAll();
+    // const credit_requirements = await ElectiveRequirement.findAll({
+    //     where: {
+    //         ProgrammeId: programme_id
+    //     }
+    // });
+    // const types = await Type.findAll();
     let eligiblecoursesObj = [];
     let coursePlan = [];
 
