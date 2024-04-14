@@ -259,7 +259,7 @@ router.post("/plan", studentAccountVerification, async (req, res) => {
             try {
                 await SelectedCourse.create({
                     advisingSessionId: newAdvisingSession.id,
-                    courseCode: courses[i],
+                    courseCode: courses[i].code
                 });
             } catch (err) {
                 console.log("Error: ", err.message);

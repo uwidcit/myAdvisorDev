@@ -233,9 +233,10 @@ router.get("/course-plan/:semesterId/:studentId", staffAccountVerification, asyn
 });
 
 // get course plan for all students
-router.get("/course-plan/:semesterId", staffAccountVerification, async (req, res) => {
+router.get("/course-plans", staffAccountVerification, async (req, res) => {
 
-    let semesterId = req.params.semesterId;
+    const recentSemester = await Semester.findOne({order: [['startDate', 'DESC']]});
+    let semesterId = recentSemester.num.toInt();
     // const studentId = req.user;
     let studentId;
     let programme;
