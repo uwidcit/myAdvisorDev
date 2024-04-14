@@ -13,6 +13,7 @@ const db = require("../db");
 // import models
 const Transcript = require("../models/Transcript");
 const StudentCourses = require("../models/StudentCourse");
+const Semester = require("../models/Semester");
 // import controllers
 const { getStudentsCourses } = require('../controllers/getStudentCourses');
 
@@ -188,15 +189,11 @@ router.post('/parseForm', upload.single('file'), async (req, res) => {
             degreeGpaHours, 
             degreeQualityPoints 
         } = data;
-        //console.log("credits "+credits);
-        //console.log("LOG::> studentId: ", studentId);
-
-
-        // check if student is already added
+          // check if student is already added
         const student = await Transcript.findOne({ where: { studentId: studentId } });
 
         if (student) {
-            // return res.status(401).send("Student already exists.");
+            return res.status(401).send("Student already exists.");
         }
         else {
             await Transcript.create({
@@ -218,7 +215,8 @@ router.post('/parseForm', upload.single('file'), async (req, res) => {
                 });
         }
         const { studentCourses: studentcourselist } = data;
-        let invalid_grades = ["F1", "F2", "F3", "DIS", "EI", "FA", "FAS", "FC", "FE", "FO", "FP", "FT", "FWS", "FTS", "AB", "AM", "AMS", "DB", "DEF", "EQ", "EX", "FM", "FMS", "FWR", "I", "IP", "LW", "NCR", "NFC", "NP", "NR", "NV", "W", "FMP"]
+        // let invalid_grades = ["F1", "F2", "F3", "DIS", "EI", "FA", "FAS", "FC", "FE", "FO", "FP", "FT", "FWS", "FTS", "AB", "AM", "AMS", "DB", "DEF", "EQ", "EX", "FM", "FMS", "FWR", "I", "IP", "LW", "NCR", "NFC", "NP", "NR", "NV", "W", "FMP"]
+        let invalid_grades = ["IP"]
         studentcourselist.map(async (course) =>{
             const code = Object.keys(course)[0];
             const grade = course[code].grade
@@ -231,15 +229,43 @@ router.post('/parseForm', upload.single('file'), async (req, res) => {
                 }
             });
             const grade_valid = !invalid_grades.includes(grade);
+            const year = course[code].year;
+            const current_year = new Date().getFullYear();
+            const course_sem = course[code].semester;
+            let sem = undefined;
+            if(year.split("/").every(yr => yr <= current_year)){
+                const start_date = course_sem === 1 ? `${year.split("/")[0]}-09-01` : `${year.split("/")[1]}-01-15`
+                const end_date = course_sem === 1 ? `${year.split("/")[0]}-12-15` : `${year.split("/")[1]}-05-31`
+                const [sem_num,created] = await Semester.findOrCreate({
+                    attributes : ['num'],
+                    where : {
+                        [Op.and]: [
+                            {num:course_sem},
+                            {academicYear:year}
+                        ]
+                    },
+                    defaults : {
+                        startDate: start_date,
+                        endDate: end_date,
+                        num: course_sem,
+                        academicYear: year
+                    }
+                });
+                // console.log(sem_num.num);
+                // if(created){
+                //     console.log(sem_num.academicYear);
+                // }
+                sem = sem_num;
+            }
             if(!student_course_exists && grade_valid){
                 await StudentCourses.create({
                     studentId,
                     courseCode:code,
-                    semesterId:course[code].semester,
+                    semesterId:sem,
                     grade:grade
-                }).then(()=>{
+                }).then(() => {
                     console.log(`course ${code} added as studentCourse for student ${studentId} `)
-                }).catch(err =>{
+                }).catch(err => {
                     console.log("Error: ", err.message);
                 });
             }
