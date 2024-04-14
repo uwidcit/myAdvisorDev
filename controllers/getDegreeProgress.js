@@ -10,12 +10,27 @@ const { Op } = require("sequelize");
 
 // returns the students degree progress(list of completed courses, total credits completed, remaining requirements and total credits remaining)
 async function getDegreeProgress(student_id) {
-
-    const studentCourses = await StudentCourse.findAll({ where: { studentId: student_id } });
-    let studentCourseCodes = [];
-    for (i = 0; i < studentCourses.length; i++) {
-        studentCourseCodes.push(studentCourses[i].dataValues.courseCode);
-    }
+    let invalid_grades = ["F1", "F2", "F3", "DIS", "EI", "FA", "FAS", "FC", "FE", "FO", "FP", "FT", "FWS", "FTS", "AB", "AM", "AMS", "DB", "DEF", "EQ", "EX", "FM", "FMS", "FWR", "I", "IP", "LW", "NCR", "NFC", "NP", "NR", "NV", "W", "FMP"]
+    let studentCourseCodes = await StudentCourse.findAll({ 
+        attributes: ['courseCode','grade'],
+        where: {
+            studentId: student_id 
+        } 
+    }).then(courses => {return courses.map(course =>{
+        const grade = course.get('grade')
+        if(!invalid_grades.includes(grade)){
+            return course.get('courseCode')
+        }
+    })});
+    // let studentCourseCodes = [];
+    // for (i = 0; i < studentCourses.length; i++) {
+    //     studentCourseCodes.push(studentCourses[i].dataValues.courseCode);
+    // }
+    // let studentCourseCodes = studentCourses.map(course =>{
+    //     if (!invalid_grades.includes(course['grade'])){
+    //         return course
+    //     } 
+    // });
     console.log("student courses: ", studentCourseCodes);
 
 
@@ -110,7 +125,9 @@ async function getDegreeProgress(student_id) {
     return degreeProgress;
 }
 
-
+// (async () =>{
+//     console.log(await getDegreeProgress('816031565'))
+// })()
 module.exports = { getDegreeProgress };
 
 
