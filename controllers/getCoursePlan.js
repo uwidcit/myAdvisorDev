@@ -135,6 +135,7 @@ async function getCoursePlan(studentId, semesterId) {
         for (type in degree_progress.Requirements) {
             let planData = {};
             let plancourses = [];
+            planData
             planData["creditType"] = type;
             planData["creditsRemaining"] = degree_progress.Requirements[type][0];
             // console.log(type);
@@ -142,6 +143,9 @@ async function getCoursePlan(studentId, semesterId) {
 
             planData["creditsRemaining"] = [degree_progress.Requirements[type][0], degree_progress.Requirements[type][1]];
             planData["Courses"] = plancourses;
+
+
+
             coursePlan.push(planData);
 
         }
@@ -149,18 +153,18 @@ async function getCoursePlan(studentId, semesterId) {
 
     // console.log("COURSEPLAN:::> ", coursePlan);
 
-    coursePlan.forEach(item => {
-        console.log(`Credit Type: ${item.creditType}`);
-        console.log(`Credits Remaining: ${item.creditsRemaining}`);
+    // coursePlan.forEach(item => {
+    //     console.log(`Credit Type: ${item.creditType}`);
+    //     console.log(`Credits Remaining: ${item.creditsRemaining}`);
 
-        // Iterate over each course in Courses array
-        item.Courses.forEach(course => {
-            console.log(`Course Name: ${course.courseCode}`);
-            // Print other properties of the course if needed
-        });
+    //     // Iterate over each course in Courses array
+    //     item.Courses.forEach(course => {
+    //         console.log(`Course Name: ${course.courseCode}`);
+    //         // Print other properties of the course if needed
+    //     });
 
-        console.log(); // Add a line break for readability
-    });
+    //     console.log(); // Add a line break for readability
+    // });
 
     return coursePlan;
 
