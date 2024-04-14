@@ -3,6 +3,7 @@ const multer = require('multer')
 const upload = multer({ storage: multer.memoryStorage() })
 const { parse } = require('../utilities/parser');
 const studentAccountVerification = require("../middleware/studentAccountVerification");
+const { Op } = require('sequelize');
 /**
  * initalizes express router and database connection
  */
@@ -104,7 +105,7 @@ router.get("/courses/viewAll/:studentId", async (req, res) => {
 router.post("/details/add", async (req, res) => {
     try {
         // destructure data entered
-        const { studentId, gpa, name, progress, credits, degree, major, admitTerm, degreeAttemptHours, degreePassedHours, degreeEarnedHours, degreeGpaHours, degreeQualityPoints } = req.body;
+        const { studentId, gpa, name, credits, degree, major, admitTerm, degreeAttemptHours, degreePassedHours, degreeEarnedHours, degreeGpaHours, degreeQualityPoints } = req.body;
 
         // check if student is already added
         const student = await Transcript.findOne({ where: { studentId } });
@@ -116,7 +117,6 @@ router.post("/details/add", async (req, res) => {
                 studentId,
                 gpa,
                 name,
-                progress,
                 credits,
                 degree,
                 major,
@@ -170,11 +170,24 @@ router.post("/courses/add", async (req, res) => {
 // Add transcript by uploading transcript
 router.post('/parseForm', upload.single('file'), async (req, res) => {
     //console.log("res:" ,res);
-    const { parsedText, ...data } = await parse(req.file.buffer);
-    //console.log("LOG::> Data "+ JSON.stringify(data));
+    const { ...data } = await parse(req.file.buffer);
+    // console.log("LOG::> Data "+ JSON.stringify(data));
     try {
         // destructure data entered
-        const { studentId, gpa, name, credits, degree, major, admitTerm, degreeAttemptHours, degreePassedHours, degreeEarnedHours, degreeGpaHours, degreeQualityPoints } = data;
+        const { 
+            studentId, 
+            degreeGpa: gpa, 
+            name, 
+            credits, 
+            degree, 
+            major, 
+            admitTerm, 
+            degreeAttemptHours, 
+            degreePassedHours, 
+            degreeEarnedHours, 
+            degreeGpaHours, 
+            degreeQualityPoints 
+        } = data;
         //console.log("credits "+credits);
         //console.log("LOG::> studentId: ", studentId);
 
@@ -187,7 +200,7 @@ router.post('/parseForm', upload.single('file'), async (req, res) => {
         }
         else {
             await Transcript.create({
-                studentId: studentId,
+                studentId,
                 gpa,
                 name,
                 credits,
@@ -204,36 +217,33 @@ router.post('/parseForm', upload.single('file'), async (req, res) => {
                     console.log("Error: ", err.message);
                 });
         }
-
-        console.log("LOG::> Entering for loop");
-        // check if course for student is already added
-        for (var key in data) {
-            //console.log("LOG::> Key: ", key);
-            if (!(key === "studentId" || key === "gpa" || key === "name" || key === "progress" || key === "credits" || key === "degree" || key === "major" || key === "admitTerm" || key === "degreeAttemptHours" || key === "degreePassedHours" || key === "degreeEarnedHours" || key === "degreeGpaHours" || key === "degreeQualityPoints")) {//if not equal to these
-                var courseCode = key;
-                var courseTitle = data[key][0]
-                var grade = data[key][1].trim();
-
-                const courses = await StudentCourses.findOne({ where: { studentId, courseCode } });
-                //console.log("+++++!+!++!", courses);
-                if (courses) {
-                    // return res.status(401).send("Course for student already exists.");
+        const { studentCourses: studentcourselist } = data;
+        let invalid_grades = ["F1", "F2", "F3", "DIS", "EI", "FA", "FAS", "FC", "FE", "FO", "FP", "FT", "FWS", "FTS", "AB", "AM", "AMS", "DB", "DEF", "EQ", "EX", "FM", "FMS", "FWR", "I", "IP", "LW", "NCR", "NFC", "NP", "NR", "NV", "W", "FMP"]
+        studentcourselist.map(async (course) =>{
+            const code = Object.keys(course)[0];
+            const grade = course[code].grade
+            const student_course_exists = await StudentCourses.findOne({
+                where: {
+                    [Op.and]: [
+                        {studentId : studentId},
+                        {courseCode: code}
+                    ]
                 }
-                else {
-                    await StudentCourses.create({
-                        studentId,
-                        courseCode,
-                        courseTitle,
-                        grade,
-                    })
-                        .catch(err => {
-                            console.log("Error: ", err.message);
-                        });
-
-                    console.log("Created: ", courseCode);
-                }
+            });
+            const grade_valid = !invalid_grades.includes(grade);
+            if(!student_course_exists && grade_valid){
+                await StudentCourses.create({
+                    studentId,
+                    courseCode:code,
+                    semesterId:course[code].semester,
+                    grade:grade
+                }).then(()=>{
+                    console.log(`course ${code} added as studentCourse for student ${studentId} `)
+                }).catch(err =>{
+                    console.log("Error: ", err.message);
+                });
             }
-        }
+        });
         return res.status(200).send("Student courses added!");
 
 
