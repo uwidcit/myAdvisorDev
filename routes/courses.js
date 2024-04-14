@@ -29,6 +29,25 @@ router.get("/all", async (req, res) => {
     }
 });
 
+//Added by Faith--------------------------------------------------
+//Get all departments through the Programme model
+router.get("/departments" , async (req, res) => {
+    try {
+        // Find all unique departments from the User model
+        const departments = await Programme.findAll({
+            attributes: ['department'],
+            group: ['department']
+        });
+        res.status(200).json(departments);
+    }
+    catch (err) {
+        console.log("Error: ", err.message);
+        res.status(500).send("Server Error");
+    }
+});
+
+
+
 // get a course in the database
 router.get("/view/:code", async (req, res) => {
     try {
