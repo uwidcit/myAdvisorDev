@@ -119,6 +119,7 @@ router.get("/degreeProgress", studentAccountVerification, async (req, res) => {
 router.get("/course-plan/:semesterId", studentAccountVerification, async (req, res) => {
 
     let semesterId = req.params.semesterId;
+
     const studentId = req.user;
     // const studentId = "816021684";
     let programme;
@@ -229,8 +230,8 @@ router.get("/course-plan/:semesterId", studentAccountVerification, async (req, r
 
 
 
-
-    // console.log("COURSEPLAN:::> ",coursePlan);
+    // console.log("COURSEPLAN:::> ", coursePlan);
+    // console.log(semesterId);
     res.json({
         "Course Plan: ": coursePlan
     });
