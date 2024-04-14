@@ -1,7 +1,7 @@
 // Import the file system module
 const fs = require('fs');
 // Import the 'getAcademicHistory' function from 'parser.js'
-const { getAcademicHistory} = require('./parser');
+const { getAcademicHistory,parse} = require('./parser');
 
 // Check if a file path was provided as a command-line argument
 if (process.argv.length < 3) {

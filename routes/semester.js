@@ -6,6 +6,7 @@ const SemesterCourse = require("../models/SemesterCourse");
 const AdvisingSession = require("../models/AdvisingSession");
 const SelectedCourse = require("../models/SelectedCourse");
 const Course = require("../models/Course");
+const studentAccountVerification = require("../middleware/studentAccountVerification");
 
 const { Op } = require("sequelize");
 
@@ -173,63 +174,7 @@ router.get("/courses/:semesterId", async (req, res) => {
     }
 });
 
-const studentAccountVerification = require("../middleware/studentAccountVerification");
 
-// router.post("/plan", studentAccountVerification, async (req, res) => {
-//     try {
-//         const { semesterId, courses } = req.body;
-//         const semester = await Semester.findOne({ where: { id: semesterId } });
-
-//         if (semester) {
-//             const studentId = req.user;
-
-//             const advisingSession = await AdvisingSession.findOne({
-//                 where: {
-//                     studentId: studentId,
-//                     semesterId: semesterId,
-//                 },
-//             });
-
-//             if (!advisingSession) {
-//                 await AdvisingSession.create({
-//                     studentId: studentId,
-//                     semesterId: semesterId,
-//                 });
-//             }
-
-
-
-
-//             if (advisingSession) {
-//                 let isError = false;
-
-//                 for (let i = 0; i < courses.length; i++) {
-//                     // console.log("course: ", courses[i]);
-//                     // console.log("sessionId: ", advisingSession.dataValues.id);
-
-//                     try {
-//                         await SelectedCourse.create({
-//                             advisingSessionId: advisingSession.dataValues.id,
-//                             courseCode: courses[i],
-//                         });
-//                     } catch (err) {
-//                         console.log("Error: ", err.message);
-//                         isError = true;
-//                     }
-//                 }
-
-//                 if (isError) {
-//                     res.status(500).send("Error occurred while adding advised courses");
-//                 } else {
-//                     res.status(200).send("Semester Planned!");
-//                 }
-//             }
-//         }
-//     } catch (err) {
-//         console.log("Error: ", err.message);
-//         res.status(500).send("Server Error");
-//     }
-// });
 
 
 router.post("/plan", studentAccountVerification, async (req, res) => {
