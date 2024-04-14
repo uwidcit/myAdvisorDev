@@ -122,7 +122,7 @@ async function getStudentData(text) {
         }
         
         if (token === "Academic%20Standing%3A"){
-            period = decode(decode(text[i+1]));
+            period = decode(text[i+1]);
         }
         //reached the courses in progress section of transcript
         if (!inprogress && token === "In%20Progress%20Courses%3A") {
