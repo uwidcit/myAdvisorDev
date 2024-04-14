@@ -22,16 +22,7 @@ async function getDegreeProgress(student_id) {
             return course.get('courseCode')
         }
     })});
-    // let studentCourseCodes = [];
-    // for (i = 0; i < studentCourses.length; i++) {
-    //     studentCourseCodes.push(studentCourses[i].dataValues.courseCode);
-    // }
-    // let studentCourseCodes = studentCourses.map(course =>{
-    //     if (!invalid_grades.includes(course['grade'])){
-    //         return course
-    //     } 
-    // });
-    console.log("student courses: ", studentCourseCodes);
+
 
 
     // Get programme id from student model
@@ -50,7 +41,7 @@ async function getDegreeProgress(student_id) {
     for (i = 0; i < programmeCourse.length; i++) {
         programmeCourses.push(programmeCourse[i].dataValues);
     }
-    console.log("programmeCourse: ", programmeCourses);
+    //console.log("programmeCourse: ", programmeCourses);
 
     //  get courses
     let course = await Course.findAll();
@@ -58,7 +49,7 @@ async function getDegreeProgress(student_id) {
     for (i = 0; i < course.length; i++) {
         courses.push(course[i].dataValues);
     }
-    console.log("courses: ", courses);
+    //console.log("courses: ", courses);
 
     // get programmeCreditRequirements
     let pcrs = await PCR.findAll({ where: { programmeId } });
@@ -66,7 +57,7 @@ async function getDegreeProgress(student_id) {
     for (i = 0; i < pcrs.length; i++) {
         programmeCreditRequirements.push(pcrs[i].dataValues);
     }
-    console.log("PCR: ", programmeCreditRequirements);
+    //console.log("PCR: ", programmeCreditRequirements);
 
     // get types
     let type = await Type.findAll();
@@ -74,7 +65,7 @@ async function getDegreeProgress(student_id) {
     for (i = 0; i < type.length; i++) {
         types.push(type[i].dataValues);
     }
-    console.log("types: ", types);
+    //console.log("types: ", types);
 
 
     let totalCredits = 0;
@@ -95,7 +86,7 @@ async function getDegreeProgress(student_id) {
             try {
                 let course = courses.find((c) => c.code === studentCourseCodes[i]);
                 const type = types.find(type => type.type === creditType);
-                console.log(type);
+                //console.log(type);
 
                 let programmeCourse = programmeCourses.find(
                     (c) => c.courseCode === studentCourseCodes[i] && c.programmeId === programmeId && c.typeId === type.id);
@@ -109,7 +100,7 @@ async function getDegreeProgress(student_id) {
                     completedCourses.push(course.code);
                     creditRequirements[creditType][0] -= credits;
                     totalCredits += credits;
-                    console.log(completedCourses);
+                    //console.log(completedCourses);
                 }
 
             } catch (error) {

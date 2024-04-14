@@ -91,10 +91,11 @@ async function getCoursePlan(studentId, semesterId) {
 
     if (planned_courses) {
         for (let courseCode of planned_courses) {
-            // console.log("planned: ",courseCode);
+            // console.log("planned: ", courseCode);
             const courseToUpdate = eligiblecoursesObj.find((course) => course['courseCode'] === courseCode);
             if (courseToUpdate) {
                 courseToUpdate.selected = true;
+                // console.log(courseToUpdate);
             }
         }
 
@@ -128,7 +129,6 @@ async function getCoursePlan(studentId, semesterId) {
             planData["creditsRemaining"] = [planData.creditsRemaining, degree_progress.Requirements[type][1]];
             planData["Courses"] = plancourses;
             coursePlan.push(planData);
-
         }
 
     } else {
@@ -147,7 +147,20 @@ async function getCoursePlan(studentId, semesterId) {
         }
     }
 
-    console.log("COURSEPLAN:::> ", coursePlan);
+    // console.log("COURSEPLAN:::> ", coursePlan);
+
+    coursePlan.forEach(item => {
+        console.log(`Credit Type: ${item.creditType}`);
+        console.log(`Credits Remaining: ${item.creditsRemaining}`);
+
+        // Iterate over each course in Courses array
+        item.Courses.forEach(course => {
+            console.log(`Course Name: ${course.courseCode}`);
+            // Print other properties of the course if needed
+        });
+
+        console.log(); // Add a line break for readability
+    });
 
     return coursePlan;
 
