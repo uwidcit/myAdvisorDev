@@ -94,5 +94,13 @@
         "email": "faith@example.com",
         "password": "password",
         "programmeId": 1
+    },
+    {
+        "studentId": 816028020,
+        "firstName": "Jarrod",
+        "lastName": "Moore",
+        "email": "jmoore@example.com",
+        "password": "qwerty123",
+        "programmeId": 1
     }
 ]
