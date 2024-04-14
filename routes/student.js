@@ -13,6 +13,7 @@ const { getEligibleCourses } = require("../controllers/getEligibleCourses");
 const { getDegreeProgress } = require("../controllers/getDegreeProgress");
 const { getPlannedCourses } = require("../controllers/getPlannedCourses");
 const { getCoursePlan } = require("../controllers/getCoursePlan");
+const { getAllCoursePlans } = require("../controllers/getAllCoursePlans");
 
 const { Sequelize } = require('sequelize');
 
@@ -122,103 +123,103 @@ router.get("/course-plan/:semesterId", studentAccountVerification, async (req, r
 
     const studentId = req.user;
     // const studentId = "816021684";
-    let programme;
+    // let programme;
 
     // -----------------GET DATA FROM DATABASE-------------------------
 
-    //#region 
+    // //#region 
 
-    // get course codes of courses completed by student
-    const studentCourses = await StudentCourse.findAll({ where: { studentId: studentId } });
-    let studentCourseCodes = [];
-    for (i = 0; i < studentCourses.length; i++) {
-        studentCourseCodes.push(studentCourses[i].dataValues.courseCode);
-    }
-    // console.log("student courses: ", studentCourseCodes);
+    // // get course codes of courses completed by student
+    // const studentCourses = await StudentCourse.findAll({ where: { studentId: studentId } });
+    // let studentCourseCodes = [];
+    // for (i = 0; i < studentCourses.length; i++) {
+    //     studentCourseCodes.push(studentCourses[i].dataValues.courseCode);
+    // }
+    // // console.log("student courses: ", studentCourseCodes);
 
-    // Get programme id from student model
-    const student = await Student.findOne({ where: { studentId: studentId } });
-    if (student) {
-        programmeId = student.dataValues.programmeId;
-        // console.log("student: ", student.dataValues.programmeId);
-    }
+    // // Get programme id from student model
+    // const student = await Student.findOne({ where: { studentId: studentId } });
+    // if (student) {
+    //     programmeId = student.dataValues.programmeId;
+    //     // console.log("student: ", student.dataValues.programmeId);
+    // }
 
-    // // Get student's transcript
-    // const transcript = await Transcript.findOne({ where: { studentId: studentId }, });
-    // switch (transcript.major) {
-    //     case "Computer Science (Special)":
-    //         programme = await Programme.findOne({ where: { name: "BSc " + transcript.major } })
-    //         break;
-    // };
-    // let programmeId = programme.dataValues.id
-    // console.log("Programme Id: ",programmeId);
+    // // // Get student's transcript
+    // // const transcript = await Transcript.findOne({ where: { studentId: studentId }, });
+    // // switch (transcript.major) {
+    // //     case "Computer Science (Special)":
+    // //         programme = await Programme.findOne({ where: { name: "BSc " + transcript.major } })
+    // //         break;
+    // // };
+    // // let programmeId = programme.dataValues.id
+    // // console.log("Programme Id: ",programmeId);
 
-    //  get programme courses for programmeId
-    const programmeCourse = await ProgrammeCourse.findAll({ where: { programmeId } });
-    let programmeCourses = [];
-    for (i = 0; i < programmeCourse.length; i++) {
-        programmeCourses.push(programmeCourse[i].dataValues);
-    }
-    // console.log("programmeCourses: ", programmeCourses);
-
-
-    // get semesterCourses
-    const semesterCourses = await SemesterCourses.findAll({ where: { semesterId: semesterId } })
-    let semCourses = [];
-    for (i = 0; i < semesterCourses.length; i++) {
-        semCourses.push(semesterCourses[i].dataValues.courseCode);
-    }
-    // console.log("Semester Courses :  ", semCourses);
+    // //  get programme courses for programmeId
+    // const programmeCourse = await ProgrammeCourse.findAll({ where: { programmeId } });
+    // let programmeCourses = [];
+    // for (i = 0; i < programmeCourse.length; i++) {
+    //     programmeCourses.push(programmeCourse[i].dataValues);
+    // }
+    // // console.log("programmeCourses: ", programmeCourses);
 
 
-    // get prerequisites
-    const prerequisites = await Prerequisite.findAll();
-    let prereqs = [];
-    for (let prereq in prerequisites) {
-        prereqs.push(prerequisites[prereq].dataValues);
-        // console.log("prerequisites: ", prerequisites[prereq]. dataValues);
-    }
-    // console.log("prerequisites: ", prereqs);
+    // // get semesterCourses
+    // const semesterCourses = await SemesterCourses.findAll({ where: { semesterId: semesterId } })
+    // let semCourses = [];
+    // for (i = 0; i < semesterCourses.length; i++) {
+    //     semCourses.push(semesterCourses[i].dataValues.courseCode);
+    // }
+    // // console.log("Semester Courses :  ", semCourses);
 
-    // get antirequisites
-    const antirequisites = await Antirequisite.findAll();
-    let antireqs = [];
-    for (let antireq in antirequisites) {
-        antireqs.push(antirequisites[antireq].dataValues);
-    }
-    // console.log("antireqs: ", antireqs);
 
-    // get courseGroups
-    const courseGroups = await CourseGroup.findAll();
-    let coursegroups = [];
-    for (let cg in courseGroups) {
-        coursegroups.push(courseGroups[cg].dataValues);
-        // console.log("prerequisites: ", prerequisites[prereq]. dataValues);
-    }
-    // console.log("courseGroups:  ", coursegroups);
+    // // get prerequisites
+    // const prerequisites = await Prerequisite.findAll();
+    // let prereqs = [];
+    // for (let prereq in prerequisites) {
+    //     prereqs.push(prerequisites[prereq].dataValues);
+    //     // console.log("prerequisites: ", prerequisites[prereq]. dataValues);
+    // }
+    // // console.log("prerequisites: ", prereqs);
 
-    //  get courses
-    let course = await Course.findAll();
-    let courses = [];
-    for (i = 0; i < course.length; i++) {
-        courses.push(course[i].dataValues);
-    }
-    //  console.log("courses: ", courses);
+    // // get antirequisites
+    // const antirequisites = await Antirequisite.findAll();
+    // let antireqs = [];
+    // for (let antireq in antirequisites) {
+    //     antireqs.push(antirequisites[antireq].dataValues);
+    // }
+    // // console.log("antireqs: ", antireqs);
 
-    // get programmeCreditRequirements
-    let pcrs = await PCR.findAll({ where: { programmeId } });
-    let programmeCreditRequirements = [];
-    for (i = 0; i < pcrs.length; i++) {
-        programmeCreditRequirements.push(pcrs[i].dataValues);
-    }
-    // console.log("PCR: ", programmeCreditRequirements);
+    // // get courseGroups
+    // const courseGroups = await CourseGroup.findAll();
+    // let coursegroups = [];
+    // for (let cg in courseGroups) {
+    //     coursegroups.push(courseGroups[cg].dataValues);
+    //     // console.log("prerequisites: ", prerequisites[prereq]. dataValues);
+    // }
+    // // console.log("courseGroups:  ", coursegroups);
 
-    // get types
-    let type = await Type.findAll();
-    let types = [];
-    for (i = 0; i < type.length; i++) {
-        types.push(type[i].dataValues);
-    }
+    // //  get courses
+    // let course = await Course.findAll();
+    // let courses = [];
+    // for (i = 0; i < course.length; i++) {
+    //     courses.push(course[i].dataValues);
+    // }
+    // //  console.log("courses: ", courses);
+
+    // // get programmeCreditRequirements
+    // let pcrs = await PCR.findAll({ where: { programmeId } });
+    // let programmeCreditRequirements = [];
+    // for (i = 0; i < pcrs.length; i++) {
+    //     programmeCreditRequirements.push(pcrs[i].dataValues);
+    // }
+    // // console.log("PCR: ", programmeCreditRequirements);
+
+    // // get types
+    // let type = await Type.findAll();
+    // let types = [];
+    // for (i = 0; i < type.length; i++) {
+    //     types.push(type[i].dataValues);
+    // }
     // console.log("types: ", types);
 
     //#endregion
@@ -233,8 +234,75 @@ router.get("/course-plan/:semesterId", studentAccountVerification, async (req, r
     // console.log("COURSEPLAN:::> ", coursePlan);
     // console.log(semesterId);
     res.json({
-        "Course Plan: ": coursePlan
+        studentId: {
+            "lastUpdated": "",
+            "status": "confirmed",
+            "plan": coursePlan,
+            "limit": 15,
+        }
     });
+
+});
+
+router.get("/course-plan/detail/:semesterId", studentAccountVerification, async (req, res) => {
+
+    let semesterId = req.params.semesterId;
+    console.log(semesterId)
+    const studentId = req.user;
+
+    // -----------------CALL THE FUNCTION-------------------------
+
+    let coursePlan = await getCoursePlan(studentId, semesterId);
+
+
+
+    // console.log("COURSEPLAN:::> ", coursePlan);
+    // console.log(semesterId);
+    res.json({
+        "lastUpdated": "",
+        "status": "confirmed",
+        "plan": coursePlan,
+        "limit": 15,
+    });
+
+});
+
+router.get("/course-plans", studentAccountVerification, async (req, res) => {
+
+
+    try {
+        const CoursePlanList = await getAllCoursePlans();
+        const semesterId = req.query.semesterId;
+        const page = parseInt(req.query.page) || 1;
+        const itemsPerPage = parseInt(req.query.itemsPerPage) || 5;
+
+        if (!semesterId) {
+            return res.status(400).json({ message: 'Semester ID is required' });
+        }
+
+        if (!CoursePlanList[semesterId]) {
+            return res.status(404).json({ message: 'Course plans not found for the provided semester ID' });
+        }
+
+        const totalPlans = CoursePlanList[semesterId].length;
+        const start = (page - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+
+        const paginatedPlans = CoursePlanList[semesterId].slice(start, end);
+
+        const payload = {
+            allPlan: CoursePlanList,
+            plans: paginatedPlans,
+            totalPlans,
+            totalPages: Math.ceil(totalPlans / itemsPerPage),
+            currentPage: page,
+        };
+
+        res.status(200).json(payload);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
 
 });
 
