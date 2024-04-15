@@ -166,6 +166,7 @@ async function loadDummyStudents(studentsData) {
             email: student.email,
             programmeId: student.programmeId,
             password: passEncrypt,
+            year: student.year
         };
         return createStudent(studentDataWithEncryptedPassword);
     });

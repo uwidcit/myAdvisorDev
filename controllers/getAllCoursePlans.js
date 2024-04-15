@@ -1,57 +1,69 @@
 const Student = require("../models/Student");
 const AdvisingSession = require("../models/AdvisingSession");
+const SelectedCourse = require("../models/SelectedCourse");
 const Programme = require("../models/Programme");
 const Semester = require("../models/Semester");
-
-
-const getAllCoursePlans = async () => {
-    try {
-        const students = await Student.findAll();
-        const semesters = await Semester.findAll(); // Assuming you have a Semester model
-
-        const coursePlans = [];
-
-        for (const semester of semesters) {
-            const semesterId = semester.id; // Assuming semester has an id property
-            for (const student of students) {
-                let studentId = student.studentId;
-                let programmeId = student.programmeId;
-
-                let courseplan = {
-                    studentId: studentId,
-                    programmeName: '',
-                    firstName: student.firstName,
-                    lastName: student.lastName,
-                    year: 0,
-                    courses: []
-                };
-
-                const programme = await Programme.findOne({ where: { id: programmeId } });
-                if (programme) {
-                    courseplan.programmeName = programme.name;
-                }
-
-                const advisingSession = await AdvisingSession.findOne({ where: { studentId, semesterId } });
-
-                if (advisingSession) {
-                    const sessionId = advisingSession.id;
-                    const selectedCourses = await SelectedCourse.findAll({ where: { advisingSessionId: sessionId } });
-
-                    for (const ac of selectedCourses) {
-                        courseplan.courses.push(ac.courseCode);
-                    }
-                }
-                courseplan = {
-                    semesterId: courseplan
-                }
-                coursePlans[semesterId].push(courseplan);
+const { Op } = require('sequelize');
+async function getAllCoursePlans(semesterId){
+    try{
+        //pending courses 
+        const courseplans = await AdvisingSession.findAll({
+            attributes:['id','planStatus','studentId','semesterId'],
+            where: {
+                [Op.and] : [
+                    {planStatus:'Pending'},
+                    {semesterId: semesterId}
+                ]
             }
-        }
+        }).then(plans => plans.map(async (info) => {
+            const student = info.get('studentId');
+            const semester = info.get('semesterId');
+            const planId = info.get('id');
+            const status = info.get('planStatus')
+            const student_info = await Student.findOne({
+                attributes:['programmeId','firstName','lastName'],
+                where :{
+                    studentId: student
+                }
+            }).then(async (student) =>{
+                return [
+                    student.get('firstName'),
+                    student.get('lastName'),
+                    await Programme.findOne({
+                        attributes:['name'],
+                        where:{id: student.get('programmeId')}
+                    }).then(prog=>{
+                        return prog.get('name');
+                    })
+                ]
+            });
+            const courses = await SelectedCourse.findAll({
+                attributes :['courseCode'],
+                where : {
+                    AdvisingSessionId: planId
+                }
+            }).then(courses => courses.map(course => {
+                return course.get('courseCode');
+            }));
+            return {
+                studentId:student,
+                firstName: student_info[0],
+                lastName: student_info[1],
+                programmeName: student_info[2],
+                semesterId:semester,
+                status:status,
+                courses: courses
+            }
+        })); 
+        return Promise.all(courseplans); 
+    }catch(error){
+        const msg = `Error in getting all student courseplans for semesterId ${semesterId}:`;
+        console.log(msg,error.message);
+        return null;
 
-        return coursePlans;
-    } catch (error) {
-        // Handle errors here
-        console.error(error);
-        throw new Error('Failed to fetch course plans.');
     }
-};
+}
+// (async () => {
+//     console.log(await getAllCoursePlans(2));
+// })()
+module.exports = {getAllCoursePlans}
