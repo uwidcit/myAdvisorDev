@@ -919,5 +919,69 @@ router.get("/studentsSummary", staffAccountVerification, async (req, res) => {
 
 })
 
+router.get("/students", staffAccountVerification, async (req, res) => {
+    try {
+        let studentsAll = [];
+
+        const students = await Student.findAll();
+        for (i = 0; i < students.length; i++) {
+
+            const programme = await Programme.findOne({ where: { "id": students[i].programmeId } })
+            let studentData = {
+                "id": students[i].id,
+                "accountType": "student",
+                "username": students[i].studentId,
+                "firstName": students[i].firstName,
+                "lastName": students[i].lastName,
+                "avatar": '/assets/images/face-4.png',
+                "age": 0,
+                "semester_started": {
+                    "year_group": 0,
+                    "admit_term": ""
+                },
+                "email": students[i].email,
+                "programme": programme.name,
+            }
+
+            studentsAll.push(studentData);
+        }
+
+        res.status(200).send(studentsAll);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal server error');
+    }
+})
+
+router.get("/student/:studentId", staffAccountVerification, async (req, res) => {
+    try {
+
+        const studentId = req.params.studentId;
+        const student = await Student.findOne({ where: { "studentId": studentId } });
+
+        const programme = await Programme.findOne({ where: { "id": student.programmeId } })
+        let studentData = {
+            "id": student.id,
+            "accountType": "student",
+            "username": student.studentId,
+            "firstName": student.firstName,
+            "lastName": student.lastName,
+            "avatar": '/assets/images/face-4.png',
+            "age": 0,
+            "semester_started": {
+                "year_group": 0,
+                "admit_term": ""
+            },
+            "email": student.email,
+            "programme": programme.name,
+        }
+
+        res.status(200).send(studentData);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send('Internal server error');
+    }
+})
+
 
 module.exports = router;

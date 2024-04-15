@@ -34,7 +34,62 @@ const CourseGroup = require("../models/CourseGroup");
 const Course = require("../models/Course");
 const PCR = require("../models/ElectiveRequirement");
 const Type = require("../models/Type");
+const SelectedCourse = require("../models/SelectedCourse");
 
+
+router.post("/create-plan", studentAccountVerification, async (req, res) => {
+
+    try {
+        const studentId = req.user;
+        let selectedCourses = req.body.selectedCourses;
+        const semesterId = req.body.semesterId;
+
+        let session = await AdvisingSession.findOne({ where: { studentId: studentId, semesterId: semesterId } });
+
+        if (!session) {
+
+            session = await AdvisingSession.create({
+                studentId: studentId,
+                planStatus: "Pending",
+                semesterId: semesterId
+            });
+
+            for (i = 0; i < selectedCourses.length; i++) {
+                console.log(selectedCourses[i])
+                await SelectedCourse.create({
+                    advisingSessionId: session.id,
+                    courseCode: selectedCourses[i]
+                });
+            }
+
+            res.status(200).send("Created New Course Plan");
+        }
+        else {
+
+
+            // Delete all old selected courses
+            await SelectedCourse.destroy({ where: { advisingSessionId: session.id } });
+
+            // Create new selected courses with updated course codes
+            for (let i = 0; i < selectedCourses.length; i++) {
+                await SelectedCourse.create({
+                    advisingSessionId: session.id,
+                    courseCode: selectedCourses[i]
+                });
+            }
+
+            res.status(200).send("Updated Old Course Plan");
+
+        }
+
+
+
+    }
+    catch (err) {
+        console.log("Error: ", err.message);
+        res.status(500).send("Server Error");
+    }
+});
 
 // save advising session
 router.post("/academic-advising/session/:studentId", async (req, res) => {
