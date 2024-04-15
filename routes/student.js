@@ -97,7 +97,7 @@ router.get("/eligibleCourses/:semesterId", studentAccountVerification, async (re
     console.log(eligible_courses);
     res.json({
         "student": student,
-        "upcoming semester": semester,
+        "upcomingSemester": semester,
         "eligibleCourses": eligible_courses
     });
 });
