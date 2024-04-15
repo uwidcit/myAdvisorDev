@@ -12,7 +12,18 @@ const db = new Sequelize({
   dialect: 'sqlite',
   logging: false,
   storage: 'database.sqlite', // Replace with the path to your SQLite database file
+  pool: {
+      max: 50, // Maximum number of connections in the pool
+      min: 0, // Minimum number of connections in the pool
+      acquire: 30000, // Maximum time, in milliseconds, that a connection can be idle before being released
+      idle: 10000 // Maximum time, in milliseconds, that a connection can be idle before being closed
+  }
 });
+// const db = new Sequelize({
+//   dialect: 'sqlite',
+//   logging: false,
+//   storage: 'database.sqlite', // Replace with the path to your SQLite database file
+// });
 
 
 // //CONNECTS TO THE RENDER POSTGRES DATABASE
