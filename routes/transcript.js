@@ -3,7 +3,7 @@ const multer = require('multer')
 const upload = multer({ storage: multer.memoryStorage() })
 const { parse } = require('../utilities/parser');
 const studentAccountVerification = require("../middleware/studentAccountVerification");
-const { Op } = require('sequelize');
+const { Op,Transaction } = require('sequelize');
 /**
  * initalizes express router and database connection
  */
@@ -16,7 +16,9 @@ const StudentCourses = require("../models/StudentCourse");
 const Semester = require("../models/Semester");
 // import controllers
 const { getStudentsCourses } = require('../controllers/getStudentCourses');
-
+const { addStudentTranscript } = require('../controllers/addStudentTranscript');
+const { addStudentTranscriptCourses } = require('../controllers/addStudentTranscriptCourses');
+const { response } = require('express');
 // get all student details in the database
 //Get Transcript
 router.get("/details/all", async (req, res) => {
@@ -170,114 +172,10 @@ router.post("/courses/add", async (req, res) => {
 
 // Add transcript by uploading transcript
 router.post('/parseForm', upload.single('file'), async (req, res) => {
-    //console.log("res:" ,res);
     const { ...data } = await parse(req.file.buffer);
-    // console.log("LOG::> Data "+ JSON.stringify(data));
-    try {
-        // destructure data entered
-        const { 
-            studentId, 
-            degreeGpa: gpa, 
-            name, 
-            credits, 
-            degree, 
-            major, 
-            admitTerm, 
-            degreeAttemptHours, 
-            degreePassedHours, 
-            degreeEarnedHours, 
-            degreeGpaHours, 
-            degreeQualityPoints 
-        } = data;
-          // check if student is already added
-        const student = await Transcript.findOne({ where: { studentId: studentId } });
-
-        if (student) {
-            return res.status(401).send("Student already exists.");
-        }
-        else {
-            await Transcript.create({
-                studentId,
-                gpa,
-                name,
-                credits,
-                degree,
-                major,
-                admitTerm,
-                degreeAttemptHours,
-                degreePassedHours,
-                degreeEarnedHours,
-                degreeGpaHours,
-                degreeQualityPoints
-            })
-                .catch(err => {
-                    console.log("Error: ", err.message);
-                });
-        }
-        const { studentCourses: studentcourselist } = data;
-        // let invalid_grades = ["F1", "F2", "F3", "DIS", "EI", "FA", "FAS", "FC", "FE", "FO", "FP", "FT", "FWS", "FTS", "AB", "AM", "AMS", "DB", "DEF", "EQ", "EX", "FM", "FMS", "FWR", "I", "IP", "LW", "NCR", "NFC", "NP", "NR", "NV", "W", "FMP"]
-        let invalid_grades = ["IP"]
-        studentcourselist.map(async (course) =>{
-            const code = Object.keys(course)[0];
-            const grade = course[code].grade
-            const student_course_exists = await StudentCourses.findOne({
-                where: {
-                    [Op.and]: [
-                        {studentId : studentId},
-                        {courseCode: code}
-                    ]
-                }
-            });
-            const grade_valid = !invalid_grades.includes(grade);
-            const year = course[code].year;
-            const current_year = new Date().getFullYear();
-            const course_sem = course[code].semester;
-            let sem = undefined;
-            if(year.split("/").every(yr => yr <= current_year)){
-                const start_date = course_sem === 1 ? `${year.split("/")[0]}-09-01` : `${year.split("/")[1]}-01-15`
-                const end_date = course_sem === 1 ? `${year.split("/")[0]}-12-15` : `${year.split("/")[1]}-05-31`
-                const [sem_num,created] = await Semester.findOrCreate({
-                    attributes : ['num'],
-                    where : {
-                        [Op.and]: [
-                            {num:course_sem},
-                            {academicYear:year}
-                        ]
-                    },
-                    defaults : {
-                        startDate: start_date,
-                        endDate: end_date,
-                        num: course_sem,
-                        academicYear: year
-                    }
-                });
-                // console.log(sem_num.num);
-                // if(created){
-                //     console.log(sem_num.academicYear);
-                // }
-                sem = sem_num;
-            }
-            if(!student_course_exists && grade_valid){
-                await StudentCourses.create({
-                    studentId,
-                    courseCode:code,
-                    semesterId:sem,
-                    grade:grade
-                }).then(() => {
-                    console.log(`course ${code} added as studentCourse for student ${studentId} `)
-                }).catch(err => {
-                    console.log("Error: ", err.message);
-                });
-            }
-        });
-        return res.status(200).send("Student courses added!");
-
-
-    }
-    catch (err) {
-        console.log("Error: ", err.message);
-        res.status(500).send("Server Error");
-    }
+    const response = await addStudentTranscriptCourses(data);
+    console.log(response);
+    res.status(response['status']).send(`${response['msg']}`)
 });
 
 // update a selected student transcript
