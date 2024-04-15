@@ -4,7 +4,7 @@ const Programme = require("../models/Programme");
 const Semester = require("../models/Semester");
 
 
-const getAllCoursePlans = async () => {
+async function getAllCoursePlans() {
     try {
         const students = await Student.findAll();
         const semesters = await Semester.findAll(); // Assuming you have a Semester model
