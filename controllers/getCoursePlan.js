@@ -106,7 +106,7 @@ async function getCoursePlan(studentId, semesterId) {
 
         // console.log("degree_progress Requiremtns: ", degree_progress.Requirements);
 
-        for (type in degree_progress.Requirements) {
+        for (let type in degree_progress.Requirements) {
             let planData = {};
             let plancourses = [];
             planData["creditType"] = type;
@@ -132,7 +132,7 @@ async function getCoursePlan(studentId, semesterId) {
         }
 
     } else {
-        for (type in degree_progress.Requirements) {
+        for (let type in degree_progress.Requirements) {
             let planData = {};
             let plancourses = [];
             planData
