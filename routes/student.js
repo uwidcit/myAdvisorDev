@@ -164,10 +164,10 @@ router.get("/degreeProgress", studentAccountVerification, async (req, res) => {
     const studentId = req.user;
 
     let degreeProgress = await getDegreeProgress(studentId);
-    console.log("Degree Progress: ", degreeProgress);
-    res.json({
-        "DegreeProgress: ": degreeProgress
-    });
+    console.log(degreeProgress);
+    res.json(
+        degreeProgress
+    );
 
 })
 

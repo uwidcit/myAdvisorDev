@@ -7,7 +7,7 @@ const { getPlannedCourses } = require("../controllers/getPlannedCourses");
 const { getStudentCoursePlan } = require("../controllers/getStudentCoursePlan");
 const { getCoursePlan } = require("../controllers/getCoursePlan.js");
 const { getAllCoursePlans } = require("../controllers/getAllCoursePlans");
-const {updatePlanStatus} = require("../controllers/updateCoursePlan.js")
+const { updatePlanStatus } = require("../controllers/updateCoursePlan.js")
 // import models
 const Admin = require("../models/Admin");
 const Programme = require("../models/Programme");
@@ -29,6 +29,7 @@ const SemesterCourses = require("../models/SemesterCourse");
 // const CourseGroup = require("../models/CourseGroup");
 const PCR = require("../models/ElectiveRequirement");
 // const Type = require("../models/Type");
+
 
 // ---Routes---
 
@@ -111,40 +112,78 @@ router.post("/create/student", async (req, res) => {
 
 
 //get all courseplans(advisingSessions) for a semester
-router.get("/course-plan/all/:semesterId",staffAccountVerification,async(req,res)=>{
-    const coursePlans = await getAllCoursePlans(req.params.semesterId);
-    if(coursePlans){
-        res.status(200).json(coursePlans)
-    }else{
-        res.status(404).send("Course Plans for Semester Not Found");
+router.get("/course-plan/all/:semesterId/:page/:itemsPerPage", staffAccountVerification, async (req, res) => {
+    try {
+        const semesterId = req.params.semesterId;
+        const page = parseInt(req.params.page) || 1;
+        const itemsPerPage = parseInt(req.params.itemsPerPage) || 5;
+
+        if (!semesterId) {
+            return res.status(400).json({ message: 'Semester ID is required' });
+        }
+
+
+        const coursePlans = await getAllCoursePlans(semesterId);
+        if (coursePlans) {
+            const totalPlans = coursePlans.length;
+            const start = (page - 1) * itemsPerPage;
+            const end = start + itemsPerPage;
+
+            const plans = Array.isArray(coursePlans)
+                ? coursePlans
+                : [];
+
+            const paginatedPlans = plans.slice(start, end);
+
+            const payload = {
+                allPlan: coursePlans,
+                plans: paginatedPlans,
+                totalPlans,
+                totalPages: Math.ceil(totalPlans / itemsPerPage),
+                currentPage: page,
+            };
+
+            res.status(200).json(payload)
+        } else {
+            res.status(404).send("Course Plans for Semester Not Found");
+        }
     }
+    catch (err) {
+        console.log("Error: ", err.message);
+        res.status(500).send("Server Error");
+    }
+
 });
 
 //get courseplan(advisingSession) of a student for a semester 
-router.get("/course-plan/:semesterId/:studentId",staffAccountVerification, async (req,res)=>{
-    const coursePlan = await getStudentCoursePlan(req.params.studentId,req.params.semesterId);
-    if(coursePlan){
+router.get("/course-plan/:semesterId/:studentId", staffAccountVerification, async (req, res) => {
+    const coursePlan = await getStudentCoursePlan(req.params.studentId, req.params.semesterId);
+    if (coursePlan) {
         res.status(200).json(coursePlan);
-    }else{
+    } else {
         res.status(404).send("Course Plan for Student Not Found");
     }
 });
 
 // post/update courseplan(advisingSession) of a student for a semester Confirm or Return
-router.put("/course-plan/review/:semesterId/:studentId",staffAccountVerification,async (req,res)=>{
-    const decision = req.body.decision;
-    const plan = await updatePlanStatus(req.params.studentId,req.params.semesterId,decision);
-    if(decision==='Confirm' && plan){
+router.put("/course-plan/review/:semesterId/:studentId/:decision", async (req, res) => {
+    const decision = req.params.decision;
+    console.log(decision);
+    const plan = await updatePlanStatus(req.params.studentId, req.params.semesterId, decision);
+    if (decision === 'Confirmed' && plan) {
+        console.log("Approved");
         res.status(200).send({
+
             message: "Course Plan Approved",
             student: req.params.studentId
         });
-    }else if(decision==='Reject' && plan){
+    } else if (decision === 'Rejected' && plan) {
+        console.log("Rejected");
         res.status(200).send({
             message: "Course Plan Not Approved",
             student: req.params.studentId
         });
-    }else{
+    } else {
         res.status(400)
     }
 });
@@ -234,77 +273,77 @@ router.get("/student/advising-sessions", async (req, res) => {
 
 // });
 
-router.get("/course-plans", staffAccountVerification, async (req, res) => {
+// router.get("/course-plans", staffAccountVerification, async (req, res) => {
 
 
-    try {
-        const CoursePlanList = await getAllCoursePlans();
-        const semesterId = req.query.semesterId;
-        const page = parseInt(req.query.page) || 1;
-        const itemsPerPage = parseInt(req.query.itemsPerPage) || 5;
+//     try {
+//         const CoursePlanList = await getAllCoursePlans();
+//         const semesterId = req.query.semesterId;
+//         const page = parseInt(req.query.page) || 1;
+//         const itemsPerPage = parseInt(req.query.itemsPerPage) || 5;
 
-        if (!semesterId) {
-            return res.status(400).json({ message: 'Semester ID is required' });
-        }
+//         if (!semesterId) {
+//             return res.status(400).json({ message: 'Semester ID is required' });
+//         }
 
-        if (!CoursePlanList[semesterId]) {
-            return res.status(404).json({ message: 'Course plans not found for the provided semester ID' });
-        }
+//         if (!CoursePlanList[semesterId]) {
+//             return res.status(404).json({ message: 'Course plans not found for the provided semester ID' });
+//         }
 
-        const totalPlans = CoursePlanList[semesterId].length;
-        const start = (page - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
+//         const totalPlans = CoursePlanList[semesterId].length;
+//         const start = (page - 1) * itemsPerPage;
+//         const end = start + itemsPerPage;
 
-        const paginatedPlans = CoursePlanList[semesterId].slice(start, end);
+//         const paginatedPlans = CoursePlanList[semesterId].slice(start, end);
 
-        const payload = {
-            allPlan: CoursePlanList,
-            plans: paginatedPlans,
-            totalPlans,
-            totalPages: Math.ceil(totalPlans / itemsPerPage),
-            currentPage: page,
-        };
+//         const payload = {
+//             allPlan: CoursePlanList,
+//             plans: paginatedPlans,
+//             totalPlans,
+//             totalPages: Math.ceil(totalPlans / itemsPerPage),
+//             currentPage: page,
+//         };
 
-        res.status(200).json(payload);
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Internal server error' });
-    }
+//         res.status(200).json(payload);
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).json({ message: 'Internal server error' });
+//     }
 
-});
+// });
 
-router.get("/course-plan/all", staffAccountVerification, async (req, res) => {
-    try {
-        const semesters = await Semester.findAll();
-        const students = await Student.findAll();
-        const coursePlans = {};
+// router.get("/course-plan/all", staffAccountVerification, async (req, res) => {
+//     try {
+//         const semesters = await Semester.findAll();
+//         const students = await Student.findAll();
+//         const coursePlans = {};
 
-        for (const semester of semesters) {
-            const semesterId = semester.id; // Assuming semester has an id property
-            coursePlans[semesterId] = [];
+//         for (const semester of semesters) {
+//             const semesterId = semester.id; // Assuming semester has an id property
+//             coursePlans[semesterId] = [];
 
-            for (const student of students) {
-                let studentId = student.studentId;
-                let coursePlan = await getCoursePlan(studentId, semesterId);
+//             for (const student of students) {
+//                 let studentId = student.studentId;
+//                 let coursePlan = await getCoursePlan(studentId, semesterId);
 
-                courseplan = {
-                    studentId: {
-                        "lastUpdated": "",
-                        "status": "confirmed",
-                        "plan": coursePlan,
-                        "limit": 15,
-                    }
-                }
-                coursePlans[semesterId].push(courseplan);
-            }
-        }
+//                 courseplan = {
+//                     studentId: {
+//                         "lastUpdated": "",
+//                         "status": "confirmed",
+//                         "plan": coursePlan,
+//                         "limit": 15,
+//                     }
+//                 }
+//                 coursePlans[semesterId].push(courseplan);
+//             }
+//         }
 
-        res.status(200).json(coursePlans);
-    } catch (error) {
-        console.error("Error fetching course plans:", error);
-        res.status(500).json({ error: "Internal Server Error" });
-    }
-});
+//         res.status(200).json(coursePlans);
+//     } catch (error) {
+//         console.error("Error fetching course plans:", error);
+//         res.status(500).json({ error: "Internal Server Error" });
+//     }
+// });
 
 
 
@@ -981,6 +1020,19 @@ router.get("/student/:studentId", staffAccountVerification, async (req, res) => 
         console.error(err);
         res.status(500).send('Internal server error');
     }
+})
+
+router.get("/degreeProgress/:studentId", staffAccountVerification, async (req, res) => {
+
+    // get logged in studentId
+    const studentId = req.params.studentId;
+
+    let degreeProgress = await getDegreeProgress(studentId);
+
+    res.json(
+        degreeProgress
+    );
+
 })
 
 
