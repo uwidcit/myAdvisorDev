@@ -36,6 +36,10 @@ const Student = db.define("student", {
         allowNull: true, // Change to false if each student must have a programme
         type: Sequelize.INTEGER, // Assuming Programme's primary key is an INTEGER
     },
+    year: {
+        allowNull: false,
+        type: Sequelize.STRING,
+    },
 
 }, { timestamps: true });
 

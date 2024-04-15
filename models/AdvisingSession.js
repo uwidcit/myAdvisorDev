@@ -4,9 +4,13 @@ const db = require("../db");
 // const Semester = require("./Semester")
 // const SelectedCourse = require("./SelectedCourse");
 const AdvisingSession = db.define("advisingsession", {
-}, {
-    timestamps: true
-});
+    planStatus : {
+        allowNull: false,
+        type: Sequelize.ENUM,
+        values: ['Pending', 'Confirmed'],
+    }
+    }, { timestamps: true });
+
 // AdvisingSession.belongsTo(Student, {
 //     foreignKey: 'studentId',
 //     allowNull: false
