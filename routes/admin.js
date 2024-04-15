@@ -30,6 +30,7 @@ const SemesterCourses = require("../models/SemesterCourse");
 const PCR = require("../models/ElectiveRequirement");
 // const Type = require("../models/Type");
 
+
 // ---Routes---
 
 // Create Admin Account
@@ -1048,6 +1049,19 @@ router.get("/student/:studentId", staffAccountVerification, async (req, res) => 
         console.error(err);
         res.status(500).send('Internal server error');
     }
+})
+
+router.get("/degreeProgress/:studentId", staffAccountVerification, async (req, res) => {
+
+    // get logged in studentId
+    const studentId = req.params.studentId;
+
+    let degreeProgress = await getDegreeProgress(studentId);
+
+    res.json(
+        degreeProgress
+    );
+
 })
 
 
