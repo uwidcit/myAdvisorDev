@@ -11,119 +11,84 @@ const { getDegreeProgress } = require("../controllers/getDegreeProgress");
 const { getPlannedCourses } = require("../controllers/getPlannedCourses");
 
 async function getCoursePlan(studentId, semesterId) {
+    try {
+        const programme_id = await Student.findOne({
+            attributes: ['programmeId'],
+            where: {
+                studentId: studentId
+            }
+        }).then(async (programme) => {
+            return programme.get('programmeId');
+        });
+        let eligiblecoursesObj = [];
+        let coursePlan = [];
 
-    const programme_id = await Student.findOne({
-        attributes: ['programmeId'],
-        where: {
-            studentId: studentId
-        }
-    }).then(async (programme) => {
-        return programme.get('programmeId');
-    });
+        //where selected courses can pull from
+        const courses_eligible = await getEligibleCourses(studentId, semesterId);
+        const degree_progress = await getDegreeProgress(studentId);//use to determine effect of selected courses
+        const planned_courses = await getPlannedCourses(studentId, semesterId);//what is displayed on the courseplan
 
-    // const programme_courses = await ProgrammeCourse.findAll({
-    //     attributes: ['courseCode'],
-    //     where: {
-    //         ProgrammeId: programme_id
-    //     }
-    // });
-    // const student_courses = await StudentCourse.findAll({
-    //     attributes: ['courseCode'],
-    //     where: {
-    //         studentId: studentId
-    //     }
-    // }).then(async (std_courses) => {
-    //     return std_courses.map(std => std.get('courseCode'));
-    // });
-    // const courses = await Course.findAll();
-    // const credit_requirements = await ElectiveRequirement.findAll({
-    //     where: {
-    //         ProgrammeId: programme_id
-    //     }
-    // });
-    // const types = await Type.findAll();
-    let eligiblecoursesObj = [];
-    let coursePlan = [];
+        if (courses_eligible) {
+            // get eligibleCourses
+            for (let course_c of courses_eligible) {
+                const typeName = await Type.findOne({
+                    attributes: ['type'],
+                    where: {
+                        id: await ProgrammeCourse.findOne({
+                            attributes: ['typeId'],
+                            where: {
+                                [Op.and]: [
+                                    { courseCode: course_c },
+                                    { programmeId: programme_id }
+                                ]
+                            }
+                        }).then(async (programme) => {
+                            return programme.get('typeId');
+                        })
+                    }
+                }).then(async (type) => {
+                    return type.get('type')
+                });
 
-    //where selected courses can pull from
-    const courses_eligible = await getEligibleCourses(studentId, semesterId);
-    const degree_progress = await getDegreeProgress(studentId);//use to determine effect of selected courses
-    const planned_courses = await getPlannedCourses(studentId, semesterId);//what is displayed on the courseplan
-
-    if (courses_eligible) {
-        // get eligibleCourses
-        for (let course_c of courses_eligible) {
-            const typeName = await Type.findOne({
-                attributes: ['type'],
-                where: {
-                    id: await ProgrammeCourse.findOne({
-                        attributes: ['typeId'],
-                        where: {
-                            [Op.and]: [
-                                { courseCode: course_c },
-                                { programmeId: programme_id }
-                            ]
-                        }
-                    }).then(async (programme) => {
-                        return programme.get('typeId');
-                    })
-                }
-            }).then(async (type) => {
-                return type.get('type')
-            });
-
-            const [courseName, credits] = await Course.findOne({
-                attributes: ['title', 'credits'],
-                where: {
-                    code: course_c
-                }
-            }).then(async (content) => {
-                return [content.get('title'), content.get('credits')]
-            });
-            eligiblecoursesObj.push({
-                "courseCode": course_c,
-                "courseTitle": courseName,
-                "type": typeName,
-                "selected": false,
-                "credits": credits
-            })
-        }
-    }
-
-    if (planned_courses) {
-        for (let courseCode of planned_courses) {
-            // console.log("planned: ", courseCode);
-            const courseToUpdate = eligiblecoursesObj.find((course) => course['courseCode'] === courseCode);
-            if (courseToUpdate) {
-                courseToUpdate.selected = true;
-                // console.log(courseToUpdate);
+                const [courseName, credits] = await Course.findOne({
+                    attributes: ['title', 'credits'],
+                    where: {
+                        code: course_c
+                    }
+                }).then(async (content) => {
+                    return [content.get('title'), content.get('credits')]
+                });
+                eligiblecoursesObj.push({
+                    "courseCode": course_c,
+                    "courseTitle": courseName,
+                    "type": typeName,
+                    "selected": false,
+                    "credits": credits
+                })
             }
         }
+        if (planned_courses) {
+            for (let courseCode of planned_courses) {
+                // console.log("planned: ", courseCode);
+                const courseToUpdate = eligiblecoursesObj.find((course) => course['courseCode'] === courseCode);
+                if (courseToUpdate) {
+                    courseToUpdate.selected = true;
+                    // console.log(courseToUpdate);
+                }
+            }
 
 
-    }
-
-    if (planned_courses) {
-
-        // console.log("degree_progress Requiremtns: ", degree_progress.Requirements);
-
+        }
         for (let type in degree_progress.requirements) {
             let planData = {};
             let plancourses = [];
             planData["creditType"] = type;
             planData["creditsRemaining"] = degree_progress.requirements[type][0];
-            // console.log(type);
-            // console.log(degree_progress.requirements[type][0]);
             for (let e of eligiblecoursesObj) {
                 if (e.type === type) {
                     if (e.selected) {
                         planData["creditsRemaining"] -= e.credits;
                     }
-                    // console.log(plannedCoursesObj);
-
-
-                    // console.log("planData.creditsRemaining",planData.creditsRemaining);
-                    // console.log("remaining credits",planData["creditsRemaining"]);
                     plancourses.push(e);
                 }
             }
@@ -131,43 +96,15 @@ async function getCoursePlan(studentId, semesterId) {
             planData["Courses"] = plancourses;
             coursePlan.push(planData);
         }
+        console.log(coursePlan);
 
-    } else {
-        for (let type in degree_progress.requirements) {
-            let planData = {};
-            let plancourses = [];
-            planData
-            planData["creditType"] = type;
-            planData["creditsRemaining"] = degree_progress.requirements[type][0];
-            // console.log(type);
-            // console.log(degree_progress.requirements[type][0]);
-
-            planData["creditsRemaining"] = [degree_progress.requirements[type][0], degree_progress.requirements[type][1]];
-            planData["Courses"] = plancourses;
-
-
-
-            coursePlan.push(planData);
-
-        }
+        return coursePlan;
+    } catch (error) {
+        const msg = `Error in getting student's ${studentId} structured courseplan for semesterId ${semesterId}:`;
+        console.log(msg, error.message);
+        return null;
     }
 
-    // console.log("COURSEPLAN:::> ", coursePlan);
-
-    // coursePlan.forEach(item => {
-    //     console.log(`Credit Type: ${item.creditType}`);
-    //     console.log(`Credits Remaining: ${item.creditsRemaining}`);
-
-    //     // Iterate over each course in Courses array
-    //     item.Courses.forEach(course => {
-    //         console.log(`Course Name: ${course.courseCode}`);
-    //         // Print other properties of the course if needed
-    //     });
-
-    //     console.log(); // Add a line break for readability
-    // });
-
-    return coursePlan;
 
 }
 // (async () => {

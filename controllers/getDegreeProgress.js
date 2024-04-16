@@ -10,7 +10,8 @@ const { Op } = require("sequelize");
 
 // returns the students degree progress(list of completed courses, total credits completed, remaining requirements and total credits remaining)
 async function getDegreeProgress(student_id) {
-    let invalid_grades = ["F1", "F2", "F3", "DIS", "EI", "FA", "FAS", "FC", "FE", "FO", "FP", "FT", "FWS", "FTS", "AB", "AM", "AMS", "DB", "DEF", "EQ", "EX", "FM", "FMS", "FWR", "I", "IP", "LW", "NCR", "NFC", "NP", "NR", "NV", "W", "FMP"]
+    try{
+        let invalid_grades = ["F1", "F2", "F3", "DIS", "EI", "FA", "FAS", "FC", "FE", "FO", "FP", "FT", "FWS", "FTS", "AB", "AM", "AMS", "DB", "DEF", "EQ", "EX", "FM", "FMS", "FWR", "I", "IP", "LW", "NCR", "NFC", "NP", "NR", "NV", "W", "FMP"]
     let studentCourseCodes = await StudentCourse.findAll({
         attributes: ['courseCode', 'grade'],
         where: {
@@ -116,6 +117,12 @@ async function getDegreeProgress(student_id) {
         remainingCredits: degreeCredits - actualTotalCredits
     };
     return degreeProgress;
+    }catch(error){
+        const msg = `Error in getting student's ${student_id} Degree Progress:`;
+        console.log(msg, error.message);
+        return null;
+    }
+    
 }
 
 // (async () =>{
