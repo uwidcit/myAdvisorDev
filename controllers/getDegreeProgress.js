@@ -11,17 +11,19 @@ const { Op } = require("sequelize");
 // returns the students degree progress(list of completed courses, total credits completed, remaining requirements and total credits remaining)
 async function getDegreeProgress(student_id) {
     let invalid_grades = ["F1", "F2", "F3", "DIS", "EI", "FA", "FAS", "FC", "FE", "FO", "FP", "FT", "FWS", "FTS", "AB", "AM", "AMS", "DB", "DEF", "EQ", "EX", "FM", "FMS", "FWR", "I", "IP", "LW", "NCR", "NFC", "NP", "NR", "NV", "W", "FMP"]
-    let studentCourseCodes = await StudentCourse.findAll({ 
-        attributes: ['courseCode','grade'],
+    let studentCourseCodes = await StudentCourse.findAll({
+        attributes: ['courseCode', 'grade'],
         where: {
-            studentId: student_id 
-        } 
-    }).then(courses => {return courses.map(course =>{
-        const grade = course.get('grade')
-        if(!invalid_grades.includes(grade)){
-            return course.get('courseCode')
+            studentId: student_id
         }
-    })});
+    }).then(courses => {
+        return courses.map(course => {
+            const grade = course.get('grade')
+            if (!invalid_grades.includes(grade)) {
+                return course.get('courseCode')
+            }
+        })
+    });
 
 
 
@@ -68,7 +70,7 @@ async function getDegreeProgress(student_id) {
     //console.log("types: ", types);
 
 
-    let totalCredits = 0;
+    let actualTotalCredits = 0;
     let completedCourses = [];
     let degreeCredits = 0;
 
@@ -99,7 +101,7 @@ async function getDegreeProgress(student_id) {
                     let credits = parseInt(course.credits);
                     completedCourses.push(course.code);
                     creditRequirements[creditType][0] -= credits;
-                    totalCredits += credits;
+                    actualTotalCredits += credits;
                     //console.log(completedCourses);
                 }
 
@@ -109,9 +111,9 @@ async function getDegreeProgress(student_id) {
         }
     }
     let degreeProgress = {
-        Requirements: creditRequirements,
-        totalCompletedCredits: [totalCredits, degreeCredits],
-        remainingCredits: degreeCredits - totalCredits
+        requirements: creditRequirements,
+        totalCredits: [actualTotalCredits, degreeCredits],
+        remainingCredits: degreeCredits - actualTotalCredits
     };
     return degreeProgress;
 }

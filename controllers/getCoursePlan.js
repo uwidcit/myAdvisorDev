@@ -11,6 +11,7 @@ const { getDegreeProgress } = require("../controllers/getDegreeProgress");
 const { getPlannedCourses } = require("../controllers/getPlannedCourses");
 
 async function getCoursePlan(studentId, semesterId) {
+
     const programme_id = await Student.findOne({
         attributes: ['programmeId'],
         where: {
@@ -106,13 +107,13 @@ async function getCoursePlan(studentId, semesterId) {
 
         // console.log("degree_progress Requiremtns: ", degree_progress.Requirements);
 
-        for (let type in degree_progress.Requirements) {
+        for (let type in degree_progress.requirements) {
             let planData = {};
             let plancourses = [];
             planData["creditType"] = type;
-            planData["creditsRemaining"] = degree_progress.Requirements[type][0];
+            planData["creditsRemaining"] = degree_progress.requirements[type][0];
             // console.log(type);
-            // console.log(degree_progress.Requirements[type][0]);
+            // console.log(degree_progress.requirements[type][0]);
             for (let e of eligiblecoursesObj) {
                 if (e.type === type) {
                     if (e.selected) {
@@ -126,22 +127,22 @@ async function getCoursePlan(studentId, semesterId) {
                     plancourses.push(e);
                 }
             }
-            planData["creditsRemaining"] = [planData.creditsRemaining, degree_progress.Requirements[type][1]];
+            planData["creditsRemaining"] = [planData.creditsRemaining, degree_progress.requirements[type][1]];
             planData["Courses"] = plancourses;
             coursePlan.push(planData);
         }
 
     } else {
-        for (let type in degree_progress.Requirements) {
+        for (let type in degree_progress.requirements) {
             let planData = {};
             let plancourses = [];
             planData
             planData["creditType"] = type;
-            planData["creditsRemaining"] = degree_progress.Requirements[type][0];
+            planData["creditsRemaining"] = degree_progress.requirements[type][0];
             // console.log(type);
-            // console.log(degree_progress.Requirements[type][0]);
+            // console.log(degree_progress.requirements[type][0]);
 
-            planData["creditsRemaining"] = [degree_progress.Requirements[type][0], degree_progress.Requirements[type][1]];
+            planData["creditsRemaining"] = [degree_progress.requirements[type][0], degree_progress.requirements[type][1]];
             planData["Courses"] = plancourses;
 
 
@@ -149,6 +150,9 @@ async function getCoursePlan(studentId, semesterId) {
             coursePlan.push(planData);
 
         }
+    }
+    if (studentId == "816031565" && semesterId == "2") {
+        console.log(coursePlan);
     }
 
     // console.log("COURSEPLAN:::> ", coursePlan);
