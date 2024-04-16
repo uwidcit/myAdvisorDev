@@ -66,9 +66,19 @@ router.post("/create-plan", studentAccountVerification, async (req, res) => {
         }
         else {
 
-
-            // Delete all old selected courses
             await SelectedCourse.destroy({ where: { advisingSessionId: session.id } });
+            await session.destroy();
+
+
+            session = await AdvisingSession.create({
+                studentId: studentId,
+                planStatus: "Pending",
+                semesterId: semesterId
+            });
+
+
+            console.log(session);
+
 
             // Create new selected courses with updated course codes
             for (let i = 0; i < selectedCourses.length; i++) {
@@ -177,10 +187,10 @@ router.get("/course-plan/:semesterId", studentAccountVerification, async (req, r
     let semesterId = req.params.semesterId;
     const studentId = req.user;
 
-    const coursePlan = await getStudentCoursePlanSimple(studentId,semesterId);
-    if(coursePlan){
+    const coursePlan = await getStudentCoursePlanSimple(studentId, semesterId);
+    if (coursePlan) {
         res.status(200).json(coursePlan);
-    }else{
+    } else {
         res.status(404).send("Course Plan for Student Not Found");
     }
 });
@@ -188,9 +198,9 @@ router.get("/course-plan/:semesterId", studentAccountVerification, async (req, r
 router.get("/course-plan/detail/:semesterId", studentAccountVerification, async (req, res) => {
 
     let semesterId = req.params.semesterId;
-    
     const studentId = req.user;
-    console.log(semesterId,studentId)
+
+    console.log(semesterId, studentId)
     // -----------------CALL THE FUNCTION-------------------------
 
     let coursePlan = await getStudentCoursePlan(studentId, semesterId);

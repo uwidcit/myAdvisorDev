@@ -11,7 +11,7 @@ const { getDegreeProgress } = require("../controllers/getDegreeProgress");
 const { getPlannedCourses } = require("../controllers/getPlannedCourses");
 
 async function getCoursePlan(studentId, semesterId) {
-    try{
+    try {
         const programme_id = await Student.findOne({
             attributes: ['programmeId'],
             where: {
@@ -99,12 +99,12 @@ async function getCoursePlan(studentId, semesterId) {
         console.log(coursePlan);
 
         return coursePlan;
-    }catch(error){
+    } catch (error) {
         const msg = `Error in getting student's ${studentId} structured courseplan for semesterId ${semesterId}:`;
         console.log(msg, error.message);
         return null;
     }
-    
+
 
 }
 // (async () => {
