@@ -13,7 +13,7 @@ const { getEligibleCourses } = require("../controllers/getEligibleCourses");
 const { getDegreeProgress } = require("../controllers/getDegreeProgress");
 const { getPlannedCourses } = require("../controllers/getPlannedCourses");
 const { getCoursePlan } = require("../controllers/getCoursePlan");
-const { getStudentCoursePlan } = require("../controllers/getStudentCoursePlan");
+const { getStudentCoursePlan, getStudentCoursePlanSimple } = require("../controllers/getStudentCoursePlan");
 const { getAllCoursePlans } = require("../controllers/getAllCoursePlans");
 
 const { Sequelize } = require('sequelize');
@@ -171,42 +171,33 @@ router.get("/degreeProgress", studentAccountVerification, async (req, res) => {
 
 })
 
-
+//For the table on CourseplannerViewer if coursePlan for selectedSemester && selectedSemester==currentSemester
 router.get("/course-plan/:semesterId", studentAccountVerification, async (req, res) => {
 
     let semesterId = req.params.semesterId;
     const studentId = req.user;
 
-    let coursePlan = await getCoursePlan(studentId, semesterId);
-
-
-
-    // console.log("COURSEPLAN:::> ", coursePlan);
-    // console.log(semesterId);
-    res.json({
-        studentId: {
-            "lastUpdated": "",
-            "status": "confirmed",
-            "plan": coursePlan,
-            "limit": 15,
-        }
-    });
-
+    const coursePlan = await getStudentCoursePlanSimple(studentId,semesterId);
+    if(coursePlan){
+        res.status(200).json(coursePlan);
+    }else{
+        res.status(404).send("Course Plan for Student Not Found");
+    }
 });
 //coursePlannerView.jsx
 router.get("/course-plan/detail/:semesterId", studentAccountVerification, async (req, res) => {
 
     let semesterId = req.params.semesterId;
-    console.log(semesterId)
+    
     const studentId = req.user;
-
+    console.log(semesterId,studentId)
     // -----------------CALL THE FUNCTION-------------------------
 
     let coursePlan = await getStudentCoursePlan(studentId, semesterId);
 
 
 
-    // console.log("COURSEPLAN:::> ", coursePlan);
+    console.log("COURSEPLAN:::> ", coursePlan);
     // console.log(semesterId);
     res.status(200).json(coursePlan);
 
