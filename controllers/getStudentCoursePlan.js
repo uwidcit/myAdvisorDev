@@ -14,31 +14,31 @@ async function getStudentCoursePlan(studentId,semesterId){
                 ]
                 
             }
-        }).then(info => {
-            if(!info){
-                return null;
-            }else{
-                const date = JSON.stringify(info.get('updatedAt')).split("T")[0].substring(1);
-                return [info.get('planStatus'),date];
-            }
         });
-        if(!advising_info){
-            return null;
-        }
 
         const plan = await getCoursePlan(studentId, semesterId);
 
+        const current_date = new Date();
+        const year = current_date.getFullYear();
+        const month = String(current_date.getMonth() + 1).padStart(2, '0');
+        const day = String(current_date.getDate()).padStart(2, '0');
+        let last_update = `${year}-${month}-${day}`;
+        let status = "New";
+        if(advising_info){
+            last_update = advising_info.get('updatedAt');
+            status = advising_info.get('planStatus');
+        }
         return {
             [studentId]: {
-                lastUpdated: advising_info[1],
-                status: advising_info[0],
+                lastUpdated: last_update,
+                status: status,
                 plan: plan,
                 limit: 15
             }
         }
     } catch (error) {
-        const msg = `Error in getting student's ${studentId} courseplan for semesterId ${semesterId}:`;
-        console.log(msg, error.message);
+        const msg = `Error in getting student's ${studentId} structured courseplan for semesterId ${semesterId}:`;
+        console.log(msg, {...error});
         return null;
     }
 }
@@ -54,17 +54,24 @@ async function getStudentCoursePlanSimple(studentId,semesterId){
                 ]
             }
         }).then(async (plan)=>{
-            const student = plan.get('studentId');
-            const stat = plan.get('planStatus');
             const current_year = new Date().getFullYear();
             const year = current_year - await Student.findOne({
                 attributes:['year'],
                 where :{
-                    studentId: student
+                    studentId: studentId
                 }
             }).then(async(stu)=>{
                 return stu.get('year');
             });
+            if(!plan){
+                let status = "New";
+                return{
+                    year:year,
+                    status: status,
+                    courses:[]
+                }
+            }
+            const stat = plan.get('planStatus');
             const planId = plan.get('id');
             const courses = await SelectedCourse.findAll({
                 attributes :['courseCode'],
@@ -82,7 +89,7 @@ async function getStudentCoursePlanSimple(studentId,semesterId){
         });
         return courseplan;
     }catch(error){
-        const msg = `Error in getting student's ${studentId} courseplan for semesterId ${semesterId}:`;
+        const msg = `Error in getting student's ${studentId} simple courseplan for semesterId ${semesterId}:`;
         console.log(msg,error.message);
         return null;
     }
