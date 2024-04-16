@@ -184,7 +184,7 @@ router.get("/course-plan/:semesterId", studentAccountVerification, async (req, r
         res.status(404).send("Course Plan for Student Not Found");
     }
 });
-//coursePlannerView.jsx
+//coursePlanReport.jsx
 router.get("/course-plan/detail/:semesterId", studentAccountVerification, async (req, res) => {
 
     let semesterId = req.params.semesterId;

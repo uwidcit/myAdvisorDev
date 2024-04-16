@@ -37,8 +37,8 @@ async function getStudentCoursePlan(studentId,semesterId){
             }
         }
     } catch (error) {
-        // const msg = `Error in getting student's ${studentId} courseplan for semesterId ${semesterId}:`;
-        // console.log(msg, error.message);
+        const msg = `Error in getting student's ${studentId} courseplan for semesterId ${semesterId}:`;
+        console.log(msg, error.message);
         return null;
     }
 }

@@ -308,8 +308,14 @@ async function loadDummySemesterCourses(courseData) {
                 id: course.semester
             }
         });
+        
+
         const courseCode = target_course.code;
-        const semester_n = semester.num
+        let semester_n = semester.num
+        //for demo purposes
+        if(semester_n == 2){
+            semester_n = 8
+        }
         return createSemesterCourse(semester_n, courseCode);
     });
     try {
