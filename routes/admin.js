@@ -73,7 +73,8 @@ router.post("/create/admin", staffAccountVerification, async (req, res) => {
 router.post("/create/student", async (req, res) => {
     try {
         // destructure data entered
-        const { studentId, firstName, lastName, email, password } = req.body;
+        console.log(req.body);
+        const { studentId, firstName, lastName, email, year, password } = req.body;
         let { programmeId } = req.body;
 
         programmeId = parseInt(programmeId, 10);
@@ -91,6 +92,7 @@ router.post("/create/student", async (req, res) => {
                 studentId,
                 firstName,
                 lastName,
+                year,
                 email,
                 programmeId,
                 password: passEncrypt,

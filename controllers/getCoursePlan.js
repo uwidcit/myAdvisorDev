@@ -151,9 +151,6 @@ async function getCoursePlan(studentId, semesterId) {
 
         }
     }
-    if (studentId == "816031565" && semesterId == "2") {
-        console.log(coursePlan);
-    }
 
     // console.log("COURSEPLAN:::> ", coursePlan);
 
