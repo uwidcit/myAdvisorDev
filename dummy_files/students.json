@@ -1,14 +1,5 @@
 [
     {
-        "studentId": 816031565,
-        "firstName": "John",
-        "lastName": "Doe",
-        "email": "john@example.com",
-        "password": "password123",
-        "programmeId": 1,
-        "year": "2020"
-    },
-    {
         "studentId": "816000001",
         "firstName": "Bob",
         "lastName": "Smith",
