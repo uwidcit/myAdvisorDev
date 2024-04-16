@@ -159,6 +159,7 @@ router.get("/course-plan/all/:semesterId/:page/:itemsPerPage", staffAccountVerif
 router.get("/course-plan/:semesterId/:studentId", staffAccountVerification, async (req, res) => {
     const coursePlan = await getStudentCoursePlan(req.params.studentId, req.params.semesterId);
     if (coursePlan) {
+        console.log(coursePlan);
         res.status(200).json(coursePlan);
     } else {
         res.status(404).send("Course Plan for Student Not Found");
@@ -312,38 +313,34 @@ router.get("/student/advising-sessions", async (req, res) => {
 
 // });
 
-// router.get("/course-plan/all", staffAccountVerification, async (req, res) => {
-//     try {
-//         const semesters = await Semester.findAll();
-//         const students = await Student.findAll();
-//         const coursePlans = {};
+router.get("/detailed-course-plan/all", staffAccountVerification, async (req, res) => {
+    try {
+        const semesters = await Semester.findAll();
+        const students = await Student.findAll();
+        const coursePlans = {};
 
-//         for (const semester of semesters) {
-//             const semesterId = semester.id; // Assuming semester has an id property
-//             coursePlans[semesterId] = [];
+        for (const semester of semesters) {
+            const semesterId = semester.id; // Assuming semester has an id property
+            coursePlans[semesterId] = [];
 
-//             for (const student of students) {
-//                 let studentId = student.studentId;
-//                 let coursePlan = await getCoursePlan(studentId, semesterId);
+            for (const student of students) {
+                let studentId = student.studentId;
+                let coursePlan = await getStudentCoursePlan(studentId, semesterId);
 
-//                 courseplan = {
-//                     studentId: {
-//                         "lastUpdated": "",
-//                         "status": "confirmed",
-//                         "plan": coursePlan,
-//                         "limit": 15,
-//                     }
-//                 }
-//                 coursePlans[semesterId].push(courseplan);
-//             }
-//         }
+                if (coursePlan) {
+                    coursePlans[semesterId].push(coursePlan);
+                }
 
-//         res.status(200).json(coursePlans);
-//     } catch (error) {
-//         console.error("Error fetching course plans:", error);
-//         res.status(500).json({ error: "Internal Server Error" });
-//     }
-// });
+
+            }
+        }
+
+        res.status(200).json(coursePlans);
+    } catch (error) {
+        console.error("Error fetching course plans:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+});
 
 
 
