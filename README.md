@@ -15,7 +15,7 @@ The following members worked on the previous version project:
 - Alexis Pitypaul
 - Shalana Seuraj
 
-The following members are part of the current development team:
+The following members are part of the 2024 Project Course development team:
 - Quinn Mohammed
 - Faith Shim
 - Jarrod Moore
