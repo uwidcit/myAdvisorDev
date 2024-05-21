@@ -5,7 +5,9 @@ const Programme = require("../models/Programme");
 const Semester = require("../models/Semester");
 const { Op } = require('sequelize');
 async function getAllCoursePlans(semesterId){
+    
     try{
+        semesterId = parseInt(semesterId);
         //pending courses 
         const courseplans = await AdvisingSession.findAll({
             attributes:['id','planStatus','studentId','semesterId'],

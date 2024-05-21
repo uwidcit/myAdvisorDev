@@ -66,6 +66,7 @@ router.post("/login", async (req, res) => {
                     "firstName": student.firstName,
                     "lastName": student.lastName,
                     "email": student.email,
+                    "programmeId": student.programmeId,
                     "createdAt": student.createdAt,
                     "token": token
                 });

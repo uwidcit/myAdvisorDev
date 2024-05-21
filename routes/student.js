@@ -213,43 +213,43 @@ router.get("/course-plan/detail/:semesterId", studentAccountVerification, async 
 
 });
 
-router.get("/course-plans", studentAccountVerification, async (req, res) => {
-
-
+router.get("/course-plans/:semesterId", studentAccountVerification, async (req, res) => {
     try {
-        const CoursePlanList = await getAllCoursePlans();
-        const semesterId = req.query.semesterId;
+        const semesterId = req.params.semesterId;
+        const CoursePlanList = await getAllCoursePlans(semesterId);
         const page = parseInt(req.query.page) || 1;
         const itemsPerPage = parseInt(req.query.itemsPerPage) || 5;
-
+        console.log("SemesterId  ", semesterId)
         if (!semesterId) {
             return res.status(400).json({ message: 'Semester ID is required' });
         }
 
-        if (!CoursePlanList[semesterId]) {
-            return res.status(404).json({ message: 'Course plans not found for the provided semester ID' });
+        // Filter CoursePlanList based on semesterId
+        const filteredPlans = CoursePlanList.filter(plan => plan.semesterId === parseInt(semesterId));
+
+        if (filteredPlans.length === 0) {
+            return res.status(200).json({});
         }
 
-        const totalPlans = CoursePlanList[semesterId].length;
+        const totalPlans = filteredPlans.length;
         const start = (page - 1) * itemsPerPage;
         const end = start + itemsPerPage;
 
-        const paginatedPlans = CoursePlanList[semesterId].slice(start, end);
+        const paginatedPlans = filteredPlans.slice(start, end);
 
         const payload = {
-            allPlan: CoursePlanList,
+            allPlan: CoursePlanList, // You might want to consider sending only the filtered plans instead of all plans
             plans: paginatedPlans,
             totalPlans,
             totalPages: Math.ceil(totalPlans / itemsPerPage),
             currentPage: page,
         };
-
+        console.log("Got Course Plans for semester, ", semesterId)
         res.status(200).json(payload);
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Internal server error' });
     }
-
 });
 
 
