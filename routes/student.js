@@ -57,7 +57,7 @@ router.post("/create-plan", studentAccountVerification, async (req, res) => {
             });
 
             for (i = 0; i < selectedCourses.length; i++) {
-                console.log(selectedCourses[i])
+                // console.log(selectedCourses[i])
                 await SelectedCourse.create({
                     advisingSessionId: session.id,
                     courseCode: selectedCourses[i]
@@ -79,7 +79,7 @@ router.post("/create-plan", studentAccountVerification, async (req, res) => {
             });
 
 
-            console.log(session);
+            // console.log(session);
 
 
             // Create new selected courses with updated course codes
@@ -162,7 +162,7 @@ router.get("/eligibleCourses/:semesterId", studentAccountVerification, async (re
     const student = req.user
     const semester = req.params.semesterId;
     const eligible_courses = await getEligibleCourses(student, semester);
-    console.log(eligible_courses);
+    // console.log(eligible_courses);
     res.json({
         "student": student,
         "upcomingSemester": semester,
@@ -176,7 +176,7 @@ router.get("/degreeProgress", studentAccountVerification, async (req, res) => {
     const studentId = req.user;
 
     let degreeProgress = await getDegreeProgress(studentId);
-    console.log(degreeProgress);
+    // console.log(degreeProgress);
     res.json(
         degreeProgress
     );
@@ -219,15 +219,14 @@ router.get("/course-plan/detail/:semesterId", studentAccountVerification, async 
     let semesterId = req.params.semesterId;
     const studentId = req.user;
 
-    console.log(semesterId, studentId)
+    
     // -----------------CALL THE FUNCTION-------------------------
 
-    let coursePlan = await getStudentCoursePlan(studentId, semesterId);
+    const coursePlan = await getStudentCoursePlan(studentId, semesterId);
+    
 
-
-
-    console.log("COURSEPLAN:::> ", coursePlan);
-    // console.log(semesterId);
+    // console.log("COURSEPLAN:::> ", coursePlan);
+    
     res.status(200).json(coursePlan);
 
 });
@@ -238,7 +237,7 @@ router.get("/course-plans/:semesterId", studentAccountVerification, async (req, 
         const CoursePlanList = await getAllCoursePlans(semesterId);
         const page = parseInt(req.query.page) || 1;
         const itemsPerPage = parseInt(req.query.itemsPerPage) || 5;
-        console.log("SemesterId  ", semesterId)
+        // console.log("SemesterId  ", semesterId)
         if (!semesterId) {
             return res.status(400).json({ message: 'Semester ID is required' });
         }
@@ -263,7 +262,7 @@ router.get("/course-plans/:semesterId", studentAccountVerification, async (req, 
             totalPages: Math.ceil(totalPlans / itemsPerPage),
             currentPage: page,
         };
-        console.log("Got Course Plans for semester, ", semesterId)
+        // console.log("Got Course Plans for semester, ", semesterId)
         res.status(200).json(payload);
     } catch (err) {
         console.error(err);
