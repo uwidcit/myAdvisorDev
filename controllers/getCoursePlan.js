@@ -96,7 +96,7 @@ async function getCoursePlan(studentId, semesterId) {
             planData["Courses"] = plancourses;
             coursePlan.push(planData);
         }
-        console.log(coursePlan);
+        // console.log(coursePlan);
 
         return coursePlan;
     } catch (error) {

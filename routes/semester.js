@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const fs = require('fs');
 
 // import models
 const Semester = require("../models/Semester");
@@ -146,30 +147,88 @@ router.get("/:semesterId", async (req, res) => {
 
 // Get Courses for a Semester 
 router.get("/courses/:semesterId", async (req, res) => {
+    const { semesterId } = req.params;
+
     try {
-        const semesterCourses = await SemesterCourse.findAll({ where: { semesterId: req.params.semesterId } });
-        let semCourses = [];
+        // Find the semester by ID
+        const semester = await Semester.findOne({ where: { id: semesterId } });
 
-        if (!semesterCourses) {
-
+        if (!semester) {
+            return res.status(404).send("Semester not found.");
         }
-        else {
-            var i;
-            let courseCodes = [];
 
-            for (i = 0; i < semesterCourses.length; i++) {
-                courseCodes.push(semesterCourses[i].dataValues.courseCode)
-            }
+        // let courses;
 
-            for (i = 0; i < courseCodes.length; i++) {
-                const course = await Course.findOne({ where: { courseCode: courseCodes[i] } });
-                semCourses.push(course);
-            }
+        // // Fetch courses based on semester.num
+        // switch (semester.num) {
+        //     case '1':
+        //         courses = await Course.findAll({ where: { 
+        //             semester: '1'
+        //         } });
+        //         break;
+        //     case '2':
+        //         courses = await Course.findAll({ where: { 
+        //             semester: '2',
+        //         } });
+        //         break;
+        //     case '3':
+        //         // Fetch courses for both semesters in one query (assuming semester is stored in a numeric field)
+        //         courses = await Course.findAll({
+        //             where: {
+        //                 OR: [
+        //                     { semester: '1'  },
+        //                     { semester: '2'  },
+        //                 ],
+        //             },
+        //         });
+        //         break;
+        //     default:
+        //         return res.status(400).send("Invalid semester number.");
+        // }
+
+        const semesterCourses = await SemesterCourse.findAll({
+            include: [{ model: Course }],
+            where: { semesterId },
+        });
+        const courses = semesterCourses.map((sc) => sc.course);
+        
+        
+        let filteredCourses;
+
+        switch (semester.num) {
+            case '1':
+                filteredCourses = courses.filter((course) => course.semester === '1' );
+                break;
+            case '2':
+                filteredCourses = courses.filter((course) => course.semester === '2' );
+                break;
+            case '3':
+                filteredCourses = courses.filter((course) => course.semester === '1' || course.semester === '2');
+                break;
+            default:
+                filteredCourses = [];
         }
-        res.status(202).json(semCourses);
-    }
-    catch (err) {
-        console.log("Error: ", err.message);
+        
+
+        // // Prepare the data to be written to the file
+        const dataToSend = {
+            courses: filteredCourses,
+            length: filteredCourses.length
+        };
+
+        // // Write the data to a file named 'courses.json'
+        // fs.writeFile('get_semester_courses.json', JSON.stringify(dataToSend, null, 2), (err) => {
+        //     if (err) {
+        //         console.error("Error writing to file:", err.message);
+        //         return res.status(500).send("Server Error");
+        //     }
+        //     console.log("File has been written successfully.");
+        // });
+
+        
+        res.status(200).json(dataToSend);
+    } catch (err) {
+        console.error("Error fetching semester courses:", err.message);
         res.status(500).send("Server Error");
     }
 });
@@ -234,7 +293,7 @@ router.get("/courses/:department/:semesterId", async (req, res) => {
     let semesterCourses = await SemesterCourse.findAll({ where: { semesterId } })
 
     let semesterCoursesInDepartment = semesterCourses.filter(semesterCourse => {
-        // Assuming the course code is stored in the 'courseCode' field of 'semesterCourse'
+        
         return courses.some(course => course.courseCode === semesterCourse.courseCode);
     });
 
