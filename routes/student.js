@@ -8,8 +8,10 @@ const db = require("../db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const studentAccountVerification = require("../middleware/studentAccountVerification");
+const { NotFoundError } = require('../middleware/errors');
 
 const { getEligibleCourses } = require("../controllers/getEligibleCourses");
+const { getStudentsCourses } = require("../controllers/getStudentCourses");
 const { getDegreeProgress } = require("../controllers/getDegreeProgress");
 const { getPlannedCourses } = require("../controllers/getPlannedCourses");
 const { getCoursePlan } = require("../controllers/getCoursePlan");
@@ -180,6 +182,23 @@ router.get("/degreeProgress", studentAccountVerification, async (req, res) => {
     );
 
 })
+
+/**
+ * GET /courses/:studentId
+ * Fetches courses for a given student ID after verifying the student's account.
+ */
+router.get('/courses/:studentId', studentAccountVerification, async (req, res, next) => {
+    const { studentId } = req.params;
+    try {
+        const courses = await getStudentsCourses(studentId);
+        if (!courses) {
+            throw new NotFoundError(`Courses for student ID ${studentId} not found.`);
+        }
+        res.status(200).json(courses);
+    } catch (error) {
+        next(error);
+    }
+});
 
 //For the table on CourseplannerViewer if coursePlan for selectedSemester && selectedSemester==currentSemester
 router.get("/course-plan/:semesterId", studentAccountVerification, async (req, res) => {
