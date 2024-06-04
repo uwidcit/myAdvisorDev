@@ -99,6 +99,7 @@ router.put("/update", async (req, res) => {
                             semesterId: semester.id,
                             courseCode: courses[i],
                         }
+                        
                     })
                     if (!semesterCourse) {
                         await SemesterCourse.create({
@@ -156,36 +157,6 @@ router.get("/courses/:semesterId", async (req, res) => {
         if (!semester) {
             return res.status(404).send("Semester not found.");
         }
-
-        // let courses;
-
-        // // Fetch courses based on semester.num
-        // switch (semester.num) {
-        //     case '1':
-        //         courses = await Course.findAll({ where: { 
-        //             semester: '1'
-        //         } });
-        //         break;
-        //     case '2':
-        //         courses = await Course.findAll({ where: { 
-        //             semester: '2',
-        //         } });
-        //         break;
-        //     case '3':
-        //         // Fetch courses for both semesters in one query (assuming semester is stored in a numeric field)
-        //         courses = await Course.findAll({
-        //             where: {
-        //                 OR: [
-        //                     { semester: '1'  },
-        //                     { semester: '2'  },
-        //                 ],
-        //             },
-        //         });
-        //         break;
-        //     default:
-        //         return res.status(400).send("Invalid semester number.");
-        // }
-
         const semesterCourses = await SemesterCourse.findAll({
             include: [{ model: Course }],
             where: { semesterId },
@@ -194,7 +165,6 @@ router.get("/courses/:semesterId", async (req, res) => {
         
         
         let filteredCourses;
-
         switch (semester.num) {
             case '1':
                 filteredCourses = courses.filter((course) => course.semester === '1' );
@@ -203,12 +173,16 @@ router.get("/courses/:semesterId", async (req, res) => {
                 filteredCourses = courses.filter((course) => course.semester === '2' );
                 break;
             case '3':
-                filteredCourses = courses.filter((course) => course.semester === '1' || course.semester === '2');
+                const semesterCoursesForSem3 = await SemesterCourse.findAll({
+                    include: [{ model: Course }],
+                });
+                const coursesSem3 = semesterCoursesForSem3.map((sc) => sc.course);
+                console.log("CoursesSemester3: ", coursesSem3)
+                filteredCourses = coursesSem3;
                 break;
             default:
                 filteredCourses = [];
         }
-        
 
         // // Prepare the data to be written to the file
         const dataToSend = {
