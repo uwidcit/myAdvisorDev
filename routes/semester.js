@@ -177,7 +177,6 @@ router.get("/courses/:semesterId", async (req, res) => {
                     include: [{ model: Course }],
                 });
                 const coursesSem3 = semesterCoursesForSem3.map((sc) => sc.course);
-                console.log("CoursesSemester3: ", coursesSem3)
                 filteredCourses = coursesSem3;
                 break;
             default:
