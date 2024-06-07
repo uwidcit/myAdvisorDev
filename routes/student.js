@@ -47,7 +47,7 @@ router.post("/create-plan", studentAccountVerification, async (req, res) => {
         const semesterId = req.body.semesterId;
 
         let session = await AdvisingSession.findOne({ where: { studentId: studentId, semesterId: semesterId } });
-
+        
         if (!session) {
 
             session = await AdvisingSession.create({
@@ -60,7 +60,7 @@ router.post("/create-plan", studentAccountVerification, async (req, res) => {
                 // console.log(selectedCourses[i])
                 await SelectedCourse.create({
                     advisingSessionId: session.id,
-                    courseCode: selectedCourses[i]
+                    courseCode: selectedCourses[i].courseCode
                 });
             }
 

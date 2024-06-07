@@ -212,6 +212,7 @@ router.get("/courses/:semesterId", async (req, res) => {
 router.get("/semesterCourses/:dept/:semNum", async (req, res) => {
     try {
         const { dept, semNum } = req.params;
+        console.log("Department and semNum from parameters: ", dept, semNum);
         const programmes = await Programme.findAll({ where: { department: dept } });
         const programmeIds = programmes.map(programme => programme.id);
 
@@ -234,24 +235,24 @@ router.get("/semesterCourses/:dept/:semNum", async (req, res) => {
         const semester3 = [];
         courses.forEach(course => {
             const courseObj = {
-                courseCode: course.courseCode,
+                courseCode: course.code,
                 courseTitle: course.title,
                 semester: course.semester,
                 selected: false
             };
 
-            if (course.semester === '1') {
+            if (course.level === 'I') {
                 courseObj.selected = (semNum === "I");
                 semester1.push(courseObj);
-            } else if (course.semester === '2') {
+            } else if (course.level === 'II') {
                 courseObj.selected = (semNum === "II");
                 semester2.push(courseObj);
-            } else if (course.semester === '3') {
+            } else if (course.level === 'III') {
                 courseObj.selected = (semNum === "III");
                 semester3.push(courseObj);
             }
         });
-
+        console.log("Semester1, Semester2, and Semester3 course: ", semester1, semester2, semester3);
         const output = {
             semester1,
             semester2,
