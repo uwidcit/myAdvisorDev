@@ -8,17 +8,31 @@ const Sequelize = require("sequelize");
 
 
 //SQLITE DATABASE
+// SQLite database configuration
 const db = new Sequelize({
   dialect: 'sqlite',
   logging: false,
   storage: 'database.sqlite', // Replace with the path to your SQLite database file
   pool: {
-      max: 50, // Maximum number of connections in the pool
-      min: 0, // Minimum number of connections in the pool
-      acquire: 30000, // Maximum time, in milliseconds, that a connection can be idle before being released
-      idle: 10000 // Maximum time, in milliseconds, that a connection can be idle before being closed
+    max: 50, // Maximum number of connections in the pool
+    min: 0,  // Minimum number of connections in the pool
+    acquire: 30000, // Maximum time, in milliseconds, that a connection can be idle before being released
+    idle: 10000  // Maximum time, in milliseconds, that a connection can be idle before being closed
+  },
+  dialectOptions: {
+    // Enable WAL mode
+    // https://sqldocs.org/sqlite/sqlite-write-ahead-logging/#when-to-use-wal-mode
+    mode: Sequelize.QueryTypes.WAL
   }
 });
+
+// Increase the busy timeout
+db.query('PRAGMA busy_timeout = 30000;'); // Set busy timeout to 30 seconds
+
+// Enable WAL mode
+db.query('PRAGMA journal_mode = WAL;');
+
+
 // const db = new Sequelize({
 //   dialect: 'sqlite',
 //   logging: false,

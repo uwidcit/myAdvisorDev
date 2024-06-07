@@ -125,7 +125,7 @@ async function getEligibleCourses (student_id,coming_semester){
                 });
                 return final_eligible;
         });
-        let eligible_list = await Promise.all(courses_eligible);
+        let eligible_list = await Promise.all(courses);
         eligible_list = eligible_list.filter((c)=>c!==undefined && c.length>0);
         return [].concat(...eligible_list);
     }catch(error){

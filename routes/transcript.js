@@ -3,7 +3,7 @@ const multer = require('multer')
 const upload = multer({ storage: multer.memoryStorage() })
 const { parse } = require('../utilities/parser');
 const studentAccountVerification = require("../middleware/studentAccountVerification");
-const { Op,Transaction } = require('sequelize');
+const { Op, Transaction } = require('sequelize');
 /**
  * initalizes express router and database connection
  */
@@ -73,7 +73,7 @@ router.get("/courses/view", async (req, res) => {
         const student = await StudentCourses.findOne({ where: { studentId: req.body.studentId } && { courseCode: req.body.courseCode } });
         //need year: derived from sem id via Semesters
         //need coursename: derived from courseCode via Course
-        
+
         if (!student) {
             return res.status(404).send("Course for student not found.");
         }
@@ -90,11 +90,11 @@ router.get("/courses/view", async (req, res) => {
 // get all of a student's course in the database
 router.get("/courses/viewAll/:studentId", async (req, res) => {
     try {
-        const path_student = req.params.studentId; 
+        const path_student = req.params.studentId;
         let studentCourses = await getStudentsCourses(path_student);
-        console.log("Student Courses: ", studentCourses);
+        // console.log("Student Courses: ", studentCourses);
         res.json({
-            "courses" : studentCourses
+            "courses": studentCourses
         })
     }
     catch (err) {
@@ -172,10 +172,32 @@ router.post("/courses/add", async (req, res) => {
 
 // Add transcript by uploading transcript
 router.post('/parseForm', upload.single('file'), async (req, res) => {
-    const { ...data } = await parse(req.file.buffer);
-    const response = await addStudentTranscriptCourses(data);
-    console.log(response);
-    res.status(response['status']).send(`${response['msg']}`)
+    try {
+        // Ensure a file is provided
+        if (!req.file) {
+            return res.status(400).send('No file uploaded');
+        }
+
+        // Ensure the uploaded file is a PDF
+        if (req.file.mimetype !== 'application/pdf') {
+            return res.status(400).send('Only PDF files are allowed');
+        }
+
+        // Parse the PDF file
+        const data = await parse(req.file.buffer);
+
+        // Add the parsed data to the student's transcript courses
+        const response = await addStudentTranscriptCourses(data);
+
+        // Log the response
+        console.log(response);
+
+        // Send response back to the client
+        res.status(response.status).send(response.msg);
+    } catch (error) {
+        console.error('Error parsing PDF or adding transcript courses:', error);
+        res.status(500).send('An error occurred while processing your request.');
+    }
 });
 
 // update a selected student transcript
