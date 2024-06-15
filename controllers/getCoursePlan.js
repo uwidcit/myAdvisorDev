@@ -26,6 +26,7 @@ async function getCoursePlan(studentId, semesterId) {
         //where selected courses can pull from
         const courses_eligible = await getEligibleCourses(studentId, semesterId);
         const degree_progress = await getDegreeProgress(studentId);//use to determine effect of selected courses
+        
         const planned_courses = await getPlannedCourses(studentId, semesterId);//what is displayed on the courseplan
 
         if (courses_eligible) {

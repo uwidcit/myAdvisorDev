@@ -63,4 +63,89 @@ async function getEligibleCourses(studentId) {
     console.log(results);
 }
 
-getEligibleCourses(816030787).catch(err => console.error(err));
+async function getCoursesByType(type) {
+    const query = `
+    SELECT c.code, c.title
+    FROM Courses c
+    JOIN ProgrammeCourses pc ON c.code = pc.courseCode
+    JOIN Types t ON pc.typeId = t.id
+    WHERE t.type = :type
+  `;
+
+    const results = await sequelize.query(query, {
+        replacements: { type: type },
+        type: sequelize.QueryTypes.SELECT
+    });
+
+    console.log(results);
+}
+
+async function getTranscript(studentId) {
+    const query = `
+    SELECT
+        s.studentId,
+        t.id AS transcriptId,
+        sc.courseCode,
+        c.title AS courseTitle,
+        sc.grade,
+        se.num AS semesterNumber,
+        se.academicYear AS semesterYear
+    FROM
+        Students s
+        JOIN Transcripts t ON s.studentId = t.studentId
+        JOIN StudentCourses sc ON s.studentId = sc.studentId
+        JOIN Courses c ON sc.courseCode = c.code
+        JOIN Semesters se ON sc.semesterId = se.id
+    WHERE
+        s.studentId = :studentId;
+    `;
+
+    try {
+        const results = await sequelize.query(query, {
+            replacements: { studentId: studentId },
+            type: sequelize.QueryTypes.SELECT
+        });
+
+        console.log(results);
+        return results;
+    } catch (error) {
+        console.error("Error fetching transcript:", error);
+    }
+}
+
+async function getStudentCourses(studentId) {
+    const query = `
+    SELECT
+        s.studentId,
+        sc.courseCode,
+        c.title AS courseTitle,
+        sc.grade,
+        se.num AS semesterNumber,
+        se.academicYear AS semesterYear
+    FROM
+        Students s
+        JOIN StudentCourses sc ON s.studentId = sc.studentId
+        JOIN Courses c ON sc.courseCode = c.code
+        JOIN Semesters se ON sc.semesterId = se.id
+    WHERE
+        s.studentId = :studentId;
+    `;
+
+    try {
+        const results = await sequelize.query(query, {
+            replacements: { studentId: studentId },
+            type: sequelize.QueryTypes.SELECT
+        });
+
+        console.log(results);
+        return results;
+    } catch (error) {
+        console.error("Error fetching student courses:", error);
+    }
+}
+
+
+// getEligibleCourses(816030787).catch(err => console.error(err));
+// getCoursesByType('L1CORE').catch(err => console.error(err));
+// getTranscript('816030787').catch(err => console.error(err));
+getStudentCourses('816030787').catch(err => console.error(err));
