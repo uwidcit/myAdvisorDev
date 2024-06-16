@@ -4,10 +4,10 @@ const sequelize = new Sequelize({
     dialect: 'sqlite',
     storage: './database.sqlite',
     pool: {
-        max: 50, // Maximum number of connections in the pool
-        min: 0,  // Minimum number of connections in the pool
-        acquire: 30000, // Maximum time, in milliseconds, that a connection can be idle before being released
-        idle: 10000  // Maximum time, in milliseconds, that a connection can be idle before being closed
+        max: 50,
+        min: 0,
+        acquire: 30000,
+        idle: 10000
     },
 });
 
@@ -144,8 +144,89 @@ async function getStudentCourses(studentId) {
     }
 }
 
+async function getAllTables() {
+    const query = `
+    SELECT name 
+    FROM sqlite_master 
+    WHERE type='table' 
+    ORDER BY name;
+    `;
+
+    try {
+        const results = await sequelize.query(query, {
+            type: sequelize.QueryTypes.SELECT
+        });
+
+        console.log("Available tables:");
+        results.forEach(result => {
+            console.log(result.name);
+        });
+
+        return results.map(result => result.name);
+    } catch (error) {
+        console.error("Error fetching table names:", error);
+    }
+}
+
+async function getAllStudentInformation() {
+    const query = `
+      SELECT 
+          s.studentId AS studentId,
+          s.firstName AS firstName,
+          s.lastName AS lastName,
+          s.year as year,
+          s.email AS email,
+          s.programmeId AS programmeId,
+          p.name AS programmeName,
+          p.faculty AS programmeFaculty,
+          p.department AS programmeDepartment,
+          p.version AS programmeVersion,
+          t.id AS transcriptId,
+          t.gpa AS transcriptGPA,
+          t.degree AS transcriptDegree,
+          t.major AS transcriptMajor,
+          t.admitTerm AS transcriptAdmitTerm,
+          t.degreeAttemptHours AS transcriptAttemptHours,
+          t.degreePassedHours AS transcriptPassedHours,
+          t.degreeEarnedHours AS transcriptEarnedHours,
+          t.degreeGpaHours AS transcriptGPAHours,
+          t.degreeQualityPoints AS transcriptQualityPoints,
+          ad.dateawarded AS awardedDegreeDate,
+          sc.courseCode AS enrolledCourseCode,
+          c.title AS enrolledCourseTitle,
+          c.credits AS enrolledCourseCredits,
+          c.semester AS enrolledCourseSemester,
+          sc.grade AS enrolledCourseGrade
+      FROM 
+          Students s
+      LEFT JOIN 
+          Programmes p ON s.programmeId = p.id
+      LEFT JOIN 
+          Transcripts t ON s.studentId = t.studentId
+      LEFT JOIN 
+          AwardedDegrees ad ON s.studentId = ad.studentId
+      LEFT JOIN 
+          StudentCourses sc ON s.studentId = sc.studentId
+      LEFT JOIN 
+          Courses c ON sc.courseCode = c.code
+      ORDER BY 
+          s.studentId;
+    `;
+
+    try {
+        const results = await sequelize.query(query, {
+            type: sequelize.QueryTypes.SELECT
+        });
+        console.log(results);
+    } catch (error) {
+        console.error('Error executing query:', error);
+    }
+}
+
 
 // getEligibleCourses(816030787).catch(err => console.error(err));
 // getCoursesByType('L1CORE').catch(err => console.error(err));
 // getTranscript('816030787').catch(err => console.error(err));
-getStudentCourses('816030787').catch(err => console.error(err));
+// getStudentCourses('816030787').catch(err => console.error(err));
+// getAllTables().catch(err => console.error(err));
+getAllStudentInformation().catch(err => console.error(err));
