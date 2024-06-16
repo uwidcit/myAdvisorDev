@@ -45,4 +45,4 @@ NodeJS
 
 ## Getting Started with the database models
 
-[Getting Started models](docs/getting-started.md)
+[Getting Started models](docs/models.md)
