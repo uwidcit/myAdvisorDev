@@ -20,6 +20,9 @@ The following members are part of the 2024 Project Course development team:
 - Faith Shim
 - Jarrod Moore
 
+The following member updated the backend - May - June, 2024
+- @firepenguindisopanda
+
 The system would be designed using a PERN Stack architecture
 PostgreSQL
 Express
@@ -39,3 +42,7 @@ NodeJS
 9. jsonwebtoken
 10. passport
 11. passport-jwt
+
+## Getting Started with the database models
+
+[Getting Started models](docs/getting-started.md)
