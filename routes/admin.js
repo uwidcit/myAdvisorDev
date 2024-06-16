@@ -204,117 +204,6 @@ router.get("/student/advising-sessions", async (req, res) => {
 });
 
 
-
-// get course plan for all students
-// router.get("/course-plan/:semesterId", staffAccountVerification, async (req, res) => {
-
-//     let semesterId = req.params.semesterId;
-//     // const studentId = req.user;
-//     let studentId;
-//     let programme;
-//     let courses = [];
-//     let courseplan = {};
-//     let coursePlans = [];
-
-//     // -----------------CALL THE FUNCTION-------------------------
-
-
-//     const students = await Student.findAll();
-//     // console.log("students::", students);
-
-
-//     if (students) {
-//         for (const s of students) {
-//             courseplan = {};
-//             courses = [];
-
-//             studentId = s.dataValues.studentId;
-//             courseplan["studentId"] = studentId;
-//             const programme = await Programme.findOne({ where: { id: programmeId } });
-//             programmeName = programme.name;
-//             courseplan["programmeName"] = programmeName;
-//             courseplan["firstName"] = s.dataValues.firstName;
-//             courseplan["lastName"] = s.dataValues.lastName;
-//             programmeId = s.dataValues.programmeId;
-//             courseplan["year"] = 0;
-
-//             const advisingSession = await AdvisingSession.findOne({ where: { studentId, semesterId } });
-//             // console.log("advising session: ", advisingSession);
-
-//             if (advisingSession) {
-//                 let sessionId = advisingSession.dataValues.id;
-//                 const SelectedCourses = await SelectedCourse.findAll({ where: { advisingSessionId: sessionId } })
-//                 // console.log("advisesCourses: ", SelectedCourses);
-
-//                 for (let ac of SelectedCourses) {
-//                     courses.push(ac.courseCode);
-//                     // console.log("courses: ", ac.courseCode);
-//                 }
-//                 courseplan["courses"] = courses;
-
-//             } else {
-//                 courseplan["courses"] = [];
-//             }
-
-
-
-
-//             coursePlans.push(courseplan);
-
-
-//         }
-//     }
-
-
-
-
-
-//     // console.log("COURSEPLAN:::> ",coursePlans);
-//     res.json({
-//         "Course Plans: ": coursePlans
-//     });
-
-// });
-
-// router.get("/course-plans", staffAccountVerification, async (req, res) => {
-
-
-//     try {
-//         const CoursePlanList = await getAllCoursePlans();
-//         const semesterId = req.query.semesterId;
-//         const page = parseInt(req.query.page) || 1;
-//         const itemsPerPage = parseInt(req.query.itemsPerPage) || 5;
-
-//         if (!semesterId) {
-//             return res.status(400).json({ message: 'Semester ID is required' });
-//         }
-
-//         if (!CoursePlanList[semesterId]) {
-//             return res.status(404).json({ message: 'Course plans not found for the provided semester ID' });
-//         }
-
-//         const totalPlans = CoursePlanList[semesterId].length;
-//         const start = (page - 1) * itemsPerPage;
-//         const end = start + itemsPerPage;
-
-//         const paginatedPlans = CoursePlanList[semesterId].slice(start, end);
-
-//         const payload = {
-//             allPlan: CoursePlanList,
-//             plans: paginatedPlans,
-//             totalPlans,
-//             totalPages: Math.ceil(totalPlans / itemsPerPage),
-//             currentPage: page,
-//         };
-
-//         res.status(200).json(payload);
-//     } catch (err) {
-//         console.error(err);
-//         res.status(500).json({ message: 'Internal server error' });
-//     }
-
-// });
-
 router.get("/detailed-course-plan/all", staffAccountVerification, async (req, res) => {
     try {
         const semesters = await Semester.findAll();
@@ -974,7 +863,7 @@ router.get("/students", staffAccountVerification, async (req, res) => {
                 "avatar": '/assets/images/face-4.png',
                 "age": 0,
                 "semester_started": {
-                    "year_group": 0,
+                    "year_group": students[i].year,
                     "admit_term": ""
                 },
                 "email": students[i].email,
@@ -1007,7 +896,7 @@ router.get("/student/:studentId", staffAccountVerification, async (req, res) => 
             "avatar": '/assets/images/face-4.png',
             "age": 0,
             "semester_started": {
-                "year_group": 0,
+                "year_group": student.year,
                 "admit_term": ""
             },
             "email": student.email,

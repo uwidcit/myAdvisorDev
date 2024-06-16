@@ -93,7 +93,7 @@ router.get("/courses/viewAll/:studentId", async (req, res) => {
         const path_student = req.params.studentId;
         let studentCourses = await getStudentsCourses(path_student);
         // console.log("Student Courses: ", studentCourses);
-        res.json({
+        res.status(200).json({
             "courses": studentCourses
         })
     }
