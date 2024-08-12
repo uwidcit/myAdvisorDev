@@ -22,6 +22,7 @@ The following members are part of the 2024 Project Course development team:
 
 The following members are part of the DCIT CCU Program
 - Joshua Noel
+- Katoya Ottley
 
 The following member updated the backend - May - June, 2024
 - @firepenguindisopanda
