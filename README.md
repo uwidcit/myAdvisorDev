@@ -20,6 +20,9 @@ The following members are part of the 2024 Project Course development team:
 - Faith Shim
 - Jarrod Moore
 
+The following members are part of the DCIT CCU Program
+- Joshua Noel
+
 The following member updated the backend - May - June, 2024
 - @firepenguindisopanda
 
