@@ -26,9 +26,8 @@ const Course = db.define("course", {
         type: Sequelize.STRING,
     },
     semester: {
+        type: Sequelize.ENUM('1', '2', '3'),
         allowNull: false,
-        type: Sequelize.ENUM,
-        values: ['I', 'II', 'III'],
     },
     department: {
         allowNull: false,

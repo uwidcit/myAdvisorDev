@@ -1,4 +1,4 @@
-const { Sequelize} = require("sequelize");
+const { Sequelize } = require("sequelize");
 const db = require("../db");
 
 // const StudentCourse = require("./StudentCourse");
@@ -13,9 +13,8 @@ const Semester = db.define("semester", {
         allowNull: false
     },
     num: {
-        type: Sequelize.ENUM,
-        values:['I', 'II', 'III'],
-        allowNull: false,
+        type: Sequelize.ENUM('1', '2', '3'),
+        allowNull: false
     },
     academicYear: {
         type: Sequelize.STRING,
