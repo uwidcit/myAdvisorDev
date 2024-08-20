@@ -4,13 +4,7 @@ const dotenv = require('dotenv').config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const path = require("path");
 const pool = require("./db");
-const passport = require("passport");
-const multer = require('multer')
-const upload = multer({ storage: multer.memoryStorage() })
-const { parse } = require('./utilities/parser');
-const errorHandler = require('./middleware/errorHandler');
 const bcrypt = require("bcrypt");
 
 const port = process.env.PORT || 3002;
@@ -140,7 +134,7 @@ app.use("/accounts", require("./routes/authorization"));
 app.use("/semester", require("./routes/semester"));
 
 // Error handling middleware should be the last middleware
-app.use(errorHandler);
+app.use(require('./routes/errorHandler'));
 
 // // if a bad route is entered
 // if (process.env.NODE_ENV === "production") {

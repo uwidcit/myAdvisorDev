@@ -4,15 +4,12 @@
     jwt uses the passport module to create and store a user token
 */
 const router = require("express").Router();
-const db = require("../db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 // import models
 const Student = require("../models/Student");
 const Admin = require("../models/Admin");
-const jwtGeneratorStudent = require("../utilities/jwtStudent");
-const jwtGeneratorStaff = require("../utilities/jwtStaff");
 
 // ---Routes---
 
@@ -20,61 +17,36 @@ const jwtGeneratorStaff = require("../utilities/jwtStaff");
 router.post("/login", async (req, res) => {
     try {
         const { username, password } = req.body;
-        console.log("LOG::> Username: ", username);
-        console.log("LOG::> Passowrd: ", password);
+        if(process.env.NODE_ENV === 'development'){
+            console.log("LOG::> Username: ", username);
+            console.log("LOG::> Passowrd: ", password);
+        }
 
-        const admin = await Admin.findOne({ where: { "adminID": username } });
         const student = await Student.findOne({ where: { "studentId": username } });
+        const admin = await Admin.findOne({ where: { "adminID": username } });
+        const account = student || admin;
 
-        if (!admin && !student) {
-            return res.status(401).send("This account does not exist.");
-        }
-        else if (admin) {
-
-            // compares entered password and account password for match
-            const passCompare = await bcrypt.compare(password, admin.password);
-
-            if (!passCompare) {
-                return res.status(401).send("Invalid Password.");
-            }
-            else if (passCompare) {
-                // generates token for staff user
-                const token = jwtGeneratorStaff(admin.adminID);
-                res.json({
-                    "accountType": "admin",
-                    "adminID": admin.adminID,
-                    "firstName": admin.firstName,
-                    "lastName": admin.lastName,
-                    "email": admin.email,
-                    "createdAt": admin.createdAt,
-                    "token": token
-                });
-            }
-        }
-        else if (student) {
-            const passCompare2 = await bcrypt.compare(password, student.password);
-
-            if (!passCompare2) {
-                return res.status(401).send("Invalid Password");
-            }
-            else if (passCompare2) {
-                // generates token for student user
-                const token = jwtGeneratorStudent(student.studentId);
-                res.json({
-                    "accountType": "student",
-                    "studentId": student.studentId,
-                    "firstName": student.firstName,
-                    "lastName": student.lastName,
-                    "email": student.email,
-                    "programmeId": student.programmeId,
-                    "createdAt": student.createdAt,
-                    "token": token
-                });
-            }
-        }
-        else {
-            res.send("Unauthorized Access");
-        }
+        if(!account) return res.status(401).send("Invalid account or password");
+        if(!(await bcrypt.compare(password,account.password)))
+            return res.status(401).send("Invalid account or password");
+        //if no statement above triggered, account is valid, now time to set jwt
+        //the jwt is set for a student if it's a student and admin if it's an admin
+        const key = student? process.env.studentSecret: process.env.staffSecret;
+        const user = student? student.studentId: admin.adminID;
+        const accountType = student? "student": "admin";
+        const token = jwt.sign({user}, key, {expiresIn:"24hr"});
+        const idname = student? "studentId": "adminID";
+        let student_extra_attrs = student? {programmeId:student.programmeId}: {}
+        res.json({
+            token,
+            accountType,
+            email: admin.email,
+            ...student_extra_attrs,
+            [idname]: account[idname],
+            firstName: admin.firstName,
+            lastName: admin.lastName,
+            createdAt: admin.createdAt
+        })
     }
     catch (err) {
         console.log("Error: ", err.message);
