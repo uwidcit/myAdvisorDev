@@ -222,12 +222,17 @@ router.get("/course-plan/detail/:semesterId", studentAccountVerification, async 
     
     // -----------------CALL THE FUNCTION-------------------------
 
-    const coursePlan = await getStudentCoursePlan(studentId, semesterId);
-    
-
-    // console.log("COURSEPLAN:::> ", coursePlan);
-    
-    res.status(200).json(coursePlan);
+    try {
+        const coursePlan = await getStudentCoursePlan(studentId, semesterId);
+        console.log("Course Plan: ", coursePlan);
+        if (coursePlan) {
+            res.status(200).json(coursePlan);
+        } else {
+            res.status(404).send("Course Plan for Student Not Found");
+        }
+    } catch (error) {
+        console.error("Error ::>",error);
+    }
 
 });
 

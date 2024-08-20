@@ -1,8 +1,12 @@
 const { Sequelize } = require("sequelize");
 
 const sequelize = new Sequelize({
-    dialect: 'sqlite',
-    storage: './database.sqlite',
+    dialect: 'postgres',
+    host: 'localhost', // Update with your PostgreSQL host
+    port: 5432,        // Default PostgreSQL port
+    database: 'myadvisor', // Update with your database name
+    username: 'postgres', // Update with your username
+    password: 'postgres', // Update with your password
     pool: {
         max: 50,
         min: 0,
@@ -10,6 +14,15 @@ const sequelize = new Sequelize({
         idle: 10000
     },
 });
+
+async function initializeDatabase() {
+    try {
+        await sequelize.authenticate();
+        console.log('Connection has been established successfully.');
+    } catch (error) {
+        console.error('Unable to connect to the database:', error);
+    }
+}
 
 async function getEligibleCourses(studentId) {
     const query = `
@@ -229,4 +242,5 @@ async function getAllStudentInformation() {
 // getTranscript('816030787').catch(err => console.error(err));
 // getStudentCourses('816030787').catch(err => console.error(err));
 // getAllTables().catch(err => console.error(err));
-getAllStudentInformation().catch(err => console.error(err));
+// getAllStudentInformation().catch(err => console.error(err));
+initializeDatabase().catch(err => console.error(err));
