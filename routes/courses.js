@@ -6,14 +6,9 @@ const db = require("../db");
 
 // import models
 const Course = require("../models/Course");
-// const Career = require("../models/Career");
 const Prerequisites = require("../models/Prerequisite");
-// const CareerCourse = require("../models/CareerCourse");
 const Programme = require("../models/Programme");
 const ProgrammeCourse = require("../models/ProgrammeCourse");
-
-// imports sequelize module
-const Sequelize = require("sequelize");
 
 // get all courses in the database
 router.get("/all", async (req, res) => {
@@ -153,49 +148,9 @@ router.delete("/delete/:code", async (req, res) => {
     }
 });
 
-// // get all career tags for a course
-// router.get("/careers/:courseCode", async (req, res) => {
-//     try {
-//         const courseCode = req.params.courseCode;
-//         console.log("LOG::> courseCode: ", courseCode);
-
-//         const courseCareers = await CareerCourse.findAll({ where: { courseCode: courseCode } });
-//         console.log("LOG::> courseCarrers: ", courseCareers);
-
-//         if (!courseCareers) {
-//             return res.status(404).send("Course doesn't exist");
-//         }
-//         else {
-//             var i;
-//             let careerIDs = [];
-
-//             for (i = 0; i < courseCareers.length; i++) {
-//                 careerIDs.push(courseCareers[i].dataValues.careerId)
-//                 console.log("LOG::> CareerIds: ", careerIDs);
-//             }
-
-
-//             let careerNames = [];
-//             for (i = 0; i < courseCareers.length; i++) {
-//                 const career = await Career.findOne({ where: { id: careerIDs[i] } });
-//                 console.log("LOG::> career: ", career);
-//                 careerNames.push(career.dataValues.careerName);
-//             }
-
-//             res.status(202).json(careerNames);
-//         }
-//     }
-//     catch (err) {
-//         console.log("Error: ", err.message);
-//         res.status(500).send("Server Error");
-//     }
-// });
-
-
 
 router.get("/prereqs/:id", async (req, res) => {
     try {
-        // const prereqs = await Course.findAll({ where: { prerequisites: { [Op.like]: `%${req.params.id}%` } } });
         console.log(req.params.id);
         const prereqs = await Prerequisites.findAll({
             where: { courseCode: req.params.id }

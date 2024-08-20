@@ -9,7 +9,7 @@ const SelectedCourse = require("../models/SelectedCourse");
 const Course = require("../models/Course");
 const Programme = require("../models/Programme");
 const ProgrammeCourse = require("../models/ProgrammeCourse");
-const studentAccountVerification = require("../middleware/studentAccountVerification");
+const { studentAccountVerification } = require("../scripts/routeUtils.js");
 
 const { Op } = require("sequelize");
 

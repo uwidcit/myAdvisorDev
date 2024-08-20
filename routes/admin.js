@@ -1,11 +1,8 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
-const staffAccountVerification = require("../middleware/staffAccountVerification");
-const { getEligibleCourses } = require("../controllers/getEligibleCourses");
+const { staffAccountVerification } = require("../scripts/routeUtils.js");
 const { getDegreeProgress } = require("../controllers/getDegreeProgress");
-const { getPlannedCourses } = require("../controllers/getPlannedCourses");
 const { getStudentCoursePlan } = require("../controllers/getStudentCoursePlan");
-const { getCoursePlan } = require("../controllers/getCoursePlan.js");
 const { getAllCoursePlans } = require("../controllers/getAllCoursePlans");
 const { updatePlanStatus } = require("../controllers/updateCoursePlan.js")
 // import models

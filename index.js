@@ -123,8 +123,6 @@ app.use("/student", require("./routes/student"));
 
 app.use("/courses", require("./routes/courses"));
 
-app.use("/careers", require("./routes/careers"));
-
 app.use("/programmes", require("./routes/programmes"));
 
 app.use("/transcript", require("./routes/transcript"));
@@ -134,7 +132,7 @@ app.use("/accounts", require("./routes/authorization"));
 app.use("/semester", require("./routes/semester"));
 
 // Error handling middleware should be the last middleware
-app.use(require('./routes/errorHandler'));
+app.use( (require('./scripts/routeUtils.js')).errorHandler );
 
 // // if a bad route is entered
 // if (process.env.NODE_ENV === "production") {
