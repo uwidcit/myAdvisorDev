@@ -163,7 +163,7 @@ Represents a group that can have many prerequisites or course groups.
 ## Relationships Diagram
 For a visual representation, refer to the ER diagram that maps out these associations.
 
-![ER Diagram](../markdown_file_assets/erd_diagram.png)
+![ER Diagram](erd_diagram.png)
 
 ## Sequelize Configuration
 All models are defined using Sequelize, an ORM for Node.js. Ensure you have the following setup in your project:

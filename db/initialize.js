@@ -1,16 +1,16 @@
-const db = require("../db");
+const db = require("./db");
 const bcrypt = require("bcrypt");
 // Dummy Data
-const ProgrammesJSON = require("../dummy_files/programmes.json");
-const CoursesJSON = require("../dummy_files/courses.json");
-const TypesJSON = require("../dummy_files/types.json");
-const StudentsJSON = require("../dummy_files/students.json");
-const SemestersJSON = require("../dummy_files/semesters.json");
-const StudentCoursesJSON = require("../dummy_files/studentCourses.json");
+const ProgrammesJSON = require("./programmes.json");
+const CoursesJSON = require("./courses.json");
+const TypesJSON = require("./types.json");
+const StudentsJSON = require("./students.json");
+const SemestersJSON = require("./semesters.json");
+const StudentCoursesJSON = require("./studentCourses.json");
 // const Dummytranscript = require("./dummytranscript.json")
 // const DummyProgCourses = require("./dummyProgCourses.json")
-const AdvisingSessionsJSON = require("../dummy_files/advisingSessions.json");
-const SelectedCourseJSON = require("../dummy_files/selectedCourses.json")
+const AdvisingSessionsJSON = require("./advisingSessions.json");
+const SelectedCourseJSON = require("./selectedCourses.json")
 
 // models
 // const Admin = require("../models/Admin");

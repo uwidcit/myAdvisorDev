@@ -238,7 +238,7 @@ router.get("/detailed-course-plan/all", staffAccountVerification, async (req, re
 //#region 
 
 // parserCSV
-const { parseCSVData } = require('../utilities/csvParser');
+const { parseCSVData } = require('../scripts/csvParser');
 const multer = require('multer');
 const { or } = require("sequelize");
 const SelectedCourse = require("../models/SelectedCourse");
@@ -431,7 +431,7 @@ router.post('/parse/programmeCourse', upload.single('file'), async (req, res) =>
 // ====================--PARSE XLSX--====================
 
 const express = require("express");
-const { parse_xlsx } = require("../utilities/xlsx_parser.js");
+const { parse_xlsx } = require("../scripts/xlsx_parser.js");
 // const { updatePlanStatus } = require("../controllers/updateCoursePlan.js");
 
 //parse programmecourse XLSX

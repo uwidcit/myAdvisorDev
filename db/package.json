@@ -1,0 +1,12 @@
+{
+  "name": "db",
+  "version": "1.0.0",
+  "description": "all database things for this repository except the model definitions",
+  "main": "db.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 0"
+  },
+  "author": "Y0ursTruly",
+  "license": "ISC",
+  "dependencies": {}
+}

@@ -44,8 +44,6 @@ const SemesterCourse = require("./models/SemesterCourse");
 
 //import associations
 require("./models/Associations");
-
-const { ppid } = require("process");
 async function newinitializeDatabase() {
   (async () => {
     try {

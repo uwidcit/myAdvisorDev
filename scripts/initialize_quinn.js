@@ -1,4 +1,4 @@
-const db = require("../db");
+const db = require("../db/db");
 // Dummy Data
 const ProgrammesJSON = require("../dummy_files/programmes.json");
 const CoursesJSON = require("../dummy_files/courses.json");
