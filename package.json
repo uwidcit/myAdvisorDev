@@ -10,7 +10,7 @@
     "dev": "node utilities/initialize.js",
     "eli": "node controllers/getEligibleCourses.js",
     "plan": "node controllers/getCoursePlan.js",
-    "test": "echo \"Message: no test specified\" && exit 0"
+    "test": "newman run https://www.postman.com/collections/33973565-64cd31f4-d07a-4eea-85fc-299c618c8899-2sA35HXgGb -e postman_env.json"
   },
   "repository": {
     "type": "git",
@@ -36,6 +36,7 @@
     "mammoth": "^1.7.1",
     "morgan": "^1.10.0",
     "multer": "^1.4.4",
+    "newman": "^6.2.1",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.1",
     "path": "^0.12.7",
