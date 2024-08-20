@@ -51,3 +51,18 @@ NodeJS
 ## Getting Started with the database models
 
 [Getting Started models](docs/models.md)
+
+### .env file setup
+
+```
+PORT=
+SYNCED=
+NODE_ENV=
+staffSecret=
+studentSecret=
+DB_HOST=
+DB_PORT=
+DB_NAME=
+DB_USER=
+DB_PASSWORD=
+```

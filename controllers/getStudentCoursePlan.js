@@ -4,6 +4,7 @@ const SelectedCourse = require("../models/SelectedCourse")
 const { getCoursePlan } = require("./getCoursePlan");
 const { Op, where } = require('sequelize');
 async function getStudentCoursePlan(studentId,semesterId){
+    
     try{
         const advising_info = await AdvisingSession.findOne({
             attributes: ['planStatus', 'updatedAt'],
