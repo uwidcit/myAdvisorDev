@@ -1,10 +1,10 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const { staffAccountVerification } = require("../scripts/routeUtils.js");
-const { getDegreeProgress } = require("../controllers/getDegreeProgress");
-const { getStudentCoursePlan } = require("../controllers/getStudentCoursePlan");
-const { getAllCoursePlans } = require("../controllers/getAllCoursePlans");
-const { updatePlanStatus } = require("../controllers/updateCoursePlan.js")
+const { getDegreeProgress } = require("../db/getDegreeProgress");
+const { getStudentCoursePlan } = require("../db/getStudentCoursePlan");
+const { getAllCoursePlans } = require("../db/getAllCoursePlans");
+const { updatePlanStatus } = require("../db/updateCoursePlan.js")
 // import models
 const Admin = require("../models/Admin");
 const Programme = require("../models/Programme");
@@ -22,11 +22,7 @@ const ElectiveRequirement = require("../models/ElectiveRequirement");
 
 const StudentCourse = require("../models/StudentCourse");
 const Transcript = require("../models/Transcript");
-const SemesterCourses = require("../models/SemesterCourse");
-// const CourseGroup = require("../models/CourseGroup");
 const PCR = require("../models/ElectiveRequirement");
-// const Type = require("../models/Type");
-
 
 // ---Routes---
 
@@ -429,7 +425,7 @@ router.post('/parse/programmeCourse', upload.single('file'), async (req, res) =>
 
 const express = require("express");
 const { parse_xlsx } = require("../scripts/xlsx_parser.js");
-// const { updatePlanStatus } = require("../controllers/updateCoursePlan.js");
+// const { updatePlanStatus } = require("../db/updateCoursePlan.js");
 
 //parse programmecourse XLSX
 router.post('/parse/programmeCourseXLSX', upload.single('file'), async (req, res) => {

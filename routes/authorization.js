@@ -31,10 +31,11 @@ router.post("/login", async (req, res) => {
             return res.status(401).send("Invalid account or password");
         //if no statement above triggered, account is valid, now time to set jwt
         //the jwt is set for a student if it's a student and admin if it's an admin
+        const expiresIn = req.headers['remember']? "336hr": "24hr";
         const key = student? process.env.studentSecret: process.env.staffSecret;
         const user = student? student.studentId: admin.adminID;
         const accountType = student? "student": "admin";
-        const token = jwt.sign({user}, key, {expiresIn:"24hr"});
+        const token = jwt.sign({user}, key, {expiresIn});
         const idname = student? "studentId": "adminID";
         let student_extra_attrs = student? {programmeId:student.programmeId}: {}
         res.json({

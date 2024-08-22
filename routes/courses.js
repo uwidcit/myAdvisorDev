@@ -2,7 +2,6 @@
  * initalizes express router and database connection
  */
 const router = require("express").Router();
-const db = require("../db");
 
 // import models
 const Course = require("../models/Course");
