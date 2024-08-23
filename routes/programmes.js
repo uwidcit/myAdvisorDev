@@ -9,12 +9,14 @@ const Course = require("../models/Course");
 const Programme = require("../models/Programme");
 const ProgrammeCourse = require("../models/ProgrammeCourse");
 
+const {paginate} = require('../middleware/paginate'); //import pagination function
+
 // get all programmes in the database
 router.get("/all", async (req, res) => {
     try {
         // finds all the programmes and responds with a json list 
         const programmes = await Programme.findAll();
-        res.status(200).json(programmes);
+        res.status(200).json(paginate(programmes,req));
     }
     catch (err) {
         console.log("Error: ", err.message);

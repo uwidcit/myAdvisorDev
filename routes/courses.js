@@ -15,13 +15,15 @@ const ProgrammeCourse = require("../models/ProgrammeCourse");
 // imports sequelize module
 const Sequelize = require("sequelize");
 
+const {paginate} = require('../middleware/paginate'); //import pagination function
+
 // get all courses in the database
 router.get("/all", async (req, res) => {
 
     try {
         // finds all the courses and responds with a json list 
         const courses = await Course.findAll();
-        res.status(200).json(courses);
+        res.status(200).json(paginate(courses,req));
     }
     catch (err) {
         console.log("Error: ", err.message);
@@ -38,7 +40,7 @@ router.get("/departments" , async (req, res) => {
             attributes: ['department'],
             group: ['department']
         });
-        res.status(200).json(departments);
+        res.status(200).json(paginate(departments,req));
     }
     catch (err) {
         console.log("Error: ", err.message);
