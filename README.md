@@ -50,7 +50,7 @@ NodeJS
 
 ## Getting Started with the database models
 
-[Getting Started models](docs/models.md)
+[Getting Started models](models/README.md)
 
 ### .env file setup
 

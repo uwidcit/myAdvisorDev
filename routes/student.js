@@ -9,13 +9,13 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { studentAccountVerification,NotFoundError } = require("../scripts/routeUtils.js");
 
-const { getEligibleCourses } = require("../controllers/getEligibleCourses");
-const { getStudentsCourses } = require("../controllers/getStudentCourses");
-const { getDegreeProgress } = require("../controllers/getDegreeProgress");
-const { getPlannedCourses } = require("../controllers/getPlannedCourses");
-const { getCoursePlan } = require("../controllers/getCoursePlan");
-const { getStudentCoursePlan, getStudentCoursePlanSimple } = require("../controllers/getStudentCoursePlan");
-const { getAllCoursePlans } = require("../controllers/getAllCoursePlans");
+const { getEligibleCourses } = require("../db/getEligibleCourses");
+const { getStudentsCourses } = require("../db/getStudentCourses");
+const { getDegreeProgress } = require("../db/getDegreeProgress");
+const { getPlannedCourses } = require("../db/getPlannedCourses");
+const { getCoursePlan } = require("../db/getCoursePlan");
+const { getStudentCoursePlan, getStudentCoursePlanSimple } = require("../db/getStudentCoursePlan");
+const { getAllCoursePlans } = require("../db/getAllCoursePlans");
 
 const { Sequelize } = require('sequelize');
 
