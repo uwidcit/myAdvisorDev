@@ -6,9 +6,9 @@ const Course = require("../models/Course");
 const ElectiveRequirement = require("../models/ElectiveRequirement");
 const Type = require("../models/Type");
 const { Op } = require("sequelize");
-const { getEligibleCourses } = require("../controllers/getEligibleCourses");
-const { getDegreeProgress } = require("../controllers/getDegreeProgress");
-const { getPlannedCourses } = require("../controllers/getPlannedCourses");
+const { getEligibleCourses } = require("../db/getEligibleCourses");
+const { getDegreeProgress } = require("../db/getDegreeProgress");
+const { getPlannedCourses } = require("../db/getPlannedCourses");
 
 async function getCoursePlan(studentId, semesterId) {
     try {
