@@ -9,7 +9,7 @@ const SelectedCourse = require("../models/SelectedCourse");
 const Course = require("../models/Course");
 const Programme = require("../models/Programme");
 const ProgrammeCourse = require("../models/ProgrammeCourse");
-const { studentAccountVerification } = require("../scripts/routeUtils.js");
+const { studentAccountVerification,paginate } = require("../controllers/routeUtils.js");
 
 const { Op } = require("sequelize");
 
@@ -128,7 +128,7 @@ router.put("/update", async (req, res) => {
 router.get("/all", async (req, res) => {
     try {
         const semesters = await Semester.findAll();
-        res.status(200).json(semesters);
+        res.status(200).json(paginate(semesters,req));
     }
     catch (err) {
         console.log("Error: ", err.message);

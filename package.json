@@ -5,22 +5,22 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "transcript-parse": "node utilities/parseTranscript.js transcript.pdf",
+    "transcript-parse": "node controllers/parseTranscript.js transcript.pdf",
     "heroku-postbuild": "cd myadvisor && npm install && npm run build",
-    "init": "node database/initialize.js",
-    "test": "node scripts/tests.js"
+    "init": "node db/initialize.js",
+    "test": "node controllers/tests.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nevash-gobin/myAdvisorDev.git"
+    "url": "git+https://github.com/uwidcit/myAdvisorDev.git"
   },
   "keywords": [],
   "author": "Hypertext Assassins",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/nevash-gobin/myAdvisorDev/issues"
+    "url": "https://github.com/uwidcit/myAdvisorDev/issues"
   },
-  "homepage": "https://github.com/nevash-gobin/myAdvisorDev#readme",
+  "homepage": "https://github.com/uwidcit/myAdvisorDev#readme",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",

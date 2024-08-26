@@ -1,10 +1,10 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
-const { staffAccountVerification } = require("../scripts/routeUtils.js");
-const { getDegreeProgress } = require("../scripts/getDegreeProgress");
-const { getStudentCoursePlan } = require("../scripts/getStudentCoursePlan");
-const { getAllCoursePlans } = require("../scripts/getAllCoursePlans");
-const { updatePlanStatus } = require("../scripts/updateCoursePlan.js");
+const { staffAccountVerification } = require("../controllers/routeUtils.js");
+const { getDegreeProgress } = require("../controllers/getDegreeProgress");
+const { getStudentCoursePlan } = require("../controllers/getStudentCoursePlan");
+const { getAllCoursePlans } = require("../controllers/getAllCoursePlans");
+const { updatePlanStatus } = require("../controllers/updateCoursePlan.js");
 // import models
 const Admin = require("../models/Admin");
 const Programme = require("../models/Programme");
@@ -231,7 +231,7 @@ router.get("/detailed-course-plan/all", staffAccountVerification, async (req, re
 //#region 
 
 // parserCSV
-const { parseCSVData } = require('../scripts/csvParser');
+const { parseCSVData } = require('../controllers/csvParser');
 const multer = require('multer');
 const { or } = require("sequelize");
 const SelectedCourse = require("../models/SelectedCourse");
@@ -423,8 +423,7 @@ router.post('/parse/programmeCourse', upload.single('file'), async (req, res) =>
 
 // ====================--PARSE XLSX--====================
 
-const express = require("express");
-const { parse_xlsx } = require("../scripts/xlsx_parser.js");
+const { parse_xlsx } = require("../controllers/xlsx_parser.js");
 // const { updatePlanStatus } = require("../db/updateCoursePlan.js");
 
 //parse programmecourse XLSX

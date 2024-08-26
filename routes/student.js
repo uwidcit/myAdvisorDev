@@ -7,15 +7,15 @@ const router = require("express").Router();
 const db = require("../db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { studentAccountVerification,NotFoundError } = require("../scripts/routeUtils.js");
+const { studentAccountVerification,NotFoundError } = require("../controllers/routeUtils.js");
 
-const { getEligibleCourses } = require("../scripts/getEligibleCourses");
-const { getStudentsCourses } = require("../scripts/getStudentCourses");
-const { getDegreeProgress } = require("../scripts/getDegreeProgress");
-const { getPlannedCourses } = require("../scripts/getPlannedCourses");
-const { getCoursePlan } = require("../scripts/getCoursePlan");
-const { getStudentCoursePlan, getStudentCoursePlanSimple } = require("../scripts/getStudentCoursePlan");
-const { getAllCoursePlans } = require("../scripts/getAllCoursePlans");
+const { getEligibleCourses } = require("../controllers/getEligibleCourses");
+const { getStudentsCourses } = require("../controllers/getStudentCourses");
+const { getDegreeProgress } = require("../controllers/getDegreeProgress");
+const { getPlannedCourses } = require("../controllers/getPlannedCourses");
+const { getCoursePlan } = require("../controllers/getCoursePlan");
+const { getStudentCoursePlan, getStudentCoursePlanSimple } = require("../controllers/getStudentCoursePlan");
+const { getAllCoursePlans } = require("../controllers/getAllCoursePlans");
 
 const { Sequelize } = require('sequelize');
 

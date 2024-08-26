@@ -132,7 +132,7 @@ app.use("/accounts", require("./routes/authorization"));
 app.use("/semester", require("./routes/semester"));
 
 // Error handling middleware should be the last middleware
-app.use( (require('./scripts/routeUtils.js')).errorHandler );
+app.use( (require('./controllers/routeUtils.js')).errorHandler );
 
 // // if a bad route is entered
 // if (process.env.NODE_ENV === "production") {
