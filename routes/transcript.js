@@ -1,7 +1,7 @@
 //Initialise file upload components
 const multer = require('multer')
 const upload = multer({ storage: multer.memoryStorage() })
-const { parse } = require('../db/parser');
+const { parse } = require('../scripts/parser');
 const { studentAccountVerification } = require("../scripts/routeUtils.js");
 const { Op, Transaction } = require('sequelize');
 /**
@@ -15,9 +15,9 @@ const Transcript = require("../models/Transcript");
 const StudentCourses = require("../models/StudentCourse");
 const Semester = require("../models/Semester");
 // import controllers
-const { getStudentsCourses } = require('../db/getStudentCourses');
-const { addStudentTranscript } = require('../db/addStudentTranscript');
-const { addStudentTranscriptCourses } = require('../db/addStudentTranscriptCourses');
+const { getStudentsCourses } = require('../scripts/getStudentCourses.js');
+const { addStudentTranscript } = require('../scripts/addStudentTranscript.js');
+const { addStudentTranscriptCourses } = require('../scripts/addStudentTranscriptCourses.js');
 const { response } = require('express');
 // get all student details in the database
 //Get Transcript

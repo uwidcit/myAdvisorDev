@@ -1,6 +1,6 @@
 const { addStudentTranscript } = require('./addStudentTranscript');
 // const { addStudentCourses } = require('../controllers/addStudentTranscript');
-const db = require('../db');
+const db = require('../db/db');
 const { Op } = require('sequelize');
 const Semester = require("../models/Semester");
 const StudentCourse = require("../models/StudentCourse");

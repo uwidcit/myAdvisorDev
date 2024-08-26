@@ -10,3 +10,8 @@ Besides authorization, should the others be publicly accessible without any impl
 - `authorization.js`
 - `programmes.js`
 - `semester.js` (minus the _"plan"_ route inside of it)
+
+### Routes Using Controllers
+- `admin.js`
+- `student.js`
+- `transcript.js`
