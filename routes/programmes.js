@@ -126,10 +126,8 @@ router.get("/offered-courses/:id", async (req, res) => {
     try {
 
         const programmeID = req.params.id;
-        //console.log("LOG::> programmeID: ", programmeID);
 
-        const programmeCourses = await ProgrammeCourse.findAll({ where: { programmeID: programmeID } });
-        //console.log("LOG::> ProgrammeCourses: ", programmeCourses);
+        const programmeCourses = await ProgrammeCourse.findAll({ where: { programmeId: programmeID } });
 
         if (!programmeCourses) {
             return res.status(404).send("Programme doesn't exists");
@@ -145,7 +143,7 @@ router.get("/offered-courses/:id", async (req, res) => {
             let courses = [];
             for (i = 0; i < programmeCourses.length; i++) {
                 const course = await Course.findOne({ where: { code: courseCodes[i] } });
-                const progCourse = await ProgrammeCourse.findOne({ where: { programmeID: programmeID, courseCode: courseCodes[i] } });
+                const progCourse = await ProgrammeCourse.findOne({ where: { programmeId: programmeID, courseCode: courseCodes[i] } });
                 course.dataValues.type = progCourse.type;
                 courses.push(course);
             }

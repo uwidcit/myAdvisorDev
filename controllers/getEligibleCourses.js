@@ -11,7 +11,7 @@ async function get_prereq_courses(undone_course, student_programme_id){
     const prereqs = await Prerequisite.findAll({
         attributes : ['groupId'],
         where:{
-            ProgrammeId : student_programme_id,
+            programmeId : student_programme_id,
             courseCode: undone_course
         }
     });
@@ -62,7 +62,7 @@ async function getEligibleCourses (student_id,coming_semester){
         const programme_courses = await ProgrammeCourse.findAll({
             attributes : ['courseCode'],
             where: {
-                ProgrammeId : programme_id
+                programmeId : programme_id
             }
         });
         const student_courses = await StudentCourse.findAll({
@@ -129,7 +129,7 @@ async function getEligibleCourses (student_id,coming_semester){
         eligible_list = eligible_list.filter((c)=>c!==undefined && c.length>0);
         return [].concat(...eligible_list);
     }catch(error){
-        const msg = `Error in getting student's ${studentId} eligible courses for coming Semester: `;
+        const msg = `Error in getting student's ${student_id} eligible courses for coming Semester: `;
         console.log(msg, error.message);
         return null;
     }
