@@ -109,7 +109,6 @@ router.post("/details/add", async (req, res) => {
     try {
         // destructure data entered
         const { studentId, gpa, name, credits, degree, major, admitTerm, degreeAttemptHours, degreePassedHours, degreeEarnedHours, degreeGpaHours, degreeQualityPoints } = req.body;
-
         // check if student is already added
         const student = await Transcript.findOne({ where: { studentId } });
         if (student) {
@@ -171,6 +170,9 @@ router.post("/courses/add", async (req, res) => {
 });
 
 // Add transcript by uploading transcript
+// This route does two main things:
+// 1. Parse the uploaded PDF file and add an entry to the transcript table
+// 2. Add the parsed data to the student's transcript courses
 router.post('/parseForm', upload.single('file'), async (req, res) => {
     try {
         // Ensure a file is provided
@@ -193,7 +195,7 @@ router.post('/parseForm', upload.single('file'), async (req, res) => {
         console.log(response);
 
         // Send response back to the client
-        res.status(response.status).send(response.msg);
+        res.status(response.status).send(response);
     } catch (error) {
         console.error('Error parsing PDF or adding transcript courses:', error);
         res.status(500).send('An error occurred while processing your request.');

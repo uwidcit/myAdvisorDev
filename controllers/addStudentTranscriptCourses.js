@@ -4,6 +4,9 @@ const db = require('../db');
 const { Op } = require('sequelize');
 const Semester = require("../models/Semester");
 const StudentCourse = require("../models/StudentCourse");
+
+let errMessage = "";
+
 async function addStudentTranscriptCourses(transcriptData) {
     const start = performance.now();
     if (!await addStudentTranscript(transcriptData)) {
@@ -19,7 +22,16 @@ async function addStudentTranscriptCourses(transcriptData) {
             const grade = course[code].grade;
             const year = course[code].year;
             const current_year = new Date().getFullYear();
-            const course_sem = course[code].semester;
+            let course_sem = course[code].semester;
+
+            if(course_sem === "I"){
+                course_sem = "1";
+            } else if (course_sem === "II"){
+                course_sem = "2";
+            } else if (course_sem === "III"){
+                course_sem = "3";
+            }
+            
 
             // Validate grade and year
             const grade_valid = !invalid_grades.includes(grade);
@@ -41,8 +53,9 @@ async function addStudentTranscriptCourses(transcriptData) {
                             },
                             transaction: t // Ensure this query is part of the transaction
                         });
-
+                        errMessage += `Retrieving Student Course: ${student_course_exists}\n`;
                         if (!student_course_exists) {
+                            errMessage += `Adding Course ${code} as studentCourse for student ${studentId}\n`;
                             const semester = await Semester.findOne({
                                 where: {
                                     [Op.and]: [
@@ -53,7 +66,7 @@ async function addStudentTranscriptCourses(transcriptData) {
                                 attributes: ['id'],
                                 transaction: t // Ensure this query is part of the transaction
                             });
-
+                            errMessage += `Retrieving Semester: ${semester}\n`;
                             const sem_id = semester ? semester.get('id') : 1; // Use the actual semester id or default to 1
 
                             await StudentCourse.create({
@@ -62,8 +75,7 @@ async function addStudentTranscriptCourses(transcriptData) {
                                 semesterId: sem_id,
                                 grade: grade
                             }, { transaction: t });
-
-                            console.log(`Course ${code} added as studentCourse for student ${studentId}`);
+                            errMessage += `Course ${code} added as studentCourse for student ${studentId}\n`;
                         }
                     });
                     break; // Exit the retry loop on success
@@ -75,7 +87,7 @@ async function addStudentTranscriptCourses(transcriptData) {
                     } else {
                         // Other errors
                         console.error("Error in Adding student Courses from transcript file:", error.message);
-                        return { status: 500, msg: "Error in Adding student Courses from transcript file:" };
+                        return { status: 500, msg: "Error in Adding student Courses from transcript file: " + error.message, error_message: errMessage };
                     }
                 }
             }

@@ -49,7 +49,7 @@ const { ppid } = require("process");
 async function newinitializeDatabase() {
   (async () => {
     try {
-      if (process.env.SYNCED == "FALSE") {
+      if (process.env.SYNCED === "FALSE") {
         // Create tables if they do not exist
         await pool.sync()
         await Admin.sync();
