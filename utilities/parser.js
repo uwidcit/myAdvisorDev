@@ -90,7 +90,7 @@ async function getStudentData(text) {
     }
 
     const courses = await getCourses();
-    // console.log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!", courses);
+    
     let i = 0;
 
     for (i = 0; i < courses.length; i++) {
@@ -171,9 +171,9 @@ async function getStudentData(text) {
                 let course= `${key}${token}`;
                 let academicperiod = period.split(" ")
                 let courseInfo = {
-                    "title":title, 
-                    "grade":grade,
-                    "semester": academicperiod[2]==='I' ? 1 : 2,
+                    "title":title,
+                    "grade": grade.trim(),
+                    "semester": academicperiod[2] === 'I' ? "1" : academicperiod[2] === 'II' ? "2" : "3",
                     "year": academicperiod[0]
                 };
 
