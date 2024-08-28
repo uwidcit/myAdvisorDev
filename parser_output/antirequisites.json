@@ -1,0 +1,214 @@
+[
+  {
+    "courseCode": "ACCT1002",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "ACCT1003",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "COMP1600",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "COMP1601",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "COMP1602",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "COMP1603",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "COMP1604",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "COMP2601",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "COMP2602",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "COMP2603",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "COMP2604",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "COMP2605",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "COMP2606",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "COMP2611",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "COMP3601",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "COMP3602",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "COMP3603",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "COMP3605",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "COMP3606",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "COMP3607",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "COMP3608",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "COMP3609",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "COMP3610",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "COMP3613",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "ECON1001",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "ECON1002",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "FOUN1101",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "FOUN1105",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "FOUN1301",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "INFO1600",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "INFO1601",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "INFO2600",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "INFO2601",
+    "antirequisiteCourseCode": "COMP2604"
+  },
+  {
+    "courseCode": "INFO2602",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "INFO2603",
+    "antirequisiteCourseCode": "COMP2601"
+  },
+  {
+    "courseCode": "INFO2604",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "INFO2605",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "INFO3600",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "INFO3601",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "INFO3602",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "INFO3604",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "INFO3605",
+    "antirequisiteCourseCode": "INFO3510"
+  },
+  {
+    "courseCode": "INFO3606",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "INFO3607",
+    "antirequisiteCourseCode": "INFO3510"
+  },
+  {
+    "courseCode": "INFO3608",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "INFO3609",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "INFO3610",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "INFO3611",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "MATH1115",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "MATH2250",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "MGMT2008",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "MGMT2032",
+    "antirequisiteCourseCode": "None"
+  },
+  {
+    "courseCode": "MKTG2001",
+    "antirequisiteCourseCode": "None"
+  }
+]
