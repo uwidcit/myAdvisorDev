@@ -6,3 +6,6 @@
 .eslintcache
 
 postgres-data
+
+*.sqlite*
+*.sqlite
