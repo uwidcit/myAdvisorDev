@@ -239,8 +239,8 @@ router.get("/course-plans/:semesterId", studentAccountVerification, async (req, 
     try {
         const semesterId = req.params.semesterId;
         const CoursePlanList = await getAllCoursePlans(semesterId);
-        const page = parseInt(req.query.page) || 1;
-        const itemsPerPage = parseInt(req.query.itemsPerPage) || 5;
+        const page = !isNaN(req.params.page)? parseInt(req.params.page): 1;
+        const itemsPerPage = !isNaN(req.params.itemsPerPage)? parseInt(req.params.itemsPerPage): 5;
         // console.log("SemesterId  ", semesterId)
         if (!semesterId) {
             return res.status(400).json({ message: 'Semester ID is required' });

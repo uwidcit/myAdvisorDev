@@ -110,8 +110,8 @@ router.post("/create/student", async (req, res) => {
 router.get("/course-plan/all/:semesterId/:page/:itemsPerPage", staffAccountVerification, async (req, res) => {
     try {
         const semesterId = req.params.semesterId;
-        const page = parseInt(req.params.page) || 1;
-        const itemsPerPage = parseInt(req.params.itemsPerPage) || 5;
+        const page = !isNaN(req.params.page)? parseInt(req.params.page): 1;
+        const itemsPerPage = !isNaN(req.params.itemsPerPage)? parseInt(req.params.itemsPerPage): 5;
 
         if (!semesterId) {
             return res.status(400).json({ message: 'Semester ID is required' });

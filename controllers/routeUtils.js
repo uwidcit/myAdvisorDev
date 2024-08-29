@@ -86,12 +86,12 @@ const studentAccountVerification = async (req, res, next) => {
 }
 
 function paginate(data,request){
-    const page_number = Number(request.headers['page_number']||undefined)
-    const page_size = Number(request.headers['page_size']||undefined)
+    const page_number = Number(request.headers['page_number'])
+    const page_size = Number(request.headers['page_size'])
     const starting = page_size * page_number;
-    if(!isNaN(page_number) && !isNaN(page_size))
-        return data.slice(starting,starting+page_size);
-    return data;
+    if(isNaN(page_number) || isNaN(page_size))
+        return data.slice(0,10); //default pagination(first 10 items) if none given
+    return data.slice(starting,starting+page_size);
 }
 
 module.exports = {

@@ -4,6 +4,7 @@ const db = require("../db");
 const Transcript = db.define("transcript", {
     id: {
         // allowNull: false,
+        autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
     },
