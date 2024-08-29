@@ -23,7 +23,7 @@ function sqlitedb(){
   return new Sequelize({
     dialect: 'sqlite',
     logging: false,
-    storage: 'database.sqlite', // Replace with the path to your SQLite database file
+    storage: 'db/database.sqlite', // Replace with the path to your SQLite database file
     pool: {
       max: 50, // Maximum number of connections in the pool
       min: 0,  // Minimum number of connections in the pool

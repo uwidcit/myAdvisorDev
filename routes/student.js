@@ -7,7 +7,7 @@ const router = require("express").Router();
 const db = require("../db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { studentAccountVerification,NotFoundError } = require("../controllers/routeUtils.js");
+const { studentAccountVerification,NotFoundError,paginate } = require("../controllers/routeUtils.js");
 
 const { getEligibleCourses } = require("../controllers/getEligibleCourses");
 const { getStudentsCourses } = require("../controllers/getStudentCourses");
@@ -249,25 +249,8 @@ router.get("/course-plans/:semesterId", studentAccountVerification, async (req, 
         // Filter CoursePlanList based on semesterId
         const filteredPlans = CoursePlanList.filter(plan => plan.semesterId === parseInt(semesterId));
 
-        if (filteredPlans.length === 0) {
-            return res.status(200).json({});
-        }
-
-        const totalPlans = filteredPlans.length;
-        const start = (page - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
-
-        const paginatedPlans = filteredPlans.slice(start, end);
-
-        const payload = {
-            allPlan: CoursePlanList, // You might want to consider sending only the filtered plans instead of all plans
-            plans: paginatedPlans,
-            totalPlans,
-            totalPages: Math.ceil(totalPlans / itemsPerPage),
-            currentPage: page,
-        };
-        // console.log("Got Course Plans for semester, ", semesterId)
-        res.status(200).json(payload);
+        
+        res.status(200).json(paginate(filteredPlans,req));
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: 'Internal server error' });

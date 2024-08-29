@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
-const { staffAccountVerification } = require("../controllers/routeUtils.js");
+const { staffAccountVerification,paginate } = require("../controllers/routeUtils.js");
 const { getDegreeProgress } = require("../controllers/getDegreeProgress");
 const { getStudentCoursePlan } = require("../controllers/getStudentCoursePlan");
 const { getAllCoursePlans } = require("../controllers/getAllCoursePlans");
@@ -120,25 +120,12 @@ router.get("/course-plan/all/:semesterId/:page/:itemsPerPage", staffAccountVerif
 
         const coursePlans = await getAllCoursePlans(semesterId);
         if (coursePlans) {
-            const totalPlans = coursePlans.length;
-            const start = (page - 1) * itemsPerPage;
-            const end = start + itemsPerPage;
 
             const plans = Array.isArray(coursePlans)
                 ? coursePlans
                 : [];
 
-            const paginatedPlans = plans.slice(start, end);
-
-            const payload = {
-                allPlan: coursePlans,
-                plans: paginatedPlans,
-                totalPlans,
-                totalPages: Math.ceil(totalPlans / itemsPerPage),
-                currentPage: page,
-            };
-
-            res.status(200).json(payload)
+            res.status(200).json(paginate(plans,req))
         } else {
             res.status(404).send("Course Plans for Semester Not Found");
         }
