@@ -12,7 +12,7 @@
     "eli": "node controllers/getEligibleCourses.js",
     "plan": "node controllers/getCoursePlan.js",
     "test": "echo \"Message: no test specified\" && exit 0",
-    "load-courses": "node utilities/xlsx_parser.js"
+    "load-courses": "node utilities/cli_xlsx_parser.js"
   },
   "repository": {
     "type": "git",
