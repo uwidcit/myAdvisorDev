@@ -732,13 +732,6 @@ function generate_json(header, data) {
   });
 }
 
-//DRIVER CODE
-data = parse_xlsx("myAdvisor-datasheet.xlsx");
-
-for (const [key, value] of Object.entries(data[0])) { //generates a json for each header in the data
-  generate_json(key, value)
-}
-
 // console.log("Sheetdata 1: ", data[0]);
 // console.log("Sheetdata 2: ", data[1]);
 
