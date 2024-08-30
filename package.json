@@ -11,7 +11,8 @@
     "dev": "node utilities/initialize.js",
     "eli": "node controllers/getEligibleCourses.js",
     "plan": "node controllers/getCoursePlan.js",
-    "test": "echo \"Message: no test specified\" && exit 0"
+    "test": "echo \"Message: no test specified\" && exit 0",
+    "load-courses": "node utilities/cli_xlsx_parser.js"
   },
   "repository": {
     "type": "git",
@@ -37,6 +38,7 @@
     "mammoth": "^1.7.1",
     "morgan": "^1.10.0",
     "multer": "^1.4.4",
+    "myadvisor": "file:",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.1",
     "path": "^0.12.7",

@@ -1,0 +1,1147 @@
+[
+  {
+    "programmeId": 1,
+    "courseCode": "COMP1600",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "COMP1601",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "COMP1602",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "COMP1603",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "COMP1604",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "COMP2601",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "COMP2602",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "COMP2603",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "COMP2604",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "COMP2605",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "COMP2606",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "COMP2611",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "COMP3601",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "COMP3602",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "COMP3603",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "COMP3605",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "COMP3606",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "COMP3607",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "COMP3608",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "COMP3609",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "COMP3610",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "COMP3613",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "INFO1600",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "INFO1601",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "INFO2602",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "INFO2604",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "INFO2605",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "INFO3600",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "INFO3604",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "INFO3605",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "INFO3606",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "INFO3607",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "INFO3608",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "INFO3609",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "INFO3610",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "MATH1115",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 1,
+    "courseCode": "MATH2250",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "ACCT1002",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "ACCT1003",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "COMP1600",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "COMP1601",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "COMP1602",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "COMP1603",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "COMP2603",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "COMP2604",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "COMP2605",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "COMP2606",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "COMP3601",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "COMP3602",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "COMP3603",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "COMP3605",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "COMP3606",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "COMP3607",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "COMP3608",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "COMP3609",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "COMP3610",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "COMP3613",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "ECON1001",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "ECON1002",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "INFO2602",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "INFO2604",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "INFO2605",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "INFO3600",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "INFO3604",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "INFO3605",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "INFO3606",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "INFO3607",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "INFO3609",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "INFO3611",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "MATH2250",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "MGMT2008",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "MGMT2032",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 2,
+    "courseCode": "MKTG2001",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "COMP1601",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "COMP1602",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "COMP1603",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "COMP1604",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "COMP2603",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "COMP2605",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "COMP2606",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "COMP3603",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "COMP3605",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "COMP3607",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "COMP3609",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "COMP3610",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "FOUN1101",
+    "typeId": "4"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "FOUN1105",
+    "typeId": "4"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "FOUN1301",
+    "typeId": "4"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "INFO1600",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "INFO1601",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "INFO2600",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "INFO2601",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "INFO2602",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "INFO2603",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "INFO2604",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "INFO2605",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "INFO3600",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "INFO3601",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "INFO3602",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "INFO3604",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "INFO3605",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "INFO3606",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "INFO3607",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "INFO3608",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "INFO3609",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "INFO3610",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "INFO3611",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "MATH1115",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 3,
+    "courseCode": "MATH2250",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "COMP1600",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "COMP1601",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "COMP1602",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "COMP1603",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "COMP1604",
+    "typeId": "3"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "COMP2601",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "COMP2602",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "COMP2603",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "COMP2604",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "COMP2605",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "COMP2606",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "COMP2611",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "COMP3601",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "COMP3602",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "COMP3603",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "COMP3605",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "COMP3606",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "COMP3607",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "COMP3609",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "COMP3610",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "COMP3613",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "INFO1600",
+    "typeId": "3"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "INFO1601",
+    "typeId": "3"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "INFO2602",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "INFO2604",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "INFO2605",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "INFO3600",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "INFO3604",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "INFO3605",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "INFO3606",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "INFO3607",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "INFO3608",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "INFO3609",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "INFO3610",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "INFO3611",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "MATH1115",
+    "typeId": "3"
+  },
+  {
+    "programmeId": 4,
+    "courseCode": "MATH2250",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "COMP1601",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "COMP1602",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "COMP2603",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "COMP2605",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "COMP2606",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "COMP3603",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "COMP3605",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "COMP3607",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "COMP3609",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "COMP3610",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "INFO1600",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "INFO1601",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "INFO2600",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "INFO2601",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "INFO2602",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "INFO2603",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "INFO2604",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "INFO2605",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "INFO3600",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "INFO3601",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "INFO3602",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "INFO3604",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "INFO3605",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "INFO3606",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "INFO3607",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "INFO3608",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "INFO3609",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "INFO3610",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "INFO3611",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 5,
+    "courseCode": "MATH2250",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "COMP1600",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "COMP1601",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "COMP1602",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "COMP1603",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "COMP1604",
+    "typeId": "3"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "COMP2601",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "COMP2602",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "COMP2603",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "COMP2604",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "COMP2605",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "COMP2606",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "COMP2611",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "COMP3601",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "COMP3602",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "COMP3603",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "COMP3605",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "COMP3606",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "COMP3608",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "COMP3609",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "COMP3610",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "INFO2602",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "INFO2605",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "INFO3600",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "INFO3604",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "INFO3605",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "INFO3606",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "INFO3607",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "INFO3609",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "INFO3610",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "INFO3611",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "MATH1115",
+    "typeId": "3"
+  },
+  {
+    "programmeId": 6,
+    "courseCode": "MATH2250",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 7,
+    "courseCode": "COMP1601",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 7,
+    "courseCode": "COMP1602",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 7,
+    "courseCode": "COMP2605",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 7,
+    "courseCode": "COMP3605",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 7,
+    "courseCode": "COMP3610",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 7,
+    "courseCode": "INFO1600",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 7,
+    "courseCode": "INFO1601",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 7,
+    "courseCode": "INFO2600",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 7,
+    "courseCode": "INFO2601",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 7,
+    "courseCode": "INFO2602",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 7,
+    "courseCode": "INFO2603",
+    "typeId": "2"
+  },
+  {
+    "programmeId": 7,
+    "courseCode": "INFO2604",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 7,
+    "courseCode": "INFO2605",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 7,
+    "courseCode": "INFO3605",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 7,
+    "courseCode": "INFO3606",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 7,
+    "courseCode": "INFO3607",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 7,
+    "courseCode": "INFO3608",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 7,
+    "courseCode": "INFO3609",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 7,
+    "courseCode": "INFO3610",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 7,
+    "courseCode": "INFO3611",
+    "typeId": "1"
+  },
+  {
+    "programmeId": 7,
+    "courseCode": "MATH2250",
+    "typeId": "1"
+  }
+]
