@@ -439,9 +439,17 @@ router.post('/parse/programmeCourseXLSX', upload.single('file'), async (req, res
 
     try {
         const xlsxData = req.file.buffer; // XLSX file buffer
+
+        if (xlsxData != null) { console.log("Excel file uploaded successfully"); } //feedback for headless upload, probably not needed
+         
         const [sheetdata1, sheetdata2] = parse_xlsx(xlsxData);
 
-        const { courses, programmes, programmeCourses, groups, prerequisites, antirequisites } = sheetdata1;
+        //generates json files from the parsed excel and stores them on the server
+        for (const [key, value] of Object.entries(sheetdata1)) { //generates a json for each header in the data
+            generate_json(key, value)
+        }
+
+        const { courses, programmes, programmeCourses, groups, prerequisites, antirequisites } = sheetdata1; 
         const { types, electiveRequirements } = sheetdata2;
 
         // ==========--------put courses in database

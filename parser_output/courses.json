@@ -1,0 +1,532 @@
+[
+  {
+    "courseCode": "ACCT1002",
+    "courseTitle": "Introduction to Financial Accounting",
+    "level": "I",
+    "semester": "1",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "None",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "ACCT1003",
+    "courseTitle": "Introduction to Cost and Managerial Accounting",
+    "level": "I",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "None",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "COMP1600",
+    "courseTitle": "Introduction to Computing Concepts",
+    "level": "I",
+    "semester": "1",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "None",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "COMP1601",
+    "courseTitle": "Computer Programming I",
+    "level": "I",
+    "semester": "1",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "None",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "COMP1602",
+    "courseTitle": "Computer Programming II",
+    "level": "I",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "None",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "COMP1603",
+    "courseTitle": "Computer Programming III",
+    "level": "I",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "None",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "COMP1604",
+    "courseTitle": "Mathematics for Computing",
+    "level": "I",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "None",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "COMP2601",
+    "courseTitle": "Computer Architecture",
+    "level": "II",
+    "semester": "1",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "COMP1600 OR COMP1401",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "COMP2602",
+    "courseTitle": "Computer Networks",
+    "level": "II",
+    "semester": "1",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "COMP1600 OR COMP1401",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "COMP2603",
+    "courseTitle": "Object-Oriented Programming I",
+    "level": "II",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "COMP1603 OR COMP1405",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "COMP2604",
+    "courseTitle": "Operating Systems",
+    "level": "II",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "COMP1600 OR COMP1401",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "COMP2605",
+    "courseTitle": "Enterprise Database Systems",
+    "level": "II",
+    "semester": "1",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "COMP1400 OR COMP1404 OR COMP1601 OR COMP1602",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "COMP2606",
+    "courseTitle": "Software Engineering I",
+    "level": "II",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "COMP1603 OR COMP1405",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "COMP2611",
+    "courseTitle": "Data Structures",
+    "level": "II",
+    "semester": "1",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "COMP1603 OR COMP1405",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "COMP3601",
+    "courseTitle": "Design and Analysis of Algorithms",
+    "level": "III",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "COMP2000 OR COMP2611 OR INFO2410",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "COMP3602",
+    "courseTitle": "Theory of Computing",
+    "level": "III",
+    "semester": "1",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "COMP2000 OR COMP2611 OR INFO2410",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "COMP3603",
+    "courseTitle": "Human-Computer Interaction",
+    "level": "III",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "COMP2606 OR COMP3250",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "COMP3605",
+    "courseTitle": "Introduction to Data Analytics",
+    "level": "III",
+    "semester": "1",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "MATH2250 OR COMP2100",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "COMP3606",
+    "courseTitle": "Wireless and Mobile Computing",
+    "level": "III",
+    "semester": "1",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "COMP2602 OR INFO2601",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "COMP3607",
+    "courseTitle": "Object-Oriented Programming II",
+    "level": "III",
+    "semester": "1",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "COMP2603 OR COMP2500",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "COMP3608",
+    "courseTitle": "Intelligent Systems",
+    "level": "III",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "COMP2000 OR COMP2611 OR INFO2410 AND MATH2250 OR COMP2100",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "COMP3609",
+    "courseTitle": "Game Programming",
+    "level": "III",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "COMP2603 OR COMP2500 AND COMP2606 OR COMP3250",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "COMP3610",
+    "courseTitle": "Big Data Analytics",
+    "level": "III",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "COMP3605",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "COMP3613",
+    "courseTitle": "Software Engineering II",
+    "level": "III",
+    "semester": "1",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "COMP2606 OR COMP3250",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "ECON1001",
+    "courseTitle": "Introduction to Microeconomics",
+    "level": "I",
+    "semester": "1",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "None",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "ECON1002",
+    "courseTitle": "Introduction to Macroeconomics",
+    "level": "I",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "None",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "FOUN1101",
+    "courseTitle": "Caribbean Civilisation",
+    "level": "I",
+    "semester": "1",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "None",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "FOUN1105",
+    "courseTitle": "Scientific and Technical Writing",
+    "level": "I",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "None",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "FOUN1301",
+    "courseTitle": "Law, Governance, Economy and Society",
+    "level": "I",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "None",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "INFO1600",
+    "courseTitle": "Introduction to Information Technology Concepts",
+    "level": "I",
+    "semester": "1",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "None",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "INFO1601",
+    "courseTitle": "Introduction to WWW Programming",
+    "level": "I",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "None",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "INFO2600",
+    "courseTitle": "Information Systems Development",
+    "level": "II",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "INFO1600 OR INFO1500",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "INFO2601",
+    "courseTitle": "Networking Technologies Fundamentals",
+    "level": "I",
+    "semester": "1",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "COMP1600 OR INFO1600",
+    "antirequisites": "COMP2604"
+  },
+  {
+    "courseCode": "INFO2602",
+    "courseTitle": "Web Programming and Technologies I",
+    "level": "II",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "INFO1601 OR INFO1501",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "INFO2603",
+    "courseTitle": "Platform Technologies I",
+    "level": "II",
+    "semester": "1",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "INFO1600 OR COMP1600",
+    "antirequisites": "COMP2601"
+  },
+  {
+    "courseCode": "INFO2604",
+    "courseTitle": "Information Systems Security",
+    "level": "II",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "COMP1404 OR COMP1602 OR INFO1502",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "INFO2605",
+    "courseTitle": "Professional Ethics and Law",
+    "level": "II",
+    "semester": "1",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "INFO1500 OR INFO1505 OR INFO1600 OR COMP1401 OR COMP1600",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "INFO3600",
+    "courseTitle": "Business Information Systems",
+    "level": "III",
+    "semester": "1",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "COMP2605",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "INFO3601",
+    "courseTitle": "Platform Technologies II",
+    "level": "III",
+    "semester": "1",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "INFO2603 OR INFO3400 OR COMP2200 OR COMP2601",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "INFO3602",
+    "courseTitle": "Web Programming and Technologies II",
+    "level": "III",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "INFO2602 OR INFO3410",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "INFO3604",
+    "courseTitle": "Project",
+    "level": "III",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "INFO2600 OR COMP2606",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "INFO3605",
+    "courseTitle": "Fundamentals of LAN Technologies",
+    "level": "III",
+    "semester": "1",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "INFO2500 OR INFO2601 OR INFO3400 OR COMP2604 OR COMP3100",
+    "antirequisites": "INFO3510"
+  },
+  {
+    "courseCode": "INFO3606",
+    "courseTitle": "Cloud Computing",
+    "level": "III",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "COMP2605 OR INFO2415",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "INFO3607",
+    "courseTitle": "Fundamentals of WAN Technologies",
+    "level": "III",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "INFO2601 OR INFO2500 AND COMP2604 OR COMP3100 OR INFO3400",
+    "antirequisites": "INFO3510"
+  },
+  {
+    "courseCode": "INFO3608",
+    "courseTitle": "E-Commerce",
+    "level": "III",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "INFO2400 OR INFO2600 OR COMP2606 OR COMP3250",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "INFO3609",
+    "courseTitle": "Internship I",
+    "level": "III",
+    "semester": "3",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "INFO2600 OR COMP2606",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "INFO3610",
+    "courseTitle": "Internship II",
+    "level": "III",
+    "semester": "3",
+    "credits": "6",
+    "description": "None",
+    "prerequisites": "INFO2600 OR COMP2606",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "INFO3611",
+    "courseTitle": "Database Administration",
+    "level": "III",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "COMP2605",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "MATH1115",
+    "courseTitle": "Fundamental Mathematics for the General Sciences I",
+    "level": "I",
+    "semester": "1",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "None",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "MATH2250",
+    "courseTitle": "Industrial Statistics",
+    "level": "II",
+    "semester": "1",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "MATH1115",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "MGMT2008",
+    "courseTitle": "Organisational Behaviour",
+    "level": "II",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "COMP1601",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "MGMT2032",
+    "courseTitle": "Managerial Economics",
+    "level": "II",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "COMP1601",
+    "antirequisites": "None"
+  },
+  {
+    "courseCode": "MKTG2001",
+    "courseTitle": "Principles of Marketing",
+    "level": "II",
+    "semester": "2",
+    "credits": "3",
+    "description": "None",
+    "prerequisites": "ECON1001 OR ACCT1002",
+    "antirequisites": "None"
+  }
+]
