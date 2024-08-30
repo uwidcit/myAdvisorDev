@@ -20,11 +20,11 @@ function createSequelizeInstance() {
     // PostgreSQL database configuration
     return new Sequelize({
       dialect: 'postgres',
-      host: DB_HOST,
-      port: DB_PORT,
-      database: DB_NAME,
-      username: DB_USER,
-      password: DB_PASSWORD,
+      host: process.env.DB_HOST,
+      port: process.env.DB_PORT,
+      database: process.env.DB_NAME,
+      username: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
       pool: {
         max: 50,
         min: 0,
@@ -32,7 +32,7 @@ function createSequelizeInstance() {
         idle: 10000
       },
     });
-  } else {
+  } else if( env === 'development') {
     // SQLite database configuration
     return new Sequelize({
       dialect: 'sqlite',
