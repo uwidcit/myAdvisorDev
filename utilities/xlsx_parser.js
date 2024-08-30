@@ -4,17 +4,53 @@ const Group = require('../models/Group');
 const CourseGroup = require('../models/CourseGroup');
 const { Sequelize } = require("sequelize");
 
+const fs = require('fs'); //file writing
 
 function parseCourses(data) {
   const courses = [];
-
   for (let j = 4; j < data.length; j++) {
     let course = {};
     for (let i = 0; i < 8; i++) {
       const header = data[0][i];
-      const value = data[j][i];
+      const value = data[j][i] ?? "None"; //sets value to "None" if undefined
+
+      // if (header == "prerequisites") {
+      //   hard = value.split(" AND ");
+      //   soft = value.split(" OR ");
+
+      //   if (soft.length > 1) {
+      //     course["softPrereqs"] = soft.join(", ");
+      //     course["hardPrereqs"] = "None";
+      //     break;
+
+      //   } else if (hard.length > 1) {
+      //       course["softPrereqs"] = "None";
+      //       course["hardPrereqs"] = hard.join(", ");
+      //       break;
+
+      //   } else {
+      //     course["softPrereqs"] = "None";
+      //     course["hardPrereqs"] = value;
+      //     break;
+
+      //   }
+
+      // }
+
       course[header] = value;
     }
+
+    // course["code"] = data[j][0];
+    // course["title"] = data[j][1];
+    // course["level"] = data[j][2];
+    // course["semester"] = data[j][3];
+    // course["credits"] = data[j][4];
+    // course["faculty"] = data[j][5];
+    // course["department"] = data[j][6];
+    // course["description"] = data[j][7];
+    // course["prerequisites"] = data[j][8];
+    // course["antirequisites"] = data[j][9];
+
     courses.push(course);
   }
 
@@ -631,26 +667,27 @@ function parse_xlsx(xlsxData) {
   const bufferArray = new Uint8Array(xlsxData);
 
   // Load the XLSX workbook from the bufferArray
-  const workbook = XLSX.read(bufferArray, { type: "array" });
+  //const workbook = XLSX.read(bufferArray, { type: "array" });
 
-  //   const workbook = XLSX.readFile(filename);
+     const workbook = XLSX.readFile(filename="ProgrammeCourseDetails.xlsx");
 
   workbook.SheetNames.forEach(sheetName => {
     // Get the sheet by its name
     const worksheet = workbook.Sheets[sheetName];
     // console.log("name: ", sheetName);
 
-    if (sheetName == "ProgrammeCourses") {
+    if (sheetName == "CourseProgrammeType") {
 
       let allGroups = [];
       let groupId = 1;
 
-      const data = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+      const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false});
+      //console.log(data) //TK
 
       let groups = parseGroups(data, groupId)
       let prerequisites = parsePrerequisites(data, groups);
       
-      sheetdata1 = {
+      sheetdata1 = { //TDOD: change these titles to properly reflect the requirements
         courses: parseCourses(data),
         programmes: parseProgrammes(data),
         programmeCourses: parseProgrammeCourses(data),
@@ -680,13 +717,38 @@ function parse_xlsx(xlsxData) {
 
 }
 
-// data = parse_xlsx("myAdvisor-datasheet.xlsx");
+//HELPER FUNCTIONS
+function generate_json(header, data) {
+  payload = JSON.stringify(data, null, 2) //converts the parser data into a json string and prettifies
+  fs.writeFile(`parser_output\\${header}.json`, payload, (error) => { //names file after the json header
+    //success/failure feedback
+    if (error) {
+      console.log("Error writing to file: ", error);
+      throw error;
+    
+    }
+    
+    console.log(`Write of ${header} successfull`);
+  });
+}
+
+function driver_code() {
+  data = parse_xlsx("myAdvisor-datasheet.xlsx");
+
+  for (const [key, value] of Object.entries(data[0])) { //generates a json for each header in the data
+    generate_json(key, value)
+  }
+}
+
 // console.log("Sheetdata 1: ", data[0]);
 // console.log("Sheetdata 2: ", data[1]);
-// console.log("courses: ", data[0].courses);
-// console.log("programmes: ", data[0].programmes);
-// console.log("programmeCourses: ", data[0].programmeCourses);
-// console.log("groups: ", data[0].groups);
-// console.log("prerequisites: ", data[0].prerequisites);
 
-module.exports = { parse_xlsx };
+// console.log("courses: ", data[0].courses); //YES
+// console.log("programmes: ", data[0].programmes); //YES
+// console.log("programmeCourses: ", data[0].programmeCourses); //May be broken
+// console.log("groups: ", data[0].groups); //EMPTY
+// console.log("prerequisites: ", data[0].prerequisites); //EMPTY
+
+
+
+module.exports = { parse_xlsx, driver_code };

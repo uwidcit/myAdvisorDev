@@ -1,0 +1,44 @@
+[
+  {
+    "programmeID": 1,
+    "name": "BSc Computer Science (Special)",
+    "faculty": "Faculty of Science and Technology",
+    "department": "Department of Computing & Information Technology"
+  },
+  {
+    "programmeID": 2,
+    "name": "BSc Computer Science with Management (Special)",
+    "faculty": "Faculty of Science and Technology",
+    "department": "Department of Computing & Information Technology"
+  },
+  {
+    "programmeID": 3,
+    "name": "BSc Information Technology (Special)",
+    "faculty": "Faculty of Science and Technology",
+    "department": "Department of Computing & Information Technology"
+  },
+  {
+    "programmeID": 4,
+    "name": "Major in Computer Science",
+    "faculty": "Faculty of Science and Technology",
+    "department": "Department of Computing & Information Technology"
+  },
+  {
+    "programmeID": 5,
+    "name": "Major in Information Technology",
+    "faculty": "Faculty of Science and Technology",
+    "department": "Department of Computing & Information Technology"
+  },
+  {
+    "programmeID": 6,
+    "name": "Minor in Computer Science",
+    "faculty": "Faculty of Science and Technology",
+    "department": "Department of Computing & Information Technology"
+  },
+  {
+    "programmeID": 7,
+    "name": "Minor in Information Technology",
+    "faculty": "Faculty of Science and Technology",
+    "department": "Department of Computing & Information Technology"
+  }
+]
