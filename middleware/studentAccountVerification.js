@@ -15,7 +15,6 @@ const jwt = require("jsonwebtoken");
 module.exports = async (req, res, next) => {
     try {
         const token = req.header("token");
-        console.log("Token: ", token);
         if (!token) {
             return res.status(403).json("Not Authorized!");
         }
