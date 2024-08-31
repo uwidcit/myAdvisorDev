@@ -218,7 +218,7 @@ router.get("/detailed-course-plan/all", staffAccountVerification, async (req, re
 //#region 
 
 // parserCSV
-const { parseCSVData } = require('../utilities/csvParser.js');
+const { parseCSVData } = require('../utilities/csvParser');
 const multer = require('multer');
 const { or } = require("sequelize");
 const SelectedCourse = require("../models/SelectedCourse");

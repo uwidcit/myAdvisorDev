@@ -8,7 +8,7 @@
     "transcript-parse": "node controllers/parseTranscript.js transcript.pdf",
     "heroku-postbuild": "cd myadvisor && npm install && npm run build",
     "init": "node db/initialize.js",
-    "test": "node controllers/tests.js"
+    "test": "node utilities/tests.js"
   },
   "repository": {
     "type": "git",

@@ -1,4 +1,3 @@
-const db = require("../db/db");
 const fs = require('fs');
 
 

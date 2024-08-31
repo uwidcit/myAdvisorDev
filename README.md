@@ -35,25 +35,41 @@ React
 NodeJS
 
 # Pre-requisites
-### Environment Dependencies
-1. nodemon
-2. express
-3. cors
-4. pg
-5. pg-store
-6. dotenv
-7. sequelize
-8. bcrypt
-9. jsonwebtoken
-10. passport
-11. passport-jwt
+### Node Package Manager Dependencies
+1. bcrypt
+2. cors
+3. dotenv
+4. express
+5. jsonwebtoken
+6. multer
+7. pdf2json
+8. pg
+9. sequelize
+10. sqlite3
+11. xlsx
 
-## Getting Started with the database models
+## Getting Started
+### Preamble
+There are `README.md` files in each folder, so besides the information in here, feel free to look at the other folders' documentation, especially for [models](/models/README.md) and [routes](/routes/README.md).
 
-[Getting Started models](models/README.md)
+### Controllers
+The _controllers_ folder contains helper files with a more specific convention than the relatively "miscallaneous" utilities folder.
 
-### .env file setup
+### Database
+For the _db_ folder, there are database scripts such as [db.js](/db/db.js) and [initialize.js](/db/initialize.js) are in there along with a bevy of data files (lots of json and xlsx files). You would see the [db.js](/db/db.js) being imported by lots of JavaScript files, especially in the [**models**](#models) folder.
 
+### Models
+For the _models_ folder, you can look at the models which are defined as [sequelize model instances](https://sequelize.org/docs/v6/core-concepts/model-querying-basics/).<br>
+Sequelize is the [ORM](https://www.freecodecamp.org/news/what-is-an-orm-the-meaning-of-object-relational-mapping-database-tools/) that is used for this repository. On that note you can get familiar with [sequelize model querying](https://sequelize.org/docs/v6/core-concepts/model-querying-basics/) if you aren't familiar already.
+
+### Routes
+The _routes_ folder contains the heart of the [API](https://www.ibm.com/topics/api) that is this backend repository (well how anything interacts with it regardless). The flow of an entity interacting with this as an application starts with [index.js](index.js) which hosts the express server and imports the route folder scripts to populate the server with the whole host of end to end routes that exist.
+
+### Utilities
+The _utilities_ folder contains "helper" files, similar to the [**controllers**](#controllers) folder, however for more arbitrary directives such as having a transcript parser and test script and routeUtils.
+
+### .env
+Environment Secrets in this repository is managed via a `.env` file that is created and given values to the keys listed below (so what is shown below is somewhat the template for your `.env` file)
 ```
 PORT=
 SYNCED=
