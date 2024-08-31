@@ -8,7 +8,7 @@ const Course = require("../models/Course");
 const Programme = require("../models/Programme");
 const ProgrammeCourse = require("../models/ProgrammeCourse");
 
-const {paginate} = require('../controllers/routeUtils'); //import pagination function
+const {paginate} = require('../utilities/routeUtils'); //import pagination function
 
 // get all programmes in the database
 router.get("/all", async (req, res) => {

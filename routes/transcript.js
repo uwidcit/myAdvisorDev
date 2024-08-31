@@ -1,8 +1,8 @@
 //Initialise file upload components
 const multer = require('multer')
 const upload = multer({ storage: multer.memoryStorage() })
-const { parse } = require('../controllers/parser');
-const { studentAccountVerification } = require("../controllers/routeUtils.js");
+const { parse } = require('../utilities/parser.js');
+const { studentAccountVerification } = require("../utilities/routeUtils.js");
 const { Op, Transaction } = require('sequelize');
 /**
  * initalizes express router and database connection

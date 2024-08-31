@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
-const { staffAccountVerification,paginate } = require("../controllers/routeUtils.js");
+const { staffAccountVerification,paginate } = require("../utilities/routeUtils.js");
 const { getDegreeProgress } = require("../controllers/getDegreeProgress");
 const { getStudentCoursePlan } = require("../controllers/getStudentCoursePlan");
 const { getAllCoursePlans } = require("../controllers/getAllCoursePlans");
@@ -218,7 +218,7 @@ router.get("/detailed-course-plan/all", staffAccountVerification, async (req, re
 //#region 
 
 // parserCSV
-const { parseCSVData } = require('../controllers/csvParser');
+const { parseCSVData } = require('../utilities/csvParser.js');
 const multer = require('multer');
 const { or } = require("sequelize");
 const SelectedCourse = require("../models/SelectedCourse");
@@ -410,7 +410,7 @@ router.post('/parse/programmeCourse', upload.single('file'), async (req, res) =>
 
 // ====================--PARSE XLSX--====================
 
-const { parse_xlsx } = require("../controllers/xlsx_parser.js");
+const { parse_xlsx } = require("../utilities/xlsx_parser.js");
 // const { updatePlanStatus } = require("../db/updateCoursePlan.js");
 
 //parse programmecourse XLSX
