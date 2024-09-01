@@ -10,7 +10,7 @@ const jwt = require("jsonwebtoken");
 const studentAccountVerification = require("../middleware/studentAccountVerification");
 const { NotFoundError } = require('../middleware/errors');
 
-const { getEligibleCourses } = require("../controllers/getEligibleCourses");
+const { getEligibleCourses, getAllEligibleCourses } = require("../controllers/getEligibleCourses");
 const { getStudentsCourses } = require("../controllers/getStudentCourses");
 const { getDegreeProgress } = require("../controllers/getDegreeProgress");
 const { getPlannedCourses } = require("../controllers/getPlannedCourses");
@@ -162,7 +162,9 @@ router.get("/eligibleCourses/:semesterId", studentAccountVerification, async (re
     const student = req.user
     const semester = req.params.semesterId;
     const eligible_courses = await getEligibleCourses(student, semester);
-    // console.log(eligible_courses);
+    // const all_elg_courses = await getAllEligibleCourses(student);
+    // const courseData = all_elg_courses.map(course => course.dataValues);
+    // console.log(courseData);
     res.json({
         "student": student,
         "upcomingSemester": semester,
@@ -223,7 +225,7 @@ router.get("/course-plan/detail/:semesterId", studentAccountVerification, async 
 
     try {
         const coursePlan = await getStudentCoursePlan(studentId, semesterId);
-        console.log("Course Plan: ", coursePlan);
+        // console.log("Course Plan: ", coursePlan);
         if (coursePlan) {
             res.status(200).json(coursePlan);
         } else {

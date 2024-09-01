@@ -1,4 +1,6 @@
 const { Sequelize } = require("sequelize");
+const fs = require('fs');
+const path = require('path');
 
 const sequelize = new Sequelize({
     dialect: 'postgres',
@@ -24,48 +26,160 @@ async function initializeDatabase() {
     }
 }
 
+async function getEligibleCoursesBySemesterId(studentId, currentSemesterId) {
+    const query = `
+    WITH student_programme AS (
+    SELECT "programmeId"
+    FROM "students"
+    WHERE "studentId" = :studentId
+),
+completed_courses AS (
+    SELECT "courseCode"
+    FROM "studentcourses"
+    WHERE "studentId" = :studentId AND "grade" IN ('A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'F1', 'F2', 'F3', 'EX')
+),
+eligible_courses AS (
+    SELECT sc."courseCode"
+    FROM "semestercourses" sc
+    JOIN "courses" c ON sc."courseCode" = c."code"
+    JOIN "programmes" p ON p."id" = (SELECT "programmeId" FROM student_programme)
+    WHERE sc."semesterId" = :currentSemesterId
+      AND c."code" NOT IN (SELECT "courseCode" FROM completed_courses)
+      AND c."code" NOT IN (
+          SELECT "antirequisiteCourseCode"
+          FROM "antirequisites"
+          WHERE "courseCode" IN (SELECT "courseCode" FROM completed_courses)
+      )
+      AND NOT EXISTS (
+          SELECT 1
+          FROM "prerequisites" pr
+          LEFT JOIN "courseGroups" cg ON pr."groupId" = cg."groupId"
+          WHERE pr."courseCode" = c."code"
+          AND (
+              pr."groupId" IS NULL AND pr."courseCode" NOT IN (SELECT "courseCode" FROM completed_courses)
+              OR
+              pr."groupId" IS NOT NULL AND NOT EXISTS (
+                  SELECT 1
+                  FROM completed_courses cc
+                  WHERE cg."courseCode" = cc."courseCode"
+              )
+          )
+      )
+)
+SELECT c."code", c."title"
+FROM eligible_courses ec
+JOIN "courses" c ON ec."courseCode" = c."code";
+  `;
+
+    const results = await sequelize.query(query, {
+        replacements: { studentId: studentId, currentSemesterId: currentSemesterId },
+        type: sequelize.QueryTypes.SELECT
+    });
+
+    console.log(results);
+}
+
 async function getEligibleCourses(studentId) {
     const query = `
     WITH student_programme AS (
-    SELECT programmeId 
-    FROM Students 
-    WHERE studentId = :studentId
-    ),
-    taken_courses AS (
-        SELECT courseCode 
-        FROM StudentCourses 
-        WHERE studentId = :studentId AND grade != 'F'
-    ),
-    antireqs AS (
-        SELECT antirequisiteCourseCode 
-        FROM Antirequisites 
-        WHERE courseCode IN (SELECT courseCode FROM taken_courses)
-    )
-    SELECT DISTINCT c.code, c.title
-    FROM Courses c
-    JOIN ProgrammeCourses pc ON c.code = pc.courseCode
-    JOIN student_programme sp ON pc.programmeId = sp.programmeId
-    WHERE c.code NOT IN (SELECT courseCode FROM taken_courses)
-    AND c.code NOT IN (SELECT antirequisiteCourseCode FROM antireqs)
-    AND NOT EXISTS (
-        SELECT 1
-        FROM Prerequisites p
-        WHERE p.courseCode = c.code
-            AND p.groupId IS NULL
-            AND p.courseCode NOT IN (SELECT courseCode FROM taken_courses)
-    )
-    AND NOT EXISTS (
-        SELECT 1
-        FROM Prerequisites p
-        JOIN CourseGroups cg ON p.groupId = cg.groupId
-        WHERE p.courseCode = c.code
-            AND p.groupId IS NOT NULL
-            AND NOT EXISTS (
-                SELECT 1
-                FROM taken_courses tc
-                WHERE tc.courseCode = cg.courseCode
-            )
-    );
+    SELECT "programmeId"
+    FROM "students"
+    WHERE "studentId" = :studentId
+),
+completed_courses AS (
+    SELECT "courseCode"
+    FROM "studentcourses"
+    WHERE "studentId" = :studentId AND "grade" IN ('A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'F1', 'F2', 'F3', 'EX')
+),
+eligible_courses AS (
+    SELECT c."code" AS "courseCode"
+    FROM "courses" c
+    JOIN "programmeCourses" pc ON c."code" = pc."courseCode"
+    WHERE pc."programmeId" = (SELECT "programmeId" FROM student_programme)
+      AND c."code" NOT IN (SELECT "courseCode" FROM completed_courses)
+      AND c."code" NOT IN (
+          SELECT "antirequisiteCourseCode"
+          FROM "antirequisites"
+          WHERE "courseCode" IN (SELECT "courseCode" FROM completed_courses)
+      )
+      AND NOT EXISTS (
+          SELECT 1
+          FROM "prerequisites" pr
+          LEFT JOIN "courseGroups" cg ON pr."groupId" = cg."groupId"
+          WHERE pr."courseCode" = c."code"
+          AND (
+              pr."groupId" IS NULL AND pr."courseCode" NOT IN (SELECT "courseCode" FROM completed_courses)
+              OR
+              pr."groupId" IS NOT NULL AND NOT EXISTS (
+                  SELECT 1
+                  FROM completed_courses cc
+                  WHERE cg."courseCode" = cc."courseCode"
+              )
+          )
+      )
+)
+SELECT c."code", c."title"
+FROM eligible_courses ec
+JOIN "courses" c ON ec."courseCode" = c."code";
+  `;
+
+    const results = await sequelize.query(query, {
+        replacements: { studentId: studentId },
+        type: sequelize.QueryTypes.SELECT
+    });
+
+    console.log(results);
+}
+
+async function getEligibleCoursesV1(studentId) {
+    const query = `
+    WITH student_info AS (
+    SELECT "programmeId"
+    FROM students
+    WHERE "studentId" = :studentId
+),
+passed_courses AS (
+    SELECT "courseCode"
+    FROM studentcourses
+    WHERE "studentId" = :studentId AND "grade" IN ('A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'EX')
+),
+antireqs AS (
+    SELECT "antirequisiteCourseCode"
+    FROM antirequisites
+    WHERE "courseCode" IN (SELECT "courseCode" FROM passed_courses)
+),
+prereq_groups AS (
+    SELECT DISTINCT p."courseCode", p."groupId"
+    FROM prerequisites p
+    WHERE p."groupId" IS NOT NULL
+),
+fulfilled_prereq_groups AS (
+    SELECT pg."courseCode"
+    FROM prereq_groups pg
+    JOIN "courseGroups" cg ON pg."groupId" = cg."groupId"
+    JOIN passed_courses pc ON cg."courseCode" = pc."courseCode"
+    GROUP BY pg."courseCode", pg."groupId"
+    HAVING COUNT(DISTINCT cg."courseCode") > 0
+)
+SELECT DISTINCT c.code, c.title, c.semester
+FROM courses c
+JOIN "programmeCourses" pc ON c.code = pc."courseCode"
+JOIN student_info si ON pc."programmeId" = si."programmeId"
+WHERE c.code NOT IN (SELECT "courseCode" FROM passed_courses)
+  AND c.code NOT IN (SELECT "antirequisiteCourseCode" FROM antireqs)
+  AND NOT EXISTS (
+    SELECT 1
+    FROM prerequisites p
+    WHERE p."courseCode" = c.code
+      AND p."groupId" IS NULL
+      AND p."courseCode" NOT IN (SELECT "courseCode" FROM passed_courses)
+  )
+  AND NOT EXISTS (
+    SELECT 1
+    FROM prereq_groups pg
+    WHERE pg."courseCode" = c.code
+      AND pg."courseCode" NOT IN (SELECT "courseCode" FROM fulfilled_prereq_groups)
+  );
   `;
 
     const results = await sequelize.query(query, {
@@ -235,12 +349,82 @@ async function getAllStudentInformation() {
         console.error('Error executing query:', error);
     }
 }
+function logToFile(data) {
+    const logFilePath = path.join(__dirname, 'column_info_log.txt');
+    fs.appendFileSync(logFilePath, data + '\n\n', 'utf8');
+}
+async function getColumnNamesAndTypes(tableName) {
+    const query = `
+        SELECT 
+            c.column_name, 
+            c.data_type, 
+            c.column_default, 
+            c.is_nullable, 
+            c.character_maximum_length,
+            tc.constraint_type,
+            kcu.constraint_name
+        FROM information_schema.columns c
+        LEFT JOIN information_schema.key_column_usage kcu
+            ON c.table_name = kcu.table_name 
+            AND c.column_name = kcu.column_name
+        LEFT JOIN information_schema.table_constraints tc
+            ON kcu.constraint_name = tc.constraint_name
+            AND kcu.table_name = tc.table_name
+        WHERE c.table_name = :tableName
+    `;
 
+    const results = await sequelize.query(query, {
+        replacements: { tableName: tableName },
+        type: sequelize.QueryTypes.SELECT
+    });
 
-// getEligibleCourses(816030787).catch(err => console.error(err));
+    console.log(`Table: ${tableName}`);
+    const logData = [`Table: ${tableName}`];
+    results.forEach(row => {
+        console.log(`Column: ${row.column_name}, Type: ${row.data_type}, Default: ${row.column_default}, Nullable: ${row.is_nullable}, Max Length: ${row.character_maximum_length}, Constraint: ${row.constraint_type || 'None'}, Constraint Name: ${row.constraint_name || 'None'}`);
+        logData.push(`Column: ${row.column_name}, Type: ${row.data_type}, Default: ${row.column_default}, Nullable: ${row.is_nullable}, Max Length: ${row.character_maximum_length}, Constraint: ${row.constraint_type || 'None'}, Constraint Name: ${row.constraint_name || 'None'}`);
+    });
+    logToFile(logData.join('\n'));
+}
+
+const tableNames = [
+    "SelectedCourses",
+    "admins",
+    "advisingsessions",
+    "antirequisites",
+    "awardedDegrees",
+    "courseGroups",
+    "courses",
+    "electiveRequirements",
+    "groups",
+    "prerequisites",
+    "programmeCourses",
+    "programmes",
+    "semestercourses",
+    "semesters",
+    "studentcourses",
+    "students",
+    "transcripts",
+    "types"
+];
+
+async function displayColumnNamesAndTypesInOrder() {
+    for (const tableName of tableNames) {
+        try {
+            await getColumnNamesAndTypes(tableName);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+}
+
+// displayColumnNamesAndTypesInOrder();
+// getEligibleCoursesBySemesterId('816030787', 1).catch(err => console.error(err));
+// getEligibleCourses('816030787').catch(err => console.error(err));
+getEligibleCoursesV1('816030787').catch(err => console.error(err));
 // getCoursesByType('L1CORE').catch(err => console.error(err));
 // getTranscript('816030787').catch(err => console.error(err));
 // getStudentCourses('816030787').catch(err => console.error(err));
 // getAllTables().catch(err => console.error(err));
 // getAllStudentInformation().catch(err => console.error(err));
-initializeDatabase().catch(err => console.error(err));
+// initializeDatabase().catch(err => console.error(err));

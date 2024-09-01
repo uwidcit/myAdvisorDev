@@ -18,7 +18,6 @@ async function getStudentCoursePlan(studentId,semesterId){
         });
 
         const plan = await getCoursePlan(studentId, semesterId);
-
         const current_date = new Date();
         const year = current_date.getFullYear();
         const month = String(current_date.getMonth() + 1).padStart(2, '0');

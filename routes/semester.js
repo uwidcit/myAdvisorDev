@@ -12,6 +12,7 @@ const ProgrammeCourse = require("../models/ProgrammeCourse");
 const studentAccountVerification = require("../middleware/studentAccountVerification");
 
 const { Op } = require("sequelize");
+const Type = require("../models/Type");
 
 // Create a Semester
 router.post("/add", async (req, res) => {
@@ -151,7 +152,7 @@ router.get("/:semesterId", async (req, res) => {
 // Get Courses for a Semester 
 router.get("/courses/:semesterId", async (req, res) => {
     const { semesterId } = req.params;
-
+    console.log("Semester ID: ", semesterId);
     try {
         // Find the semester by ID
         const semester = await Semester.findOne({ where: { id: semesterId } });
@@ -163,6 +164,24 @@ router.get("/courses/:semesterId", async (req, res) => {
             include: [{ model: Course }],
             where: { semesterId },
         });
+        const coursesInfo = await Course.findAll({
+            where: { semester: semester.num }
+        });
+        
+        const coursesBySemesterNum = coursesInfo.map((course) => {
+            return {
+                courseCode: course.code,
+                courseTitle: course.title,
+                courseFaculty: course.faculty,
+                courseCredits: course.credits,
+                courseSemester: course.semester,
+                courseLevel: course.level,
+                courseDepartment: course.department,
+                courseDescription: course.description,
+                selected: false
+            };
+        });
+        // console.log("Courses: ", coursesBySemesterNum);
         const courses = semesterCourses.map((sc) => sc.course);
 
 
@@ -184,22 +203,10 @@ router.get("/courses/:semesterId", async (req, res) => {
             default:
                 filteredCourses = [];
         }
-
-        // // Prepare the data to be written to the file
         const dataToSend = {
-            courses: filteredCourses,
-            length: filteredCourses.length
+            courses: coursesBySemesterNum,
+            length: coursesBySemesterNum.length
         };
-
-        // // Write the data to a file named 'courses.json'
-        // fs.writeFile('get_semester_courses.json', JSON.stringify(dataToSend, null, 2), (err) => {
-        //     if (err) {
-        //         console.error("Error writing to file:", err.message);
-        //         return res.status(500).send("Server Error");
-        //     }
-        //     console.log("File has been written successfully.");
-        // });
-
 
         res.status(200).json(dataToSend);
     } catch (err) {
