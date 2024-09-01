@@ -4,6 +4,7 @@ const dotenv = require('dotenv').config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const corsOptions =require('./config/corsOptions');
 const path = require("path");
 const pool = require("./db");
 const passport = require("passport");
@@ -11,12 +12,14 @@ const multer = require('multer')
 const upload = multer({ storage: multer.memoryStorage() })
 const { parse } = require('./utilities/parser');
 const errorHandler = require('./middleware/errorHandler');
+const credentials = require('./middleware/credentials');
 const bcrypt = require("bcrypt");
 
 const port = process.env.PORT || 3002;
 
 // app connection and resources
-app.use(cors());
+app.use(credentials);
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // models

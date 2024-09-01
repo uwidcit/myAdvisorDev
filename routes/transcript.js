@@ -15,7 +15,7 @@ const Transcript = require("../models/Transcript");
 const StudentCourses = require("../models/StudentCourse");
 const Semester = require("../models/Semester");
 // import controllers
-const { getStudentsCourses } = require('../controllers/getStudentCourses');
+const { getStudentsCourses, getPagination, getPagingData, getStudentsCoursesPaginated } = require('../controllers/getStudentCourses');
 const { addStudentTranscript } = require('../controllers/addStudentTranscript');
 const { addStudentTranscriptCourses } = require('../controllers/addStudentTranscriptCourses');
 const { response } = require('express');
@@ -90,9 +90,11 @@ router.get("/courses/view", async (req, res) => {
 // get all of a student's course in the database
 router.get("/courses/viewAll/:studentId", async (req, res) => {
     try {
-        const path_student = req.params.studentId;
-        let studentCourses = await getStudentsCourses(path_student);
-        // console.log("Student Courses: ", studentCourses);
+        const student_id = req.params.studentId;
+        const { page = 1, pageSize = 5 } = req.query;
+        // const { limit, offset } = getPagination(page, pageSize);
+        // let paginatedCourses = await getStudentsCoursesPaginated(student_id, page, pageSize);
+        let studentCourses = await getStudentsCourses(student_id);
         res.status(200).json({
             "courses": studentCourses
         })
