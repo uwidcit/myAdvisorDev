@@ -7,7 +7,7 @@ const router = require("express").Router();
 const db = require("../db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { studentAccountVerification,NotFoundError,paginate } = require("../utilities/routeUtils.js");
+const { studentAccountVerification,NotFoundError,paginate } = require("../middleware/routeUtils.js");
 
 const { getEligibleCourses } = require("../controllers/getEligibleCourses");
 const { getStudentsCourses } = require("../controllers/getStudentCourses");
