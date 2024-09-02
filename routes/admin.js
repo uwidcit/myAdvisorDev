@@ -114,47 +114,46 @@ router.post("/create/student", async (req, res) => {
 
 
 //get all courseplans(advisingSessions) for a semester
-router.get("/course-plan/all/:semesterId/:page/:itemsPerPage", staffAccountVerification, async (req, res) => {
+router.get("/course-plan/all/:semesterId", staffAccountVerification, async (req, res) => {
     try {
         const semesterId = req.params.semesterId;
-        const page = parseInt(req.params.page) || 1;
-        const itemsPerPage = parseInt(req.params.itemsPerPage) || 5;
+        console.log("Requested semester ID:", semesterId);
 
         if (!semesterId) {
             return res.status(400).json({ message: 'Semester ID is required' });
         }
 
-
         const coursePlans = await getAllCoursePlans(semesterId);
-        if (coursePlans) {
-            const totalPlans = coursePlans.length;
-            const start = (page - 1) * itemsPerPage;
-            const end = start + itemsPerPage;
 
-            const plans = Array.isArray(coursePlans)
-                ? coursePlans
-                : [];
-
-            const paginatedPlans = plans.slice(start, end);
-
-            const payload = {
-                allPlan: coursePlans,
-                plans: paginatedPlans,
-                totalPlans,
-                totalPages: Math.ceil(totalPlans / itemsPerPage),
-                currentPage: page,
+        if (coursePlans && coursePlans.advisingsessions) {
+            console.log(coursePlans);
+            const formattedData = {
+                semesterId: coursePlans.id,
+                semesterNum: coursePlans.num,
+                academicYear: coursePlans.academicYear,
+                countOfAdvisingSessions: coursePlans.advisingsessions.length,
+                advisingSessions: coursePlans.advisingsessions.map(session => ({
+                    sessionId: session.dataValues.id,
+                    planStatus: session.planStatus,
+                    studentId: session.studentId,
+                    studentName: `${session.student.firstName} ${session.student.lastName}`,
+                    selectedCourses: session.SelectedCourses.map(selectedCourse => ({
+                        courseCode: selectedCourse.course.code,
+                        courseTitle: selectedCourse.course.title,
+                        credits: selectedCourse.course.credits
+                    }))
+                }))
             };
-
-            res.status(200).json(payload)
+            console.log("Course Plans:", formattedData.advisingSessions[0].selectedCourses);
+            res.status(200).json({ message: `Got all course plans for semester ${semesterId}`, data: formattedData });
         } else {
-            res.status(404).send("Course Plans for Semester Not Found");
+            res.status(404).json({ message: "Course Plans for Semester Not Found" });
         }
     }
     catch (err) {
-        console.log("Error: ", err.message);
-        res.status(500).send("Server Error");
+        console.error("Error:", err.message);
+        res.status(500).json({ message: "Server Error", error: err.message });
     }
-
 });
 
 //get courseplan(advisingSession) of a student for a semester 
@@ -441,7 +440,7 @@ router.post('/parse/programmeCourseXLSX', upload.single('file'), async (req, res
         const xlsxData = req.file.buffer; // XLSX file buffer
 
         if (xlsxData != null) { console.log("Excel file uploaded successfully"); } //feedback for headless upload, probably not needed
-         
+
         const [sheetdata1, sheetdata2] = parse_xlsx(xlsxData);
 
         //generates json files from the parsed excel and stores them on the server
@@ -449,7 +448,7 @@ router.post('/parse/programmeCourseXLSX', upload.single('file'), async (req, res
             generate_json(key, value)
         }
 
-        const { courses, programmes, programmeCourses, groups, prerequisites, antirequisites } = sheetdata1; 
+        const { courses, programmes, programmeCourses, groups, prerequisites, antirequisites } = sheetdata1;
         const { types, electiveRequirements } = sheetdata2;
 
         // ==========--------put courses in database
