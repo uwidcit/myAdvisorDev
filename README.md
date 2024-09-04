@@ -67,9 +67,6 @@ The _controllers_ folder contains helper files with a more specific convention t
 ### Database
 For the _db_ folder, there are database scripts such as [db.js](/db/db.js) and [initialize.js](/db/initialize.js) are in there along with a bevy of data files (lots of json and xlsx files). You would see the [db.js](/db/db.js) being imported by lots of JavaScript files, especially in the [**models**](#models) folder.
 
-### Middleware
-A strange word, "what is it" might be the first question brought to mind, however [middlware](https://expressjs.com/en/guide/using-middleware.html) is an express originated concept where some utility functions such as authorisation checks are placed **before** the function that defines the "normal" execution of data on that route.
-
 ### Models
 For the _models_ folder, you can look at the models which are defined as [sequelize model instances](https://sequelize.org/docs/v6/core-concepts/model-querying-basics/).<br>
 Sequelize is the [ORM](https://www.freecodecamp.org/news/what-is-an-orm-the-meaning-of-object-relational-mapping-database-tools/) that is used for this repository. On that note you can get familiar with [sequelize model querying](https://sequelize.org/docs/v6/core-concepts/model-querying-basics/) if you aren't familiar already.

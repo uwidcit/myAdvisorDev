@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const bcrypt = require("bcrypt");
-const { staffAccountVerification,paginate } = require("../middleware/routeUtils.js");
+const { staffAccountVerification,paginate } = require("../utilities/routeUtils.js");
 const { getDegreeProgress } = require("../controllers/getDegreeProgress");
 const { getStudentCoursePlan } = require("../controllers/getStudentCoursePlan");
 const { getAllCoursePlans } = require("../controllers/getAllCoursePlans");

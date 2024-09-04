@@ -2,7 +2,7 @@
 const multer = require('multer')
 const upload = multer({ storage: multer.memoryStorage() })
 const { parse } = require('../utilities/parser');
-const { studentAccountVerification } = require("../middleware/routeUtils.js");
+const { studentAccountVerification } = require("../utilities/routeUtils.js");
 const { Op, Transaction } = require('sequelize');
 /**
  * initalizes express router and database connection
