@@ -18,8 +18,7 @@ const bcrypt = require("bcrypt");
 const port = process.env.PORT || 3002;
 
 // app connection and resources
-app.use(credentials);
-app.use(cors(corsOptions));
+
 app.use(express.json());
 
 // models

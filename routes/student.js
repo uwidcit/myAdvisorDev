@@ -7,6 +7,7 @@ const router = require("express").Router();
 const db = require("../db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { Op } = require('sequelize');
 const studentAccountVerification = require("../middleware/studentAccountVerification");
 const { NotFoundError } = require('../middleware/errors');
 
@@ -47,7 +48,7 @@ router.post("/create-plan", studentAccountVerification, async (req, res) => {
         const semesterId = req.body.semesterId;
 
         let session = await AdvisingSession.findOne({ where: { studentId: studentId, semesterId: semesterId } });
-        
+
         if (!session) {
 
             session = await AdvisingSession.create({
@@ -220,7 +221,7 @@ router.get("/course-plan/detail/:semesterId", studentAccountVerification, async 
     let semesterId = req.params.semesterId;
     const studentId = req.user;
 
-    
+
     // -----------------CALL THE FUNCTION-------------------------
 
     try {
@@ -232,9 +233,117 @@ router.get("/course-plan/detail/:semesterId", studentAccountVerification, async 
             res.status(404).send("Course Plan for Student Not Found");
         }
     } catch (error) {
-        console.error("Error ::>",error);
+        console.error("Error ::>", error);
     }
 
+});
+
+router.get("/:studentId/course-plan/:semesterId", studentAccountVerification, async (req, res) => {
+    const studentId = req.params.studentId;
+    const semesterId = req.params.semesterId;
+
+    try {
+        // Validate inputs
+        if (!studentId || !semesterId) {
+            return res.status(400).json({ error: "Invalid studentId or semesterId" });
+        }
+
+        // Fetch student's program ID
+        const student = await Student.findByPk(studentId);
+        if (!student) {
+            return res.status(404).json({ error: `Student with ID ${studentId} not found` });
+        }
+        const programmeId = student.programmeId;
+
+        // Fetch completed courses
+        const completedCourses = await StudentCourse.findAll({
+            attributes: ['courseCode'],
+            where: {
+                studentId,
+                grade: {
+                    [Op.in]: ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'EX']
+                }
+            }
+        }).then(courses => courses.map(c => c.courseCode));
+
+        // Fetch available courses for the semester
+        const availableCourses = await SemesterCourses.findAll({
+            attributes: ['courseCode'],
+            where: { semesterId }
+        }).then(courses => courses.map(c => c.courseCode));
+
+        // Fetch all programme courses
+        const programmeCourses = await ProgrammeCourse.findAll({
+            attributes: ['courseCode', 'typeId'],
+            where: { programmeId },
+            include: [{ model: Type, attributes: ['type'] }]
+        });
+
+        // Fetch eligible courses
+        const eligibleCourses = await getAllEligibleCourses(studentId);
+
+        // Structure the courses by categories using the Types table
+        const courseCategories = {
+            "L1CORE": [],
+            "L2CORE": [],
+            "L3CORE": [],
+            "ADVELECTIVE": [],
+            "CIELECTIVE": [],
+            "CIMELECTIVE": [],
+            "FOUN": []
+        };
+
+        programmeCourses.forEach(pc => {
+            const course = pc.courseCode;
+            const category = pc.type.dataValues.type;
+
+            const courseInfo = {
+                courseId: course,
+                courseName: '',  // Will be filled below
+                credits: 0,      // Will be filled below
+                completed: completedCourses.includes(course),
+                available: availableCourses.includes(course)
+            };
+
+            courseCategories[category].push(courseInfo);
+        });
+
+        // Fill in course names and credits
+        const coursesData = await Course.findAll({
+            where: {
+                code: { [Op.in]: programmeCourses.map(pc => pc.courseCode) }
+            }
+        });
+
+        coursesData.forEach(course => {
+            for (let category in courseCategories) {
+                const courseInfo = courseCategories[category].find(c => c.courseId === course.code);
+                if (courseInfo) {
+                    courseInfo.courseName = course.title;
+                    courseInfo.credits = course.credits;
+                }
+            }
+        });
+
+        // Calculate credits completed and remaining
+        const totalCredits = coursesData.reduce((sum, course) => sum + course.credits, 0);
+        const creditsCompleted = coursesData
+            .filter(course => completedCourses.includes(course.code))
+            .reduce((sum, course) => sum + course.credits, 0);
+        const creditsRemaining = totalCredits - creditsCompleted;
+
+        // Add credits summary
+        const response = {
+            ...courseCategories,
+            creditsCompleted,
+            creditsRemaining
+        };
+        console.log("Course Plan Data: ", response);
+        return res.status(200).json({ message: 'Course plan data retrieved successfully', data: response });
+    } catch (error) {
+        console.error('Error fetching course plan:', error.message);
+        return res.status(500).json({ error: 'Failed to retrieve course plan data' });
+    }
 });
 
 router.get("/course-plans/:semesterId", studentAccountVerification, async (req, res) => {

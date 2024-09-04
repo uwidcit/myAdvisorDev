@@ -1,5 +1,5 @@
 const { Sequelize } = require("sequelize");
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
 
 const sequelize = new Sequelize({
@@ -349,10 +349,7 @@ async function getAllStudentInformation() {
         console.error('Error executing query:', error);
     }
 }
-function logToFile(data) {
-    const logFilePath = path.join(__dirname, 'column_info_log.txt');
-    fs.appendFileSync(logFilePath, data + '\n\n', 'utf8');
-}
+
 async function getColumnNamesAndTypes(tableName) {
     const query = `
         SELECT 
@@ -378,13 +375,40 @@ async function getColumnNamesAndTypes(tableName) {
         type: sequelize.QueryTypes.SELECT
     });
 
-    console.log(`Table: ${tableName}`);
-    const logData = [`Table: ${tableName}`];
+    const tableSchema = {};
+
     results.forEach(row => {
-        console.log(`Column: ${row.column_name}, Type: ${row.data_type}, Default: ${row.column_default}, Nullable: ${row.is_nullable}, Max Length: ${row.character_maximum_length}, Constraint: ${row.constraint_type || 'None'}, Constraint Name: ${row.constraint_name || 'None'}`);
-        logData.push(`Column: ${row.column_name}, Type: ${row.data_type}, Default: ${row.column_default}, Nullable: ${row.is_nullable}, Max Length: ${row.character_maximum_length}, Constraint: ${row.constraint_type || 'None'}, Constraint Name: ${row.constraint_name || 'None'}`);
+        tableSchema[row.column_name] = {
+            type: row.data_type,
+            default: row.column_default,
+            nullable: row.is_nullable,
+            maxLength: row.character_maximum_length,
+            constraint: row.constraint_type || null,
+            constraintName: row.constraint_name || null
+        };
     });
-    logToFile(logData.join('\n'));
+
+    return tableSchema;
+}
+
+async function generateSchemaJSON() {
+    const schemaJSON = {};
+
+    for (const tableName of tableNames) {
+        schemaJSON[tableName] = await getColumnNamesAndTypes(tableName);
+    }
+
+    return schemaJSON;
+}
+
+async function writeSchemaToJSON() {
+    try {
+        const schema = await generateSchemaJSON();
+        await fs.writeFile('database_schema.json', JSON.stringify(schema, null, 2));
+        console.log('Schema has been written to database_schema.json');
+    } catch (error) {
+        console.error('Error writing schema to JSON:', error);
+    }
 }
 
 const tableNames = [
@@ -408,20 +432,10 @@ const tableNames = [
     "types"
 ];
 
-async function displayColumnNamesAndTypesInOrder() {
-    for (const tableName of tableNames) {
-        try {
-            await getColumnNamesAndTypes(tableName);
-        } catch (err) {
-            console.error(err);
-        }
-    }
-}
-
-// displayColumnNamesAndTypesInOrder();
+writeSchemaToJSON();
 // getEligibleCoursesBySemesterId('816030787', 1).catch(err => console.error(err));
 // getEligibleCourses('816030787').catch(err => console.error(err));
-getEligibleCoursesV1('816030787').catch(err => console.error(err));
+// getEligibleCoursesV1('816030787').catch(err => console.error(err));
 // getCoursesByType('L1CORE').catch(err => console.error(err));
 // getTranscript('816030787').catch(err => console.error(err));
 // getStudentCourses('816030787').catch(err => console.error(err));
