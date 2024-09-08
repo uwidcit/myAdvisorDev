@@ -541,7 +541,7 @@ function parsePrerequisites(data, grps) {
               }
 
               for (let i = 0; i < groupsArray.length; i++) {
-                prerequisite={};
+                prerequisite = {};
                 // console.log("groupsArray[i]  :  ", groupsArray[i]);
                 // console.log("courseCode!!!!! ", courseCode);
                 // console.log("programmeId!!!! ", programmeId);
@@ -593,15 +593,15 @@ function parseAntirequisites(data) {
 
   for (let j = 4; j < data.length; j++) {
     let antireq = {};
-    antireq["courseCode"]= data[j][0];
-    antireq["antirequisiteCourseCode"]= data[j][7];
-    if(antireq.antirequisiteCourseCode!==undefined){
+    antireq["courseCode"] = data[j][0];
+    antireq["antirequisiteCourseCode"] = data[j][7];
+    if (antireq.antirequisiteCourseCode !== undefined) {
       antirequisites.push(antireq);
     }
-    
+
   }
   // console.log("Antirequisites: ", antirequisites);
-  
+
   return antirequisites;
 }
 
@@ -669,7 +669,7 @@ function parse_xlsx(xlsxData) {
   // Load the XLSX workbook from the bufferArray
   //const workbook = XLSX.read(bufferArray, { type: "array" });
 
-     const workbook = XLSX.readFile(filename="ProgrammeCourseDetails.xlsx");
+  const workbook = XLSX.readFile(filename = "ProgrammeCourseDetails.xlsx");
 
   workbook.SheetNames.forEach(sheetName => {
     // Get the sheet by its name
@@ -681,12 +681,12 @@ function parse_xlsx(xlsxData) {
       let allGroups = [];
       let groupId = 1;
 
-      const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false});
+      const data = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false });
       //console.log(data) //TK
 
       let groups = parseGroups(data, groupId)
       let prerequisites = parsePrerequisites(data, groups);
-      
+
       sheetdata1 = { //TDOD: change these titles to properly reflect the requirements
         courses: parseCourses(data),
         programmes: parseProgrammes(data),
@@ -725,9 +725,9 @@ function generate_json(header, data) {
     if (error) {
       console.log("Error writing to file: ", error);
       throw error;
-    
+
     }
-    
+
     console.log(`Write of ${header} successfull`);
   });
 }
