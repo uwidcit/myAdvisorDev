@@ -11,7 +11,7 @@ function createSequelizeInstance() {
   if (env === 'production') {
     // Extracting database connection information from the URL
     const regex = /^postgres:\/\/([^:]+):([^@]+)@([^:]+):(\d+)\/(.+)$/;
-    const matches = process.env.POSTGRES_URL.match(regex);
+    const matches = RegExp(regex).exec(process.env.POSTGRES_URL);
     if (!matches) {
       throw new Error('Invalid POSTGRES_URL format');
     }
