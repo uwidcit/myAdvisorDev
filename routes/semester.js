@@ -259,7 +259,6 @@ router.get("/semesterCourses/:dept/:semNum", async (req, res) => {
                 semester3.push(courseObj);
             }
         });
-        console.log("Semester1, Semester2, and Semester3 course: ", semester1, semester2, semester3);
         const output = {
             semester1,
             semester2,

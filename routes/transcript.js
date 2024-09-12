@@ -96,7 +96,8 @@ router.get("/courses/viewAll/:studentId", async (req, res) => {
         // let paginatedCourses = await getStudentsCoursesPaginated(student_id, page, pageSize);
         let studentCourses = await getStudentsCourses(student_id);
         res.status(200).json({
-            "courses": studentCourses
+            "courses": studentCourses.processedCourses,
+            "student": studentCourses.fullName
         })
     }
     catch (err) {

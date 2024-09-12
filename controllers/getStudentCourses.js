@@ -1,10 +1,12 @@
 const StudentCourses = require("../models/StudentCourse");
 const Semester = require("../models/Semester");
 const Course = require("../models/Course");
+const Student = require("../models/Student");
 
 async function getStudentsCourses(studentId) {
     try {
-        // Use Sequelize's 'include' to fetch related data in one query
+        const studentObject = await Student.findByPk(studentId);
+        const studentFullName = `${studentObject.firstName} ${studentObject.lastName}`;
         const studentCourses = await StudentCourses.findAll({
             where: { studentId },
             include: [
@@ -21,7 +23,7 @@ async function getStudentsCourses(studentId) {
             ],
             attributes: ['id', 'courseCode', 'grade', 'semesterId']
         });
-
+        console.log(studentCourses);
         // Process the data in one step without the need for nested promises
         const processedCourses = studentCourses.map(course => {
             const {
@@ -43,7 +45,7 @@ async function getStudentsCourses(studentId) {
             };
         });
         
-        return processedCourses;
+        return { fullName: studentFullName, processedCourses };
     } catch (error) {
         console.error("Error fetching student courses:", error);
         throw new Error('Failed to retrieve student courses'); // Adding more specific error handling
