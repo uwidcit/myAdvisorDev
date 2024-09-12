@@ -144,7 +144,6 @@ router.get("/course-plan/all/:semesterId", staffAccountVerification, async (req,
                     }))
                 }))
             };
-            console.log("Course Plans:", formattedData.advisingSessions[0].selectedCourses);
             res.status(200).json({ message: `Got all course plans for semester ${semesterId}`, data: formattedData });
         } else {
             res.status(404).json({ message: "Course Plans for Semester Not Found" });

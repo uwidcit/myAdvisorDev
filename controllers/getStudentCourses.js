@@ -1,48 +1,54 @@
 const StudentCourses = require("../models/StudentCourse");
 const Semester = require("../models/Semester");
 const Course = require("../models/Course");
+const Student = require("../models/Student");
 
 async function getStudentsCourses(studentId) {
     try {
+        const studentObject = await Student.findByPk(studentId);
+        const studentFullName = `${studentObject.firstName} ${studentObject.lastName}`;
         const studentCourses = await StudentCourses.findAll({
-            where: {
-                studentId: studentId
-            }
-        });
-
-        const processedCourses = await Promise.all(studentCourses.map(async (info) => {
-            const stdCourseInfo = info.dataValues;
-
-            const [semInfo, courseInfo] = await Promise.all([
-                Semester.findOne({
+            where: { studentId },
+            include: [
+                {
+                    model: Semester,
                     attributes: ['academicYear', 'num'],
-                    where: {
-                        id: stdCourseInfo.semesterId
-                    }
-                }),
-                Course.findOne({
+                    as: 'semester'
+                },
+                {
+                    model: Course,
                     attributes: ['title', 'credits'],
-                    where: {
-                        code: stdCourseInfo.courseCode
-                    }
-                })
-            ]);
+                    as: 'course'
+                }
+            ],
+            attributes: ['id', 'courseCode', 'grade', 'semesterId']
+        });
+        console.log(studentCourses);
+        // Process the data in one step without the need for nested promises
+        const processedCourses = studentCourses.map(course => {
+            const {
+                id,
+                courseCode,
+                grade,
+                semester: { num: semester, academicYear },
+                course: { title: courseName, credits: creditHours }
+            } = course.dataValues;
 
             return {
-                id: stdCourseInfo.id,
-                courseCode: stdCourseInfo.courseCode,
-                courseName: courseInfo.title,
-                creditHours: courseInfo.credits,
-                grade: stdCourseInfo.grade,
-                semester: semInfo.num,
-                academicYear: semInfo.academicYear
+                id,
+                courseCode,
+                courseName,
+                creditHours,
+                grade,
+                semester,
+                academicYear
             };
-        }));
-
-        return processedCourses;
+        });
+        
+        return { fullName: studentFullName, processedCourses };
     } catch (error) {
-        console.error("Error in getStudentsCourses:", error);
-        throw error;
+        console.error("Error fetching student courses:", error);
+        throw new Error('Failed to retrieve student courses'); // Adding more specific error handling
     }
 }
 

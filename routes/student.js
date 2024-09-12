@@ -7,6 +7,7 @@ const router = require("express").Router();
 const db = require("../db");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { Op } = require('sequelize');
 const studentAccountVerification = require("../middleware/studentAccountVerification");
 const { NotFoundError } = require('../middleware/errors');
 
@@ -15,7 +16,7 @@ const { getStudentsCourses } = require("../controllers/getStudentCourses");
 const { getDegreeProgress } = require("../controllers/getDegreeProgress");
 const { getPlannedCourses } = require("../controllers/getPlannedCourses");
 const { getCoursePlan } = require("../controllers/getCoursePlan");
-const { getStudentCoursePlan, getStudentCoursePlanSimple } = require("../controllers/getStudentCoursePlan");
+const { getStudentCoursePlan, getStudentCoursePlanByStudentIdAndSemesterId } = require("../controllers/getStudentCoursePlan");
 const { getAllCoursePlans } = require("../controllers/getAllCoursePlans");
 
 const { Sequelize } = require('sequelize');
@@ -38,68 +39,78 @@ const PCR = require("../models/ElectiveRequirement");
 const Type = require("../models/Type");
 const SelectedCourse = require("../models/SelectedCourse");
 
-
+// create an advising session
+// make sure to account for edge cases, such as if the student already has an advising session
+// expect a list of courses to be selected, the studentId and the semesterId
 router.post("/create-plan", studentAccountVerification, async (req, res) => {
-
+    const transaction = await AdvisingSession.sequelize.transaction(); // Start a transaction
     try {
-        const studentId = req.user;
-        let selectedCourses = req.body.selectedCourses;
-        const semesterId = req.body.semesterId;
+        const { studentId, semesterId, selectedCourses } = req.body;
 
-        let session = await AdvisingSession.findOne({ where: { studentId: studentId, semesterId: semesterId } });
-        
-        if (!session) {
-
-            session = await AdvisingSession.create({
-                studentId: studentId,
-                planStatus: "Pending",
-                semesterId: semesterId
-            });
-
-            for (i = 0; i < selectedCourses.length; i++) {
-                // console.log(selectedCourses[i])
-                await SelectedCourse.create({
-                    advisingSessionId: session.id,
-                    courseCode: selectedCourses[i].courseCode
-                });
-            }
-
-            res.status(200).send("Created New Course Plan");
-        }
-        else {
-
-            await SelectedCourse.destroy({ where: { advisingSessionId: session.id } });
-            await session.destroy();
-
-
-            session = await AdvisingSession.create({
-                studentId: studentId,
-                planStatus: "Pending",
-                semesterId: semesterId
-            });
-
-
-            // console.log(session);
-
-
-            // Create new selected courses with updated course codes
-            for (let i = 0; i < selectedCourses.length; i++) {
-                await SelectedCourse.create({
-                    advisingSessionId: session.id,
-                    courseCode: selectedCourses[i]
-                });
-            }
-
-            res.status(200).send("Updated Old Course Plan");
-
+        // Validate request data
+        if (!studentId || !semesterId || !Array.isArray(selectedCourses) || selectedCourses.length === 0) {
+            return res.status(400).json({ error: "Missing required fields or invalid course list." });
         }
 
+        // Check if the student exists
+        const student = await Student.findByPk(studentId);
+        if (!student) {
+            return res.status(404).json({ error: "Student not found." });
+        }
 
+        // Check if the semester exists
+        const semester = await Semester.findByPk(semesterId);
+        if (!semester) {
+            return res.status(404).json({ error: "Semester not found." });
+        }
 
-    }
-    catch (err) {
-        console.log("Error: ", err.message);
-        res.status(500).send("Server Error");
+        // Check if an advising session already exists for this student in the same semester
+        const existingSession = await AdvisingSession.findOne({
+            where: { studentId, semesterId }
+        });
+        if (existingSession) {
+            return res.status(409).json({ error: "An advising session already exists for this semester." });
+        }
+
+        // Create the advising session
+        const newSession = await AdvisingSession.create({
+            studentId,
+            semesterId,
+            planStatus: "Pending"
+        }, { transaction });
+
+        // Validate and add selected courses
+        for (let courseCode of selectedCourses) {
+            const course = await Course.findOne({ where: { code: courseCode } });
+
+            if (!course) {
+                throw new Error(`Course with code ${courseCode} not found.`);
+            }
+
+            // Create each selected course tied to the advising session
+            await SelectedCourse.create({
+                advisingSessionId: newSession.id,
+                courseCode
+            }, { transaction });
+        }
+
+        // Commit the transaction
+        await transaction.commit();
+
+        return res.status(201).json({
+            message: "Advising session and selected courses successfully created.",
+            advisingSession: newSession
+        });
+    } catch (error) {
+        // Roll back the transaction in case of an error
+        if (transaction) await transaction.rollback();
+
+        console.error("Error creating advising session:", error);
+
+        // Return a 500 status if any other error occurs
+        return res.status(500).json({
+            error: error.message || "An internal server error occurred."
+        });
     }
 });
 
@@ -202,12 +213,12 @@ router.get('/courses/:studentId', studentAccountVerification, async (req, res, n
 });
 
 //For the table on CourseplannerViewer if coursePlan for selectedSemester && selectedSemester==currentSemester
-router.get("/course-plan/:semesterId", studentAccountVerification, async (req, res) => {
+router.get("/course-plan/:studentId/:semesterId", studentAccountVerification, async (req, res) => {
 
     let semesterId = req.params.semesterId;
-    const studentId = req.user;
+    const studentId = req.params.studentId;
 
-    const coursePlan = await getStudentCoursePlanSimple(studentId, semesterId);
+    const coursePlan = await getStudentCoursePlanByStudentIdAndSemesterId(studentId, semesterId);
     if (coursePlan) {
         res.status(200).json(coursePlan);
     } else {
@@ -220,7 +231,7 @@ router.get("/course-plan/detail/:semesterId", studentAccountVerification, async 
     let semesterId = req.params.semesterId;
     const studentId = req.user;
 
-    
+
     // -----------------CALL THE FUNCTION-------------------------
 
     try {
@@ -232,9 +243,193 @@ router.get("/course-plan/detail/:semesterId", studentAccountVerification, async 
             res.status(404).send("Course Plan for Student Not Found");
         }
     } catch (error) {
-        console.error("Error ::>",error);
+        console.error("Error ::>", error);
     }
 
+});
+
+router.get("/:studentId/course-plan/:semesterId", studentAccountVerification, async (req, res) => {
+    const studentId = req.params.studentId;
+    const semesterId = req.params.semesterId;
+
+    let response = {
+        lastUpdated: new Date(),
+        status: "New",
+        plan: [],
+        limit: 15
+    };
+
+    try {
+        // Validate inputs
+        if (!studentId || !semesterId) {
+            return res.status(400).json({ error: "Invalid studentId or semesterId" });
+        }
+
+        // Fetch student's program ID
+        const student = await Student.findByPk(studentId);
+        if (!student) {
+            return res.status(404).json({ error: `Student with ID ${studentId} not found` });
+        }
+        const programmeId = student.programmeId;
+
+        const advisingSession = await AdvisingSession.findOne({
+            where: {
+                studentId,
+                semesterId
+            }
+        });
+
+        if (advisingSession) {
+            const studentCoursePlanByStudentIdAndSemesterId = await getStudentCoursePlanByStudentIdAndSemesterId(studentId, semesterId);
+            response = studentCoursePlanByStudentIdAndSemesterId;
+        } else {
+            // Fetch completed courses
+            const completedCourses = await StudentCourse.findAll({
+                attributes: ['courseCode'],
+                where: {
+                    studentId,
+                    grade: {
+                        [Op.in]: ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'EX']
+                    }
+                }
+            }).then(courses => courses.map(c => c.courseCode));
+
+            // Fetch the semester and courses for that semester
+            const semester = await Semester.findByPk(semesterId);
+            const coursesBySemesterNum = await Course.findAll({
+                where: { semester: semester.num }
+            });
+
+            let listOfCoursesBySemesterNum = coursesBySemesterNum.map(course => course.code);
+
+            // Fetch all programme courses
+            const programmeCourses = await ProgrammeCourse.findAll({
+                attributes: ['courseCode', 'typeId'],
+                where: { programmeId },
+                include: [{ model: Type, attributes: ['type'] }]
+            });
+
+            // Fetch eligible courses
+            const eligibleCourses = await getAllEligibleCourses(studentId);
+            const listOfEligibleCourses = eligibleCourses.map(course => course.dataValues.code);
+
+            // Structure the courses by categories using the Types table
+            const courseCategories = {
+                "L1CORE": { courses: [], totalCredits: 0, completedCredits: 0, requiredCredits: 0, creditsRemaining: 0 },
+                "L2CORE": { courses: [], totalCredits: 0, completedCredits: 0, requiredCredits: 0, creditsRemaining: 0 },
+                "L3CORE": { courses: [], totalCredits: 0, completedCredits: 0, requiredCredits: 0, creditsRemaining: 0 },
+                "ADVELECTIVE": { courses: [], totalCredits: 0, completedCredits: 0, requiredCredits: 0, creditsRemaining: 0 },
+                "CIELECTIVE": { courses: [], totalCredits: 0, completedCredits: 0, requiredCredits: 0, creditsRemaining: 0 },
+                "CIMELECTIVE": { courses: [], totalCredits: 0, completedCredits: 0, requiredCredits: 0, creditsRemaining: 0 },
+                "FOUN": { courses: [], totalCredits: 0, completedCredits: 0, requiredCredits: 0, creditsRemaining: 0 }
+            };
+
+            // Add programme courses to their respective categories
+            programmeCourses.forEach(pc => {
+                const course = pc.courseCode;
+                const category = pc.type.dataValues.type;
+
+                const courseInfo = {
+                    courseId: course,
+                    courseName: '',  // Will be filled below
+                    credits: 0,      // Will be filled below
+                    completed: completedCourses.includes(course),
+                    selected: completedCourses.includes(course),
+                    available: listOfCoursesBySemesterNum.includes(course)
+                };
+
+                if (courseCategories[category]) {
+                    courseCategories[category].courses.push(courseInfo);
+                }
+            });
+
+            // Fill in course names and credits
+            const coursesData = await Course.findAll({
+                where: {
+                    code: { [Op.in]: programmeCourses.map(pc => pc.courseCode) }
+                }
+            });
+
+            coursesData.forEach(course => {
+                for (let category in courseCategories) {
+                    const courseInfo = courseCategories[category].courses.find(c => c.courseId === course.code);
+                    if (courseInfo) {
+                        courseInfo.courseName = course.title;
+                        courseInfo.credits = course.credits;
+                        courseCategories[category].totalCredits += course.credits;
+                        if (courseInfo.completed) {
+                            courseCategories[category].completedCredits += course.credits;
+                        }
+                    }
+                }
+            });
+
+            // Fetch the total amount of credits required for the programme using ElectiveRequirement
+            const electiveRequirements = await PCR.findAll({
+                include: [{ model: Type, attributes: ['type'] }],
+                attributes: ['amount', 'typeId'],
+                where: { programmeId }
+            });
+
+            // Map the elective requirements to their respective categories
+            electiveRequirements.forEach(req => {
+                const category = req.type.dataValues.type;
+                if (courseCategories[category]) {
+                    courseCategories[category].requiredCredits = req.amount;
+                }
+                courseCategories[category].creditsRemaining = courseCategories[category].requiredCredits - courseCategories[category].completedCredits;
+            });
+
+            // Calculate total credits completed and remaining
+            let totalCreditsCompleted = 0;
+            let totalRequiredCredits = 0;
+            for (let category in courseCategories) {
+                totalCreditsCompleted += courseCategories[category].completedCredits;
+                totalRequiredCredits += courseCategories[category].requiredCredits;
+            }
+            const totalCreditsRemaining = totalRequiredCredits - totalCreditsCompleted;
+
+            // Update availability based on eligible courses
+            for (let category in courseCategories) {
+                courseCategories[category].courses.forEach(course => {
+                    if (listOfEligibleCourses.includes(course.courseId)) {
+                        course.available = true;
+                    }
+                });
+            }
+            // construct the plan array
+            const plan = Object.entries(courseCategories).map(([category, courses]) => ({
+                category,
+                creditsRemaining: courses.creditsRemaining,
+                totalCreditsForCategory: courses.requiredCredits,
+                courses: courses.courses.map(course => ({
+                    courseId: course.courseId,
+                    courseName: course.courseName,
+                    credits: course.credits,
+                    completed: course.completed,
+                    selected: course.selected,
+                    available: course.available
+                }))
+            }));
+            
+            // Add credits summary to the response
+            response = {
+                [studentId]:{
+                    status: "New",
+                    plan: plan,
+                    totalCreditsCompleted,
+                    totalCreditsRemaining,
+                    totalRequiredCredits,
+                    limit: 15
+                }
+            };
+        }
+
+        return res.status(200).json({ message: 'Course plan data retrieved successfully', data: response });
+    } catch (error) {
+        console.error('Error fetching course plan:', error.message);
+        return res.status(500).json({ error: 'Failed to retrieve course plan data' });
+    }
 });
 
 router.get("/course-plans/:semesterId", studentAccountVerification, async (req, res) => {

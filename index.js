@@ -12,6 +12,7 @@ const multer = require('multer')
 const upload = multer({ storage: multer.memoryStorage() })
 const { parse } = require('./utilities/parser');
 const errorHandler = require('./middleware/errorHandler');
+const morgan = require('morgan');
 const credentials = require('./middleware/credentials');
 const bcrypt = require("bcrypt");
 
@@ -21,6 +22,17 @@ const port = process.env.PORT || 3002;
 app.use(credentials);
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(morgan(function (tokens, req, res) {
+  return [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    tokens.req(req, res, 'content-length'), '-',
+    tokens['remote-addr'](req, res), '-',
+    tokens.res(req, res, 'content-length'), '-',
+    tokens['response-time'](req, res), 'ms'
+  ].join(' ')
+}));
 
 // models
 const Admin = require("./models/Admin");

@@ -25,6 +25,9 @@
     "url": "https://github.com/nevash-gobin/myAdvisorDev/issues"
   },
   "homepage": "https://github.com/nevash-gobin/myAdvisorDev#readme",
+  "engines": {
+    "node": "20.10.0"
+  },
   "dependencies": {
     "axios": "^0.21.1",
     "bcrypt": "^5.0.1",
@@ -32,6 +35,7 @@
     "dotenv": "^8.6.0",
     "express": "^4.19.2",
     "express-session": "^1.17.1",
+    "express-validator": "^7.2.0",
     "fs": "^0.0.1-security",
     "html-pdf": "^3.0.1",
     "jsonwebtoken": "^8.5.1",
