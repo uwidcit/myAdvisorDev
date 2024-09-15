@@ -16,7 +16,7 @@ const { getStudentsCourses } = require("../controllers/getStudentCourses");
 const { getDegreeProgress } = require("../controllers/getDegreeProgress");
 const { getPlannedCourses } = require("../controllers/getPlannedCourses");
 const { getCoursePlan } = require("../controllers/getCoursePlan");
-const { getStudentCoursePlan, getStudentCoursePlanByStudentIdAndSemesterId } = require("../controllers/getStudentCoursePlan");
+const { getStudentCoursePlan, getStudentCoursePlanByStudentIdAndSemesterId, getNewStudentCoursePlan } = require("../controllers/getStudentCoursePlan");
 const { getAllCoursePlans } = require("../controllers/getAllCoursePlans");
 
 const { Sequelize } = require('sequelize');
@@ -252,13 +252,6 @@ router.get("/:studentId/course-plan/:semesterId", studentAccountVerification, as
     const studentId = req.params.studentId;
     const semesterId = req.params.semesterId;
 
-    let response = {
-        lastUpdated: new Date(),
-        status: "New",
-        plan: [],
-        limit: 15
-    };
-
     try {
         // Validate inputs
         if (!studentId || !semesterId) {
@@ -266,166 +259,27 @@ router.get("/:studentId/course-plan/:semesterId", studentAccountVerification, as
         }
 
         // Fetch student's program ID
-        const student = await Student.findByPk(studentId);
+        const student = await Student.findByPk(studentId, { attributes: ['programmeId'] });
         if (!student) {
             return res.status(404).json({ error: `Student with ID ${studentId} not found` });
         }
         const programmeId = student.programmeId;
 
+        // Fetch advising session if exists
         const advisingSession = await AdvisingSession.findOne({
-            where: {
-                studentId,
-                semesterId
-            }
+            where: { studentId, semesterId },
+            attributes: ['updatedAt', 'planStatus']
         });
 
         if (advisingSession) {
-            const studentCoursePlanByStudentIdAndSemesterId = await getStudentCoursePlanByStudentIdAndSemesterId(studentId, semesterId);
-            response = studentCoursePlanByStudentIdAndSemesterId;
+            // Use existing function to fetch the student's course plan
+            const studentCoursePlan = await getStudentCoursePlanByStudentIdAndSemesterId(studentId, semesterId);
+            return res.status(200).json({ message: 'Course plan retrieved successfully', data: studentCoursePlan });
         } else {
-            // Fetch completed courses
-            const completedCourses = await StudentCourse.findAll({
-                attributes: ['courseCode'],
-                where: {
-                    studentId,
-                    grade: {
-                        [Op.in]: ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'EX']
-                    }
-                }
-            }).then(courses => courses.map(c => c.courseCode));
-
-            // Fetch the semester and courses for that semester
-            const semester = await Semester.findByPk(semesterId);
-            const coursesBySemesterNum = await Course.findAll({
-                where: { semester: semester.num }
-            });
-
-            let listOfCoursesBySemesterNum = coursesBySemesterNum.map(course => course.code);
-
-            // Fetch all programme courses
-            const programmeCourses = await ProgrammeCourse.findAll({
-                attributes: ['courseCode', 'typeId'],
-                where: { programmeId },
-                include: [{ model: Type, attributes: ['type'] }]
-            });
-
-            // Fetch eligible courses
-            const eligibleCourses = await getAllEligibleCourses(studentId);
-            const listOfEligibleCourses = eligibleCourses.map(course => course.dataValues.code);
-
-            // Structure the courses by categories using the Types table
-            const courseCategories = {
-                "L1CORE": { courses: [], totalCredits: 0, completedCredits: 0, requiredCredits: 0, creditsRemaining: 0 },
-                "L2CORE": { courses: [], totalCredits: 0, completedCredits: 0, requiredCredits: 0, creditsRemaining: 0 },
-                "L3CORE": { courses: [], totalCredits: 0, completedCredits: 0, requiredCredits: 0, creditsRemaining: 0 },
-                "ADVELECTIVE": { courses: [], totalCredits: 0, completedCredits: 0, requiredCredits: 0, creditsRemaining: 0 },
-                "CIELECTIVE": { courses: [], totalCredits: 0, completedCredits: 0, requiredCredits: 0, creditsRemaining: 0 },
-                "CIMELECTIVE": { courses: [], totalCredits: 0, completedCredits: 0, requiredCredits: 0, creditsRemaining: 0 },
-                "FOUN": { courses: [], totalCredits: 0, completedCredits: 0, requiredCredits: 0, creditsRemaining: 0 }
-            };
-
-            // Add programme courses to their respective categories
-            programmeCourses.forEach(pc => {
-                const course = pc.courseCode;
-                const category = pc.type.dataValues.type;
-
-                const courseInfo = {
-                    courseId: course,
-                    courseName: '',  // Will be filled below
-                    credits: 0,      // Will be filled below
-                    completed: completedCourses.includes(course),
-                    selected: completedCourses.includes(course),
-                    available: listOfCoursesBySemesterNum.includes(course)
-                };
-
-                if (courseCategories[category]) {
-                    courseCategories[category].courses.push(courseInfo);
-                }
-            });
-
-            // Fill in course names and credits
-            const coursesData = await Course.findAll({
-                where: {
-                    code: { [Op.in]: programmeCourses.map(pc => pc.courseCode) }
-                }
-            });
-
-            coursesData.forEach(course => {
-                for (let category in courseCategories) {
-                    const courseInfo = courseCategories[category].courses.find(c => c.courseId === course.code);
-                    if (courseInfo) {
-                        courseInfo.courseName = course.title;
-                        courseInfo.credits = course.credits;
-                        courseCategories[category].totalCredits += course.credits;
-                        if (courseInfo.completed) {
-                            courseCategories[category].completedCredits += course.credits;
-                        }
-                    }
-                }
-            });
-
-            // Fetch the total amount of credits required for the programme using ElectiveRequirement
-            const electiveRequirements = await PCR.findAll({
-                include: [{ model: Type, attributes: ['type'] }],
-                attributes: ['amount', 'typeId'],
-                where: { programmeId }
-            });
-
-            // Map the elective requirements to their respective categories
-            electiveRequirements.forEach(req => {
-                const category = req.type.dataValues.type;
-                if (courseCategories[category]) {
-                    courseCategories[category].requiredCredits = req.amount;
-                }
-                courseCategories[category].creditsRemaining = courseCategories[category].requiredCredits - courseCategories[category].completedCredits;
-            });
-
-            // Calculate total credits completed and remaining
-            let totalCreditsCompleted = 0;
-            let totalRequiredCredits = 0;
-            for (let category in courseCategories) {
-                totalCreditsCompleted += courseCategories[category].completedCredits;
-                totalRequiredCredits += courseCategories[category].requiredCredits;
-            }
-            const totalCreditsRemaining = totalRequiredCredits - totalCreditsCompleted;
-
-            // Update availability based on eligible courses
-            for (let category in courseCategories) {
-                courseCategories[category].courses.forEach(course => {
-                    if (listOfEligibleCourses.includes(course.courseId)) {
-                        course.available = true;
-                    }
-                });
-            }
-            // construct the plan array
-            const plan = Object.entries(courseCategories).map(([category, courses]) => ({
-                category,
-                creditsRemaining: courses.creditsRemaining,
-                totalCreditsForCategory: courses.requiredCredits,
-                courses: courses.courses.map(course => ({
-                    courseId: course.courseId,
-                    courseName: course.courseName,
-                    credits: course.credits,
-                    completed: course.completed,
-                    selected: course.selected,
-                    available: course.available
-                }))
-            }));
-            
-            // Add credits summary to the response
-            response = {
-                [studentId]:{
-                    status: "New",
-                    plan: plan,
-                    totalCreditsCompleted,
-                    totalCreditsRemaining,
-                    totalRequiredCredits,
-                    limit: 15
-                }
-            };
+            // Generate a new course plan
+            const newCoursePlan = await getNewStudentCoursePlan(studentId, semesterId, programmeId);
+            return res.status(200).json({ message: 'New course plan generated successfully', data: { [studentId]: newCoursePlan } });
         }
-
-        return res.status(200).json({ message: 'Course plan data retrieved successfully', data: response });
     } catch (error) {
         console.error('Error fetching course plan:', error.message);
         return res.status(500).json({ error: 'Failed to retrieve course plan data' });
