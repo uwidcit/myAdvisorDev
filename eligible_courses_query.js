@@ -350,6 +350,29 @@ async function getAllStudentInformation() {
     }
 }
 
+async function getCountOfGradesByStudentId(studentId) {
+    const query = `
+    SELECT grade, COUNT(*) AS grade_count
+    FROM studentcourses
+    WHERE studentId = :studentId
+    GROUP BY grade
+    ORDER BY grade;
+    `;
+
+    try {
+        const results = await sequelize.query(query, {
+            replacements: { studentId: studentId },
+            type: sequelize.QueryTypes.SELECT
+        });
+
+        console.log(results);
+        return results;
+    } catch (error) {
+        console.error('Error executing query:', error);
+    }
+}
+
+
 async function getColumnNamesAndTypes(tableName) {
     const query = `
         SELECT 
