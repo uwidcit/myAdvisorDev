@@ -13,7 +13,7 @@ async function getPlannedCourses(studentId, semesterId) {
                 ] 
             }    
         });
-        // console.log("Advising Session: ",advisingSession);
+        
         if (advisingSession) {
             let advisingSessionId = advisingSession.dataValues.id;
             let SelectedCourses = await SelectedCourse.findAll({ 

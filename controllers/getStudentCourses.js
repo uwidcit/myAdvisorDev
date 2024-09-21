@@ -23,7 +23,7 @@ async function getStudentsCourses(studentId) {
             ],
             attributes: ['id', 'courseCode', 'grade', 'semesterId']
         });
-        console.log(studentCourses);
+
         // Process the data in one step without the need for nested promises
         const processedCourses = studentCourses.map(course => {
             const {

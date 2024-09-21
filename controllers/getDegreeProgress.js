@@ -44,7 +44,7 @@ async function getDegreeProgress(student_id) {
         for (i = 0; i < programmeCourse.length; i++) {
             programmeCourses.push(programmeCourse[i].dataValues);
         }
-        //console.log("programmeCourse: ", programmeCourses);
+        
 
         //  get courses
         let course = await Course.findAll();
@@ -52,7 +52,7 @@ async function getDegreeProgress(student_id) {
         for (i = 0; i < course.length; i++) {
             courses.push(course[i].dataValues);
         }
-        //console.log("courses: ", courses);
+        
 
         // get programmeCreditRequirements
         let pcrs = await PCR.findAll({ where: { programmeId } });
@@ -60,7 +60,7 @@ async function getDegreeProgress(student_id) {
         for (i = 0; i < pcrs.length; i++) {
             programmeCreditRequirements.push(pcrs[i].dataValues);
         }
-        //console.log("PCR: ", programmeCreditRequirements);
+        
 
         // get types
         let type = await Type.findAll();
@@ -68,7 +68,7 @@ async function getDegreeProgress(student_id) {
         for (i = 0; i < type.length; i++) {
             types.push(type[i].dataValues);
         }
-        //console.log("types: ", types);
+        
 
 
         let actualTotalCredits = 0;
@@ -89,7 +89,7 @@ async function getDegreeProgress(student_id) {
                 try {
                     let course = courses.find((c) => c.code === studentCourseCodes[i]);
                     const type = types.find(type => type.type === creditType);
-                    //console.log(type);
+                    
 
                     let programmeCourse = programmeCourses.find(
                         (c) => c.courseCode === studentCourseCodes[i] && c.programmeId === programmeId && c.typeId === type.id);
@@ -103,7 +103,7 @@ async function getDegreeProgress(student_id) {
                         completedCourses.push(course.code);
                         creditRequirements[creditType][0] -= credits;
                         actualTotalCredits += credits;
-                        //console.log(completedCourses);
+                        
                     }
 
                 } catch (error) {
@@ -125,9 +125,7 @@ async function getDegreeProgress(student_id) {
 
 }
 
-// (async () =>{
-//     console.log(await getDegreeProgress('816031565'))
-// })()
+
 module.exports = { getDegreeProgress };
 
 
