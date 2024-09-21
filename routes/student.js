@@ -193,7 +193,29 @@ router.get("/degreeProgress", studentAccountVerification, async (req, res) => {
         degreeProgress
     );
 
-})
+});
+
+router.get("/grades/:studentId", studentAccountVerification, async (req, res) => {
+    const studentId = req.params.studentId;
+    const grades = await StudentCourse.findAll({
+        where: { studentId },
+        attributes: ['grade', [Sequelize.fn('COUNT', Sequelize.col('grade')), 'count']],
+        group: ['grade'],
+        order: [['grade', 'ASC']],
+    });
+    
+    if(!grades){
+        return res.status(404).json({ error: `Grades for student ID ${studentId} not found.` });
+    }
+    if(grades.length === 0){
+        return res.status(200).json(grades);
+    }
+    const formattedData = grades.map(grade => ({
+        grade: grade.dataValues.grade,
+        count: grade.dataValues.count
+    }));
+    res.status(200).json(formattedData);
+});
 
 /**
  * GET /courses/:studentId
@@ -327,7 +349,3 @@ router.get("/course-plans/:semesterId", studentAccountVerification, async (req, 
 
 
 module.exports = router;
-
-
-
-
