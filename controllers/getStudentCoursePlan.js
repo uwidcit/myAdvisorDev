@@ -63,7 +63,7 @@ async function getStudentCoursePlanByStudentIdAndSemesterId(studentId, semesterI
                 }),
                 AdvisingSession.findOne({
                     where: { studentId, semesterId },
-                    attributes: ['updatedAt', 'planStatus'],
+                    attributes: ['updatedAt', 'planStatus', 'id'],
                     transaction: t
                 })
             ]);
@@ -74,6 +74,7 @@ async function getStudentCoursePlanByStudentIdAndSemesterId(studentId, semesterI
             // Fetch selected and completed courses in parallel
             const [selectedCourses, studentCourses, electiveRequirements] = await Promise.all([
                 SelectedCourse.findAll({
+                    where: { advisingSessionId: advisingSession.id },
                     include: [
                         {
                             model: Course,
@@ -181,9 +182,9 @@ async function getStudentCoursePlanByStudentIdAndSemesterId(studentId, semesterI
     }
 }
 
-async function getNewStudentCoursePlan (studentId, semesterId, programmeId){
+async function getNewStudentCoursePlan(studentId, semesterId, programmeId) {
     try {
-        // Parallelize fetching completed courses, semester, programme courses, and eligible courses
+        // Fetch completed courses and semester in parallel
         const [completedCourses, semester, programmeCourses, eligibleCourses] = await Promise.all([
             StudentCourse.findAll({
                 attributes: ['courseCode'],
@@ -193,75 +194,63 @@ async function getNewStudentCoursePlan (studentId, semesterId, programmeId){
                         [Op.in]: ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'EX']
                     }
                 }
-            }).then(courses => courses.map(c => c.courseCode)),
+            }).then(courses => new Set(courses.map(c => c.courseCode))), // Use Set for faster lookups
             Semester.findByPk(semesterId, { attributes: ['num'] }),
             ProgrammeCourse.findAll({
                 attributes: ['courseCode', 'typeId'],
                 where: { programmeId },
                 include: [{ model: Type, attributes: ['type'] }]
             }),
-            getAllEligibleCourses(studentId)
+            getAllEligibleCourses(studentId).then(courses => new Set(courses.map(course => course.dataValues.code))) // Use Set for faster lookups
         ]);
 
-        // Prepare lists of course codes
         const listOfCoursesBySemesterNum = await Course.findAll({
             attributes: ['code'],
             where: { semester: semester.num }
-        }).then(courses => courses.map(course => course.code));
+        }).then(courses => new Set(courses.map(course => course.code))); // Use Set for faster lookups
 
-        const listOfEligibleCourses = eligibleCourses.map(course => course.dataValues.code);
-
-        // Structure courses by category using Types table
+        // Initialize course categories
         const courseCategories = {
-            "L1CORE": { courses: [], totalCredits: 0, completedCredits: 0, requiredCredits: 0, creditsRemaining: 0 },
-            "L2CORE": { courses: [], totalCredits: 0, completedCredits: 0, requiredCredits: 0, creditsRemaining: 0 },
-            "L3CORE": { courses: [], totalCredits: 0, completedCredits: 0, requiredCredits: 0, creditsRemaining: 0 },
-            "ADVELECTIVE": { courses: [], totalCredits: 0, completedCredits: 0, requiredCredits: 0, creditsRemaining: 0 },
-            "CIELECTIVE": { courses: [], totalCredits: 0, completedCredits: 0, requiredCredits: 0, creditsRemaining: 0 },
-            "CIMELECTIVE": { courses: [], totalCredits: 0, completedCredits: 0, requiredCredits: 0, creditsRemaining: 0 },
-            "FOUN": { courses: [], totalCredits: 0, completedCredits: 0, requiredCredits: 0, creditsRemaining: 0 }
+            "L1CORE": initializeCategory(),
+            "L2CORE": initializeCategory(),
+            "L3CORE": initializeCategory(),
+            "ADVELECTIVE": initializeCategory(),
+            "CIELECTIVE": initializeCategory(),
+            "CIMELECTIVE": initializeCategory(),
+            "FOUN": initializeCategory()
         };
 
-        // Add programme courses to their respective categories
+        // Populate course categories
         programmeCourses.forEach(pc => {
             const course = pc.courseCode;
             const category = pc.type.dataValues.type;
-
-            const courseInfo = {
-                courseId: course,
-                courseName: '',  // Will be filled below
-                credits: 0,      // Will be filled below
-                completed: completedCourses.includes(course),
-                selected: completedCourses.includes(course),
-                available: listOfCoursesBySemesterNum.includes(course)
-            };
-
             if (courseCategories[category]) {
-                courseCategories[category].courses.push(courseInfo);
+                courseCategories[category].courses.push(createCourseInfo(course, completedCourses.has(course), listOfCoursesBySemesterNum.has(course)));
             }
         });
 
-        // Fetch and update course names and credits
+        // Fetch course details and update categories
         const coursesData = await Course.findAll({
-            where: { code: { [Op.in]: programmeCourses.map(pc => pc.courseCode) } },
+            where: { code: { [Op.in]: Object.keys(courseCategories).flatMap(cat => courseCategories[cat].courses.map(c => c.courseId)) } },
             attributes: ['code', 'title', 'credits']
         });
 
-        coursesData.forEach(course => {
-            for (let category in courseCategories) {
-                const courseInfo = courseCategories[category].courses.find(c => c.courseId === course.code);
-                if (courseInfo) {
-                    courseInfo.courseName = course.title;
-                    courseInfo.credits = course.credits;
-                    courseCategories[category].totalCredits += course.credits;
+        const courseDataMap = new Map(coursesData.map(course => [course.code, { title: course.title, credits: course.credits }]));
+        for (let category in courseCategories) {
+            courseCategories[category].courses.forEach(courseInfo => {
+                const courseDetails = courseDataMap.get(courseInfo.courseId);
+                if (courseDetails) {
+                    courseInfo.courseName = courseDetails.title;
+                    courseInfo.credits = courseDetails.credits;
+                    courseCategories[category].totalCredits += courseDetails.credits;
                     if (courseInfo.completed) {
-                        courseCategories[category].completedCredits += course.credits;
+                        courseCategories[category].completedCredits += courseDetails.credits;
                     }
                 }
-            }
-        });
+            });
+        }
 
-        // Fetch elective requirements and map them to categories
+        // Fetch elective requirements and calculate remaining credits
         const electiveRequirements = await ElectiveRequirement.findAll({
             attributes: ['amount', 'typeId'],
             where: { programmeId },
@@ -272,42 +261,21 @@ async function getNewStudentCoursePlan (studentId, semesterId, programmeId){
             const category = req.type.dataValues.type;
             if (courseCategories[category]) {
                 courseCategories[category].requiredCredits = req.amount;
+                courseCategories[category].creditsRemaining = req.amount - courseCategories[category].completedCredits;
             }
-            courseCategories[category].creditsRemaining = courseCategories[category].requiredCredits - courseCategories[category].completedCredits;
         });
 
-        // Calculate total credits completed and remaining
-        let totalCreditsCompleted = 0;
-        let totalRequiredCredits = 0;
-        for (let category in courseCategories) {
-            totalCreditsCompleted += courseCategories[category].completedCredits;
-            totalRequiredCredits += courseCategories[category].requiredCredits;
-        }
-        const totalCreditsRemaining = totalRequiredCredits - totalCreditsCompleted;
-
-        // Update course availability based on eligible courses
-        for (let category in courseCategories) {
-            courseCategories[category].courses.forEach(course => {
-                if (listOfEligibleCourses.includes(course.courseId)) {
-                    course.available = true;
-                }
-            });
-        }
-
-        // Construct the plan array
+        // Prepare final output
         const plan = Object.entries(courseCategories).map(([category, courses]) => ({
             category,
-            creditsRemaining: courses.creditsRemaining,
-            totalCreditsForCategory: courses.requiredCredits,
-            courses: courses.courses.map(course => ({
-                courseId: course.courseId,
-                courseName: course.courseName,
-                credits: course.credits,
-                completed: course.completed,
-                selected: course.selected,
-                available: course.available
-            }))
+            creditsRemaining: courses.creditsRemaining || 0,
+            totalCreditsForCategory: courses.requiredCredits || 0,
+            courses: courses.courses
         }));
+
+        const totalCreditsCompleted = Object.values(courseCategories).reduce((sum, { completedCredits }) => sum + completedCredits, 0);
+        const totalRequiredCredits = Object.values(courseCategories).reduce((sum, { requiredCredits }) => sum + requiredCredits, 0);
+        const totalCreditsRemaining = totalRequiredCredits - totalCreditsCompleted;
 
         return {
             status: "New",
@@ -321,7 +289,15 @@ async function getNewStudentCoursePlan (studentId, semesterId, programmeId){
         console.error('Error in getNewStudentCoursePlan:', error);
         throw new Error('Failed to generate new course plan');
     }
-};
+}
+
+function initializeCategory() {
+    return { courses: [], totalCredits: 0, completedCredits: 0, requiredCredits: 0, creditsRemaining: 0 };
+}
+
+function createCourseInfo(courseId, completed, available) {
+    return { courseId, courseName: '', credits: 0, completed, selected: completed, available };
+}
 
 
 module.exports = { getStudentCoursePlan, getStudentCoursePlanByStudentIdAndSemesterId, getNewStudentCoursePlan }

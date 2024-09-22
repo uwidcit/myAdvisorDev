@@ -294,7 +294,6 @@ router.get("/:studentId/course-plan/:semesterId", studentAccountVerification, as
         });
 
         if (advisingSession) {
-            // Use existing function to fetch the student's course plan
             const studentCoursePlan = await getStudentCoursePlanByStudentIdAndSemesterId(studentId, semesterId);
             return res.status(200).json({ message: 'Course plan retrieved successfully', data: studentCoursePlan });
         } else {
