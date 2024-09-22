@@ -12,7 +12,7 @@ function getStudentYear( transcript ) {
 
     const yearsPassed = currentYear - admitYear;
 
-    // console.log(`Years passed since admit term: ${yearsPassed}`);
+
 
     return yearsPassed;
 }

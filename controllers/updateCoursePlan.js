@@ -13,7 +13,6 @@ async function updatePlanStatus(studentId, semesterId, newStatus) {
                 }
             }
         );
-        console.log(plan);
         return plan
     } catch (error) {
         console.log("Unable to update CoursePlan Status:", error.message)

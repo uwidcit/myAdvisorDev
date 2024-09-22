@@ -72,8 +72,7 @@ router.post("/create/admin", staffAccountVerification, async (req, res) => {
 // Create Student Account
 router.post("/create/student", async (req, res) => {
     try {
-        // destructure data entered
-        console.log(req.body);
+        
         const { studentId, firstName, lastName, email, year, password } = req.body;
         let { programmeId } = req.body;
 
@@ -117,7 +116,6 @@ router.post("/create/student", async (req, res) => {
 router.get("/course-plan/all/:semesterId", staffAccountVerification, async (req, res) => {
     try {
         const semesterId = req.params.semesterId;
-        console.log("Requested semester ID:", semesterId);
 
         if (!semesterId) {
             return res.status(400).json({ message: 'Semester ID is required' });
@@ -126,7 +124,6 @@ router.get("/course-plan/all/:semesterId", staffAccountVerification, async (req,
         const coursePlans = await getAllCoursePlans(semesterId);
 
         if (coursePlans && coursePlans.advisingsessions) {
-            console.log(coursePlans);
             const formattedData = {
                 semesterId: coursePlans.id,
                 semesterNum: coursePlans.num,
@@ -159,7 +156,6 @@ router.get("/course-plan/all/:semesterId", staffAccountVerification, async (req,
 router.get("/course-plan/:semesterId/:studentId", staffAccountVerification, async (req, res) => {
     const coursePlan = await getStudentCoursePlan(req.params.studentId, req.params.semesterId);
     if (coursePlan) {
-        console.log(coursePlan);
         res.status(200).json(coursePlan);
     } else {
         res.status(404).send("Course Plan for Student Not Found");
@@ -169,17 +165,14 @@ router.get("/course-plan/:semesterId/:studentId", staffAccountVerification, asyn
 // post/update courseplan(advisingSession) of a student for a semester Confirm or Return
 router.put("/course-plan/review/:semesterId/:studentId/:decision", async (req, res) => {
     const decision = req.params.decision;
-    console.log(decision);
     const plan = await updatePlanStatus(req.params.studentId, req.params.semesterId, decision);
     if (decision === 'Confirmed' && plan) {
-        console.log("Approved");
         res.status(200).send({
 
             message: "Course Plan Approved",
             student: req.params.studentId
         });
     } else if (decision === 'Rejected' && plan) {
-        console.log("Rejected");
         res.status(200).send({
             message: "Course Plan Not Approved",
             student: req.params.studentId
@@ -248,25 +241,19 @@ router.post('/parse/programmeCourse', upload.single('file'), async (req, res) =>
 
     const csvData = req.file.buffer.toString('utf8');
     const results = await parseCSVData(csvData);
-    //console.log("data found", results);
 
 
     // Create Programme Entries 
     for (let i = 0; i < results[0].data.length; i++) {
 
-        //console.log("item number:: ", i);
         const programme = await Programme.findOne({
             where: {
                 id: results[0].data[i],
                 name: results[1].data[i]
             }
         });
-        // console.log("programme::> ", programme);
-        // console.log(" prog Id: ", results[0].data[i]);
-        // console.log(" name: ", results[1].data[i]);
 
         if (programme === null) {
-            console.log("new programme: ", results[1].data[i]);
 
             await Programme.create({
                 id: results[0].data[i],
@@ -291,13 +278,6 @@ router.post('/parse/programmeCourse', upload.single('file'), async (req, res) =>
                 courseCode: results[4].data[i],
             }
         });
-
-        // console.log("courseCode: ", results[4].data[i] );
-        // console.log("courseTitle: ", results[5].data[i] );
-        // console.log("level: ", results[6].data[i] );
-        // console.log("semester: ", results[7].data[i] );
-        // console.log("credits: ", results[8].data[i] );
-        // console.log("description: ", results[9].data[i] );
 
         if (!course) {
             await Course.create({
@@ -368,8 +348,6 @@ router.post('/parse/programmeCourse', upload.single('file'), async (req, res) =>
                 }
             });
 
-            // console.log("courseCode: ", results[4].data[i]);
-            // console.log("prereq: ", prereqCourseCodes[j]);
 
             if (!prerequisite) {
                 await Prerequisite.create({
@@ -395,8 +373,6 @@ router.post('/parse/programmeCourse', upload.single('file'), async (req, res) =>
                 }
             });
 
-            // console.log("courseCode: ", results[4].data[i]);
-            // console.log("prereq: ", prereqCourseCodes[j]);
 
             if (!antirequisite) {
                 await Antirequisite.create({
@@ -453,7 +429,6 @@ router.post('/parse/programmeCourseXLSX', upload.single('file'), async (req, res
         // ==========--------put courses in database
         /**/
         for (let i = 0; i < courses.length; i++) {
-            // console.log("courseCode::> ",courses[i].courseCode);
             try {
 
                 // check if courses is already added
@@ -490,7 +465,7 @@ router.post('/parse/programmeCourseXLSX', upload.single('file'), async (req, res
 
                 // check if programme is already added
                 const programme = await Programme.findOne({ where: { id: programmes[i].programmeID } });
-                // console.log("programme::> ",programme);
+                
                 if (programme) {
                     console.log("programme exist");
 

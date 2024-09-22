@@ -241,32 +241,5 @@ async function getAllEligibleCourses(studentId) {
     }
 }
 
-// testing without Postman
-
-// (async () =>{
-//     const dummyStudentCourses_db = await StudentCourse.findAll({
-//         attributes : ['courseCode'],
-//         where: {
-//             studentId : '816031565'
-//         }
-//     });
-//     const dummyStudentCourses = [
-//         'COMP1600',
-//         'COMP1601',
-//         'INFO1600',
-//         'MATH1115',
-//         'FOUN1101'
-//     ]
-//     const test_e = await getEligibleCourses('816031565',2);
-//     console.log(test_e);
-// })()
-/**
- * Expected
- * 'COMP1602',
- * 'COMP1603',
- * 'COMP1604',
- * 'FOUN1105',
- * 'INFO1601'
- */
 module.exports = { getEligibleCourses, getAllEligibleCourses };
 
