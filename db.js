@@ -27,9 +27,9 @@ function createSequelizeInstance() {
       password: DB_PASSWORD,
       pool: {
         max: 50,
-        min: 0,
-        acquire: 30000,
-        idle: 10000
+        min: 5,
+        acquire: 10000,
+        idle: 5000
       },
     });
   } else if( env === 'development') {
@@ -40,8 +40,8 @@ function createSequelizeInstance() {
       logging: false,
       pool: {
         max: 50,
-        min: 0,
-        acquire: 30000,
+        min: 1,
+        acquire: 10000,
         idle: 10000
       },
       dialectOptions: {

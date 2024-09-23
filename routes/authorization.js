@@ -21,62 +21,61 @@ router.post("/login", async (req, res) => {
     try {
         const { username, password } = req.body;
         console.log("LOG::> Username: ", username);
-        console.log("LOG::> Passowrd: ", password);
+        console.log("LOG::> Password: ", password);
 
-        const admin = await Admin.findOne({ where: { "adminID": username } });
-        const student = await Student.findOne({ where: { "studentId": username } });
+        // Query Admin and Student in parallel
+        const [admin, student] = await Promise.all([
+            Admin.findOne({ where: { "adminID": username } }),
+            Student.findOne({ where: { "studentId": username } })
+        ]);
 
         if (!admin && !student) {
             return res.status(401).send("This account does not exist.");
         }
-        else if (admin) {
 
-            // compares entered password and account password for match
+        if (admin) {
+            // Compare password
             const passCompare = await bcrypt.compare(password, admin.password);
-
             if (!passCompare) {
                 return res.status(401).send("Invalid Password.");
             }
-            else if (passCompare) {
-                // generates token for staff user
-                const token = jwtGeneratorStaff(admin.adminID);
-                res.json({
-                    "accountType": "admin",
-                    "adminID": admin.adminID,
-                    "firstName": admin.firstName,
-                    "lastName": admin.lastName,
-                    "email": admin.email,
-                    "createdAt": admin.createdAt,
-                    "token": token
-                });
-            }
-        }
-        else if (student) {
-            const passCompare2 = await bcrypt.compare(password, student.password);
 
+            // Generate token for admin user
+            const token = jwtGeneratorStaff(admin.adminID);
+            return res.json({
+                "accountType": "admin",
+                "adminID": admin.adminID,
+                "firstName": admin.firstName,
+                "lastName": admin.lastName,
+                "email": admin.email,
+                "createdAt": admin.createdAt,
+                "token": token
+            });
+        }
+
+        if (student) {
+            const passCompare2 = await bcrypt.compare(password, student.password);
             if (!passCompare2) {
                 return res.status(401).send("Invalid Password");
             }
-            else if (passCompare2) {
-                // generates token for student user
-                const token = jwtGeneratorStudent(student.studentId);
-                res.json({
-                    "accountType": "student",
-                    "studentId": student.studentId,
-                    "firstName": student.firstName,
-                    "lastName": student.lastName,
-                    "email": student.email,
-                    "programmeId": student.programmeId,
-                    "createdAt": student.createdAt,
-                    "token": token
-                });
-            }
+
+            // Generate token for student user
+            const token = jwtGeneratorStudent(student.studentId);
+            return res.json({
+                "accountType": "student",
+                "studentId": student.studentId,
+                "firstName": student.firstName,
+                "lastName": student.lastName,
+                "email": student.email,
+                "programmeId": student.programmeId,
+                "createdAt": student.createdAt,
+                "token": token
+            });
         }
-        else {
-            res.send("Unauthorized Access");
-        }
-    }
-    catch (err) {
+
+        res.status(401).send("Unauthorized Access");
+
+    } catch (err) {
         console.log("Error: ", err.message);
         res.status(500).send("Server Error");
     }

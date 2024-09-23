@@ -63,6 +63,28 @@ router.post("/add", async (req, res) => {
     }
 });
 
+router.get("/current", async (req, res) => {
+    try {
+        const currentDate = new Date();
+        const currentSemester = await Semester.findOne({
+            where: {
+                startDate: { [Op.lte]: currentDate },
+                endDate: { [Op.gte]: currentDate }
+            },
+            attributes: ['id', 'startDate', 'endDate', 'num', 'academicYear']
+        });
+
+        if (currentSemester) {
+            return res.status(200).json(currentSemester);
+        } else {
+            return res.status(404).json({ message: "No current semester found." });
+        }
+    } catch (err) {
+        console.error("Error: ", err.message);
+        return res.status(500).send("Server Error");
+    }
+});
+
 // Update a Semester
 router.put("/update", async (req, res) => {
     try {
@@ -167,7 +189,7 @@ router.get("/courses/:semesterId", async (req, res) => {
         const coursesInfo = await Course.findAll({
             where: { semester: semester.num }
         });
-        
+
         const coursesBySemesterNum = coursesInfo.map((course) => {
             return {
                 courseCode: course.code,
