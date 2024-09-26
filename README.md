@@ -28,7 +28,8 @@ The following members are part of the DCIT CCU Program
 The following member updated the backend - May - June, 2024
 - @firepenguindisopanda
 
-The following member last updated this project at 22nd September, 2024
+The following member last updated this project at 22nd September, 
+- @firepenguindisopanda - Nicholas Smith
 
 The system would be designed using a PERN Stack architecture
 PostgreSQL
