@@ -55,7 +55,7 @@ async function getStudentCoursePlan(studentId, semesterId) {
 async function getStudentCoursePlanByStudentIdAndSemesterId(studentId, semesterId) {
     try {
         const result = await db.transaction(async (t) => {
-            // Fetch the student and advising session
+            
             const [student, advisingSession] = await Promise.all([
                 Student.findByPk(studentId, {
                     attributes: ['programmeId'],
@@ -71,7 +71,7 @@ async function getStudentCoursePlanByStudentIdAndSemesterId(studentId, semesterI
             if (!student) throw new Error("Student not found.");
             if (!advisingSession) throw new Error("No advising session found.");
 
-            // Fetch selected and completed courses in parallel
+            
             const [selectedCourses, studentCourses, electiveRequirements] = await Promise.all([
                 SelectedCourse.findAll({
                     where: { advisingSessionId: advisingSession.id },
@@ -113,7 +113,7 @@ async function getStudentCoursePlanByStudentIdAndSemesterId(studentId, semesterI
                 })
             ]);
 
-            // Transform data and calculate credits remaining (similar to original logic)
+            
             const completedCourseData = studentCourses.map(sc => ({
                 courseCode: sc.course.code,
                 courseTitle: sc.course.title,
@@ -184,7 +184,7 @@ async function getStudentCoursePlanByStudentIdAndSemesterId(studentId, semesterI
 
 async function getNewStudentCoursePlan(studentId, semesterId, programmeId) {
     try {
-        // Fetch completed courses and semester in parallel
+        
         const [completedCourses, semester, programmeCourses, eligibleCourses] = await Promise.all([
             StudentCourse.findAll({
                 attributes: ['courseCode'],
@@ -194,22 +194,22 @@ async function getNewStudentCoursePlan(studentId, semesterId, programmeId) {
                         [Op.in]: ['A+', 'A', 'A-', 'B+', 'B', 'B-', 'C+', 'C', 'EX']
                     }
                 }
-            }).then(courses => new Set(courses.map(c => c.courseCode))), // Use Set for faster lookups
+            }).then(courses => new Set(courses.map(c => c.courseCode))),
             Semester.findByPk(semesterId, { attributes: ['num'] }),
             ProgrammeCourse.findAll({
                 attributes: ['courseCode', 'typeId'],
                 where: { programmeId },
                 include: [{ model: Type, attributes: ['type'] }]
             }),
-            getAllEligibleCourses(studentId).then(courses => new Set(courses.map(course => course.dataValues.code))) // Use Set for faster lookups
+            getAllEligibleCourses(studentId).then(courses => new Set(courses.map(course => course.dataValues.code)))
         ]);
 
         const listOfCoursesBySemesterNum = await Course.findAll({
             attributes: ['code'],
             where: { semester: semester.num }
-        }).then(courses => new Set(courses.map(course => course.code))); // Use Set for faster lookups
+        }).then(courses => new Set(courses.map(course => course.code)));
 
-        // Initialize course categories
+        
         const courseCategories = {
             "L1CORE": initializeCategory(),
             "L2CORE": initializeCategory(),
@@ -220,7 +220,7 @@ async function getNewStudentCoursePlan(studentId, semesterId, programmeId) {
             "FOUN": initializeCategory()
         };
 
-        // Populate course categories
+        
         programmeCourses.forEach(pc => {
             const course = pc.courseCode;
             const category = pc.type.dataValues.type;
@@ -229,7 +229,7 @@ async function getNewStudentCoursePlan(studentId, semesterId, programmeId) {
             }
         });
 
-        // Fetch course details and update categories
+        
         const coursesData = await Course.findAll({
             where: { code: { [Op.in]: Object.keys(courseCategories).flatMap(cat => courseCategories[cat].courses.map(c => c.courseId)) } },
             attributes: ['code', 'title', 'credits']
@@ -250,7 +250,7 @@ async function getNewStudentCoursePlan(studentId, semesterId, programmeId) {
             });
         }
 
-        // Fetch elective requirements and calculate remaining credits
+        
         const electiveRequirements = await ElectiveRequirement.findAll({
             attributes: ['amount', 'typeId'],
             where: { programmeId },
@@ -265,7 +265,7 @@ async function getNewStudentCoursePlan(studentId, semesterId, programmeId) {
             }
         });
 
-        // Prepare final output
+        
         const plan = Object.entries(courseCategories).map(([category, courses]) => ({
             category,
             creditsRemaining: courses.creditsRemaining || 0,
